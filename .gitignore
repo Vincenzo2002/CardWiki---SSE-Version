@@ -1,0 +1,49 @@
+# ==========================================
+# CardWiki - SSE Version
+# Root .gitignore
+# ==========================================
+
+# IntelliJ IDEA / JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Visual Studio Code
+.vscode/
+
+# Eclipse
+.metadata/
+.settings/
+.classpath
+.project
+.factorypath
+
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Linux / Unix
+*~
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Local environment variables
+.env
+.env.*
+!.env.example
