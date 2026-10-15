@@ -208,11 +208,11 @@
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${mapstruct.version}</version>
                         </path>
-                        **<path>
+                        <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>1.18.12</version>
-                        </path>**
+                        </path>
                     </annotationProcessorPaths>
                     <compilerArgs>
                         <compilerArg>
