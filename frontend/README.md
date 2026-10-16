@@ -43,6 +43,43 @@ Configure the following headers in the web server:
 
 - `content-security-policy: script-src 'self'; object-src 'none';`
 
+### GitHub Pages and EcoIndex
+
+The GitHub Pages workflow in `../.github/workflows/deploy-pages.yml` builds the
+frontend with the base path `/CardWiki---SSE-Version/`. It copies the built
+`index.html` into a directory for each path listed in the workflow's `routes`
+array, so direct requests to these routes return HTTP 200. Copying only to
+`404.html` lets Angular render the page but keeps the HTTP 404 response, which
+EcoIndex rejects.
+
+After deployment, use URLs with a trailing slash, for example:
+
+```text
+https://vincenzo2002.github.io/CardWiki---SSE-Version/about/
+https://vincenzo2002.github.io/CardWiki---SSE-Version/search/
+https://vincenzo2002.github.io/CardWiki---SSE-Version/help/markdown-syntax/
+```
+
+Check a published route before submitting it to EcoIndex:
+
+```sh
+curl -sS -L -o /dev/null -w 'HTTP: %{http_code}\nType: %{content_type}\n' \
+  https://vincenzo2002.github.io/CardWiki---SSE-Version/about/
+```
+
+The final response should be HTTP 200 with a `text/html` content type. Angular
+still renders each page in the browser; these copies are not prerendered HTML.
+For a dynamic route, add its concrete path (such as `decks/123` for an existing
+deck) to the `routes` array and redeploy. A parameter pattern such as `decks/:id`
+does not create pages for every ID.
+
+This workflow deploys only the frontend. Pages that fetch data still need a
+public backend configured in the production build; the default configuration
+points to `http://localhost:8080`. Without a public backend, HTTP 200 confirms
+that the page is served, but does not mean its data loaded successfully.
+EcoIndex also starts without a logged-in session, so protected routes show the
+login page instead of authenticated content.
+
 ### Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
