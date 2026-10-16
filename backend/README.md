@@ -62,6 +62,13 @@ If build artifacts are stale, run `mvn clean test`. If VS Code subsequently
 shows unresolved imports in generated sources, use the full IDE compilation
 described above.
 
+## JMH benchmarks
+
+Microbenchmarks live in the separate [`benchmarks` module](../benchmarks/README.md).
+Build them from the repository root with `mvn clean package` using JDK 11.
+The backend also produces a `plain` JAR for that module; JMH dependencies and
+benchmark sources stay outside the application module.
+
 ## Deployment
 
 Configure `src/main/resources/application-prod.yml` and run it with `-Dspring-boot.run.profiles=prod`.

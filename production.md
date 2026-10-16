@@ -47,7 +47,7 @@ server {
 ## Deploying
 
 1. Build the backend with `mvn package`.
-2. Upload `target/backend-*.jar` to `/home/cardwiki/backend.jar`.
+2. Upload `target/backend-0.0.1-SNAPSHOT.jar` to `/home/cardwiki/backend.jar` (the executable Spring Boot JAR; the `-plain.jar` is for benchmarks).
 3. Restart the backend with `XDG_RUNTIME_DIR=/run/user/$UID systemctl --user restart cardwiki`
 4. Build the frontend with `npx ng build --prod`.
 5. Upload the files in `dist/cardwiki/` to `/home/cardwiki/frontend/`.
