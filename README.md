@@ -59,6 +59,19 @@ VS Code settings in `.vscode/` are local and ignored by Git. Each developer must
 select their own JDK 11 installation. See [VS Code troubleshooting](backend/README.md#vs-code-troubleshooting)
 for extension compatibility and generated-source diagnostics.
 
+## JMH benchmarks
+
+The root Maven project builds `backend` and the separate `benchmarks` module.
+With JDK 11 selected, run from the repository root:
+
+```sh
+mvn clean package
+java -jar benchmarks/target/benchmarks.jar
+```
+
+See the [benchmark guide](benchmarks/README.md) for a quick smoke run, benchmark
+selection, and JSON results.
+
 ## Contributing
 
 Issues and pull requests are welcome!
