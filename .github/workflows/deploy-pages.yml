@@ -1,4 +1,3 @@
-
 name: Deploy CardWiki Frontend
 
 on:
@@ -41,6 +40,24 @@ jobs:
         run: |
           npm run build:prod -- \
             --base-href=/CardWiki---SSE-Version/
+
+          # Serve known Angular routes with HTTP 200 for direct URL analysis.
+          # Add concrete paths here when testing dynamic routes (e.g. decks/123).
+          routes=(
+            about
+            search
+            categories
+            users
+            login
+            settings
+            clipboard
+            help/markdown-syntax
+          )
+
+          for route in "${routes[@]}"; do
+            mkdir -p "dist/cardwiki/$route"
+            cp dist/cardwiki/index.html "dist/cardwiki/$route/index.html"
+          done
 
           cp dist/cardwiki/index.html \
              dist/cardwiki/404.html
