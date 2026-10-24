@@ -1,5 +1,8 @@
 # Contributing to CardWiki
 
+Per branch, misurazioni e risultati SSE, seguire il
+[flusso nel README principale](README.md#branch-e-miglioramenti).
+
 ## Backend
 
 For developing the backend we recommend [IntelliJ](https://www.jetbrains.com/idea/). Since we use [Lombok](https://projectlombok.org/) to generate getters and setters of DTOs, you will also want to install the [Lombok plugin for your IDE](https://projectlombok.org/setup/overview).

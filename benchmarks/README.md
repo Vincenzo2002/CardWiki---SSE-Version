@@ -94,5 +94,14 @@ Per nuove misure, preparare gli input fuori dal metodo misurato e restituire
 il risultato oppure consumarlo con `Blackhole`. Eventuali risorse specifiche
 dei benchmark vanno in `src/main/resources/` di questo modulo.
 
+## Conservare i risultati SSE
+
+Copiare gli output da `target/` prima di eseguire `mvn clean`, che li elimina.
+I risultati da conservare vanno in
+[sse-reports/baseline/jmh/](../sse-reports/baseline/jmh/) oppure
+[sse-reports/sse-improvements/jmh/](../sse-reports/sse-improvements/jmh/),
+secondo la versione misurata. Annotare commit eseguito, comando e ambiente in
+una breve nota, come descritto nella [guida dei report](../sse-reports/README.md).
+
 Riferimenti: [JMH](https://github.com/openjdk/jmh) e
 [JAR aggiuntivi con classifier](https://maven.apache.org/plugins/maven-jar-plugin/examples/attached-jar.html).
