@@ -80,8 +80,6 @@ Frontend, backend e strumenti di misura rimangono nella stessa repository:
 frontend/                  Applicazione Angular
 backend/                   Applicazione Spring Boot
 benchmarks/                Benchmark JMH già configurati
-jmeter/                    Piani di carico e dati di test
-energibridge/              Script per le misurazioni energetiche
 sse-reports/
   baseline/                Risultati prima delle ottimizzazioni
   sse-improvements/        Risultati dopo le ottimizzazioni
@@ -113,8 +111,8 @@ perché porterebbe anche le ottimizzazioni nella versione di riferimento.
 | Tool | Sorgenti o configurazioni | Cartella dei risultati per ciascuna versione |
 | --- | --- | --- |
 | JMH | [benchmarks/](benchmarks/README.md) | `jmh/` |
-| JMeter | [jmeter/](jmeter/README.md) | `jmeter/` |
-| EnergiBridge | [energibridge/](energibridge/README.md) | `energibridge/` |
+| JMeter | Piani di carico da aggiungere quando necessari | `jmeter/` |
+| EnergiBridge | Script di misura da aggiungere quando necessari | `energibridge/` |
 | Creedengo tramite SonarQube | Configurazione da aggiungere quando usato | `creedengo/` |
 | WebsiteCarbon | Analisi esterna del frontend | `websitecarbon/` |
 | EcoIndex | Analisi esterna del frontend | `ecoindex/` |
