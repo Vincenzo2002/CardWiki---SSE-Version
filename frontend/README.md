@@ -80,6 +80,19 @@ that the page is served, but does not mean its data loaded successfully.
 EcoIndex also starts without a logged-in session, so protected routes show the
 login page instead of authenticated content.
 
+### SSE analysis results
+
+Save WebsiteCarbon, EcoIndex, and GreenIT-Analysis outputs in their tool
+directories under `sse-reports/baseline/` or `sse-reports/sse-improvements/`,
+according to the application version measured. Record the analyzed URL, page,
+deployed commit, and analysis conditions as described in the
+[report guide](../sse-reports/README.md).
+
+Follow the [branch workflow](../README.md#branches-and-improvements): develop
+each optimization on a temporary branch from `master` and merge it through a
+pull request. The `baseline` branch retains the application without SSE
+optimizations; report directory names do not imply additional permanent branches.
+
 ### Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

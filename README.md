@@ -72,6 +72,38 @@ java -jar benchmarks/target/benchmarks.jar
 See the [benchmark guide](benchmarks/README.md) for a quick smoke run, benchmark
 selection, and JSON results.
 
+## Sustainable Software Engineering (SSE)
+
+The frontend, backend, and measurement tools are maintained in one repository:
+
+```text
+frontend/                  Angular application
+backend/                   Spring Boot application
+benchmarks/                Configured JMH benchmarks
+sse-reports/
+  baseline/                Results before optimization
+  sse-improvements/        Results after optimization
+```
+
+### Branches and improvements
+
+The two permanent branches are `master` and `baseline`:
+
+* `baseline` preserves the application before SSE optimizations. New tests,
+  measurement tools, and baseline results can be added to this branch.
+* `master` contains accepted improvements and comparison results.
+
+For each improvement, create a temporary branch from `master`, such as
+`perf/category-query`. Implement the change, run the tests and measurements,
+and open a pull request into `master`. Delete the temporary branch after merging.
+
+If a test is missing, add it to `baseline`, run it, and save the result under
+`sse-reports/baseline/`. Then create a temporary branch from `master`, merge
+`baseline` into it with `git merge baseline`, resolve any conflicts, and run the
+same test on the current application. Submit the tests and results to `master`
+through a pull request. Do not merge `master` into `baseline`, as that would
+also bring optimizations into the reference application.
+
 ## Contributing
 
 Issues and pull requests are welcome!

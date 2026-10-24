@@ -1,5 +1,12 @@
 # Contributing to CardWiki
 
+Write all project documentation, README files, and measurement notes in English.
+
+For branches, SSE measurements, and results, follow the
+[workflow in the main README](README.md#branches-and-improvements). Create a
+temporary branch from `master` for each improvement and submit a pull request
+back to `master`. Keep application optimizations out of `baseline`.
+
 ## Backend
 
 For developing the backend we recommend [IntelliJ](https://www.jetbrains.com/idea/). Since we use [Lombok](https://projectlombok.org/) to generate getters and setters of DTOs, you will also want to install the [Lombok plugin for your IDE](https://projectlombok.org/setup/overview).
