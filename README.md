@@ -18,6 +18,11 @@ A flashcard learning web app where decks can be edited collaboratively (like in 
 * **Remix**: both decks and cards can be easily copied.
 * **No password**: Login with GitHub, GitLab or Google
 
+## Architecture
+
+See the [architecture and reverse engineering analysis](docs/architecture-cardwiki.md)
+of the original CardWiki application.
+
 ## Setup
 
 The backend is written in Java with [Spring Boot](https://spring.io/projects/spring-boot) and the [Hibernate ORM](https://hibernate.org/orm/). The frontend is written in TypeScript with [Angular](https://angular.io/).
