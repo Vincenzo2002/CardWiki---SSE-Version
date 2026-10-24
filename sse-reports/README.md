@@ -39,5 +39,5 @@ optimization is developed on its own branch from `master`; its results accompany
 the pull request into `master`. Do not merge application optimizations into
 `baseline`.
 
-The final comparison will be summarized in the
-[main README](../README.md#tools-and-results).
+For the Git workflow, see the
+[main README](../README.md#branches-and-improvements).

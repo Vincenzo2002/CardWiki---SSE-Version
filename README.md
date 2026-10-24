@@ -104,35 +104,6 @@ same test on the current application. Submit the tests and results to `master`
 through a pull request. Do not merge `master` into `baseline`, as that would
 also bring optimizations into the reference application.
 
-### Tools and results
-
-| Tool | Sources or configuration | Results directory for each version |
-| --- | --- | --- |
-| JMH | [benchmarks/](benchmarks/README.md) | `jmh/` |
-| JMeter | Load test plans to be added when needed | `jmeter/` |
-| EnergiBridge | Measurement scripts to be added when needed | `energibridge/` |
-| Creedengo through SonarQube | Configuration to be added when used | `creedengo/` |
-| WebsiteCarbon | External frontend analysis | `websitecarbon/` |
-| EcoIndex | External frontend analysis | `ecoindex/` |
-| GreenIT-Analysis | Browser-based analysis | `greenit-analysis/` |
-| FOSSA | Configuration to be added when used | `fossa/` |
-| GUIDO | Project and collaboration analysis | `guido/` |
-
-Results directories are prepared for these tools; only JMH is currently
-configured. No SSE measurements have been archived yet.
-
-Save JSON, CSV, screenshots, and short notes in the tool's directory under
-`sse-reports/baseline/` or `sse-reports/sse-improvements/`. These paths identify
-the measured versions, not Git branches: results from improvements merged into
-`master` go under `sse-reports/sse-improvements/`.
-
-For each measurement, record the date, executed commit, command or procedure,
-environment, input data, and parameters. Use equivalent conditions when
-comparing versions. The final comparison will be summarized here with links
-to the results.
-
-See the [report guide](sse-reports/README.md) for storage examples.
-
 ## Contributing
 
 Issues and pull requests are welcome!
