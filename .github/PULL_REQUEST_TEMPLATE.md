@@ -34,7 +34,7 @@ Describe any measured changes in execution time, energy consumption, CPU usage, 
 
 - [ ] The code has been tested.
 - [ ] Existing functionality is preserved.
-- [ ] Relevant documentation has been updated.
+- [ ] Relevant documentation has been updated and is written in English.
 - [ ] No unnecessary changes have been introduced.
 - [ ] The related issue has been linked.
 

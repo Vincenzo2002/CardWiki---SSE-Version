@@ -1,7 +1,7 @@
-# Report SSE
+# SSE reports
 
-Le cartelle `baseline/` e `sse-improvements/` raccolgono i risultati prima e
-dopo le ottimizzazioni. Ciascuna contiene una cartella per tool:
+The `baseline/` and `sse-improvements/` directories store results before and
+after optimization. Each contains a directory for every tool:
 
 ```text
 baseline/                  sse-improvements/
@@ -16,21 +16,28 @@ baseline/                  sse-improvements/
   guido/                     guido/
 ```
 
-Salvare gli output originali e brevi note direttamente nella cartella del tool.
-Usare nomi distinti per le diverse esecuzioni, per esempio
-`baseline/jmh/2026-10-24-category-mapper.json` e una nota `.md` con lo stesso nome.
-Non sono ancora presenti misurazioni: i file `.gitkeep` servono soltanto a
-conservare le cartelle vuote in Git e possono essere rimossi quando arrivano
-i primi risultati.
+These names identify result sets, not Git branches. The permanent branches are
+`master` and `baseline`; measurements of improved versions on temporary branches
+or `master` are stored under `sse-improvements/`.
 
-Per ogni esecuzione annotare data, commit eseguito, versione del tool, comando
-o procedura, ambiente, dati e parametri. Usare gli stessi test e condizioni
-equivalenti sulle due versioni. Per un'analisi di un sito, annotare anche URL,
-pagina e versione effettivamente distribuita. Non sovrascrivere le misure
-precedenti e non interpretare un tempo inferiore come prova di minore energia
-senza una misura o una stima esplicitamente identificata.
+Save original outputs and short English notes directly in the tool's directory.
+Use distinct names for different runs, such as
+`baseline/jmh/2026-10-24-category-mapper.json` and a `.md` note with the same name.
+No measurements have been archived yet: `.gitkeep` files only preserve empty
+directories in Git and can be removed when the first results are added.
 
-I report della baseline possono essere aggiunti su `baseline` insieme ai test
-e poi integrati in `master` tramite un branch di lavoro. I risultati delle
-ottimizzazioni accompagnano la relativa pull request verso `master`.
-Il confronto finale verrà riassunto nel [README principale](../README.md#tool-e-risultati).
+For each run, record the date, executed commit, tool version, command or
+procedure, environment, input data, and parameters. Use the same tests and
+equivalent conditions for both versions. For a website analysis, also record
+the URL, page, and deployed application version. Do not overwrite earlier
+measurements or treat a shorter execution time as evidence of lower energy
+consumption without an energy measurement or an explicitly identified estimate.
+
+Baseline reports can be committed to `baseline` with the tests, then merged into
+a temporary branch from `master` and submitted through a pull request. Each
+optimization is developed on its own branch from `master`; its results accompany
+the pull request into `master`. Do not merge application optimizations into
+`baseline`.
+
+The final comparison will be summarized in the
+[main README](../README.md#tools-and-results).

@@ -69,6 +69,13 @@ Build them from the repository root with `mvn clean package` using JDK 11.
 The backend also produces a `plain` JAR for that module; JMH dependencies and
 benchmark sources stay outside the application module.
 
+For other backend analyses, save outputs in the tool's directory under
+`sse-reports/baseline/` or `sse-reports/sse-improvements/`, according to the
+application version measured. Follow the [report guide](../sse-reports/README.md)
+and the [branch workflow](../README.md#branches-and-improvements): each
+optimization is developed on a temporary branch from `master`, while `baseline`
+keeps the application without SSE optimizations.
+
 ## Deployment
 
 Configure `src/main/resources/application-prod.yml` and run it with `-Dspring-boot.run.profiles=prod`.

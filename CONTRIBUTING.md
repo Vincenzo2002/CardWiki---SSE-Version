@@ -1,7 +1,11 @@
 # Contributing to CardWiki
 
-Per branch, misurazioni e risultati SSE, seguire il
-[flusso nel README principale](README.md#branch-e-miglioramenti).
+Write all project documentation, README files, and measurement notes in English.
+
+For branches, SSE measurements, and results, follow the
+[workflow in the main README](README.md#branches-and-improvements). Create a
+temporary branch from `master` for each improvement and submit a pull request
+back to `master`. Keep application optimizations out of `baseline`.
 
 ## Backend
 

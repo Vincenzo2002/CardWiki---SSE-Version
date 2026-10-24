@@ -74,62 +74,64 @@ selection, and JSON results.
 
 ## Sustainable Software Engineering (SSE)
 
-Frontend, backend e strumenti di misura rimangono nella stessa repository:
+The frontend, backend, and measurement tools are maintained in one repository:
 
 ```text
-frontend/                  Applicazione Angular
-backend/                   Applicazione Spring Boot
-benchmarks/                Benchmark JMH già configurati
+frontend/                  Angular application
+backend/                   Spring Boot application
+benchmarks/                Configured JMH benchmarks
 sse-reports/
-  baseline/                Risultati prima delle ottimizzazioni
-  sse-improvements/        Risultati dopo le ottimizzazioni
+  baseline/                Results before optimization
+  sse-improvements/        Results after optimization
 ```
 
-### Branch e miglioramenti
+### Branches and improvements
 
-I branch permanenti sono `master` e `baseline`:
+The two permanent branches are `master` and `baseline`:
 
-* `baseline` conserva l'applicazione senza ottimizzazioni SSE. Può ricevere
-  nuovi test, strumenti di misura e risultati iniziali.
-* `master` raccoglie i miglioramenti accettati e i risultati dei confronti.
+* `baseline` preserves the application before SSE optimizations. New tests,
+  measurement tools, and baseline results can be added to this branch.
+* `master` contains accepted improvements and comparison results.
 
-Per ogni miglioramento creare un branch da `master`, per esempio
-`perf/category-query`. Dopo modifica, test e misurazione, aprire una pull request
-verso `master`. Eliminare il branch di lavoro dopo il merge.
-Non serve un branch permanente `sse-improvements`: il nome della cartella dei
-report identifica la versione misurata.
+For each improvement, create a temporary branch from `master`, such as
+`perf/category-query`. Implement the change, run the tests and measurements,
+and open a pull request into `master`. Delete the temporary branch after merging.
 
-Se manca un test, aggiungerlo a `baseline`, eseguirlo e salvarne il risultato
-in `sse-reports/baseline/`. Poi, da un branch di lavoro creato da `master`,
-integrare `baseline` con `git merge baseline`, controllare eventuali conflitti
-ed eseguire lo stesso test sulla versione corrente. Portare test e risultati
-in `master` tramite pull request. Evitare il merge di `master` in `baseline`,
-perché porterebbe anche le ottimizzazioni nella versione di riferimento.
+If a test is missing, add it to `baseline`, run it, and save the result under
+`sse-reports/baseline/`. Then create a temporary branch from `master`, merge
+`baseline` into it with `git merge baseline`, resolve any conflicts, and run the
+same test on the current application. Submit the tests and results to `master`
+through a pull request. Do not merge `master` into `baseline`, as that would
+also bring optimizations into the reference application.
 
-### Tool e risultati
+### Tools and results
 
-| Tool | Sorgenti o configurazioni | Cartella dei risultati per ciascuna versione |
+| Tool | Sources or configuration | Results directory for each version |
 | --- | --- | --- |
 | JMH | [benchmarks/](benchmarks/README.md) | `jmh/` |
-| JMeter | Piani di carico da aggiungere quando necessari | `jmeter/` |
-| EnergiBridge | Script di misura da aggiungere quando necessari | `energibridge/` |
-| Creedengo tramite SonarQube | Configurazione da aggiungere quando usato | `creedengo/` |
-| WebsiteCarbon | Analisi esterna del frontend | `websitecarbon/` |
-| EcoIndex | Analisi esterna del frontend | `ecoindex/` |
-| GreenIT-Analysis | Analisi nel browser | `greenit-analysis/` |
-| FOSSA | Configurazione da aggiungere quando usato | `fossa/` |
-| GUIDO | Analisi del progetto e della collaborazione | `guido/` |
+| JMeter | Load test plans to be added when needed | `jmeter/` |
+| EnergiBridge | Measurement scripts to be added when needed | `energibridge/` |
+| Creedengo through SonarQube | Configuration to be added when used | `creedengo/` |
+| WebsiteCarbon | External frontend analysis | `websitecarbon/` |
+| EcoIndex | External frontend analysis | `ecoindex/` |
+| GreenIT-Analysis | Browser-based analysis | `greenit-analysis/` |
+| FOSSA | Configuration to be added when used | `fossa/` |
+| GUIDO | Project and collaboration analysis | `guido/` |
 
-Le cartelle sono predisposte per questi strumenti; al momento è configurato
-soltanto JMH. Non sono ancora presenti misurazioni SSE archiviate.
+Results directories are prepared for these tools; only JMH is currently
+configured. No SSE measurements have been archived yet.
 
-Salvare JSON, CSV, screenshot e brevi note nella cartella del tool sotto
-`sse-reports/baseline/` oppure `sse-reports/sse-improvements/`.
-Per ogni misura annotare data, commit eseguito, comando o procedura, ambiente,
-dati e parametri usati. Usare condizioni equivalenti per confrontare le versioni.
-Il confronto finale verrà riassunto qui, con i collegamenti ai risultati.
+Save JSON, CSV, screenshots, and short notes in the tool's directory under
+`sse-reports/baseline/` or `sse-reports/sse-improvements/`. These paths identify
+the measured versions, not Git branches: results from improvements merged into
+`master` go under `sse-reports/sse-improvements/`.
 
-Vedere la [guida dei report](sse-reports/README.md) per esempi di archiviazione.
+For each measurement, record the date, executed commit, command or procedure,
+environment, input data, and parameters. Use equivalent conditions when
+comparing versions. The final comparison will be summarized here with links
+to the results.
+
+See the [report guide](sse-reports/README.md) for storage examples.
 
 ## Contributing
 

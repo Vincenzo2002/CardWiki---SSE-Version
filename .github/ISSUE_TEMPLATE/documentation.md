@@ -17,16 +17,6 @@ Describe the current state of the documentation and identify any missing, outdat
 
 **Proposed changes**
 
-**Describe the documentation task**
-
-A clear and concise description of the documentation that needs to be created, updated, or corrected.
-
-**Current documentation**
-
-Describe the current state of the documentation and identify any missing, outdated, or unclear information.
-
-**Proposed changes**
-
 A clear and concise description of the documentation changes you'd like to make.
 
 **Affected sections**
