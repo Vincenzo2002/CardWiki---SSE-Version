@@ -20,11 +20,12 @@ These names identify result sets, not Git branches. The permanent branches are
 `master` and `baseline`; measurements of improved versions on temporary branches
 or `master` are stored under `sse-improvements/`.
 
-Save original outputs and short English notes directly in the tool's directory.
-Use distinct names for different runs, such as
-`baseline/jmh/2026-10-24-category-mapper.json` and a `.md` note with the same name.
-No measurements have been archived yet: `.gitkeep` files only preserve empty
-directories in Git and can be removed when the first results are added.
+Save original outputs and short English notes in the tool's directory,
+optionally grouped by benchmark. For example, category mapper measurements
+are stored under `baseline/jmh/category-mapper/` and
+`sse-improvements/jmh/category-mapper/`. Use distinct filenames for different
+runs and include a Markdown note or comparison report. The `.gitkeep` files
+preserve otherwise empty directories in Git.
 
 For each run, record the date, executed commit, tool version, command or
 procedure, environment, input data, and parameters. Use the same tests and

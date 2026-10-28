@@ -35,6 +35,15 @@ If Maven succeeds but VS Code reports unresolved imports in
 This rebuilds the IDE's classes and diagnostics after Maven regenerates files.
 Do not edit generated mapper implementations directly.
 
+If Maven tests fail with `NoClassDefFoundError: LImageMapper;` in a generated
+`UserMapperImpl`, or JMH reports `Unresolved compilation problems`, the editor
+may have overwritten Maven's generated classes while the build was running.
+Disable **Java: Autobuild Enabled** in this workspace's VS Code settings
+(`"java.autobuild.enabled": false`), then rerun `mvn clean package` with JDK 11.
+This leaves compilation to Maven; do not force IDE compilation during the
+Maven build. If VS Code has not applied the setting, reload its window before
+rebuilding. Keep this preference in the local, ignored `.vscode/settings.json`.
+
 ## How to run it
 
 Run these commands from `backend/`.

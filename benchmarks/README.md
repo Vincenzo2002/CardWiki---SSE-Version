@@ -46,6 +46,12 @@ executable Spring Boot JAR, and `backend/target/backend-0.0.1-SNAPSHOT-plain.jar
 used as a dependency by JMH. The `plain` JAR exposes classes on the standard Java
 classpath; in the Spring Boot JAR, application classes are under `BOOT-INF/classes`.
 
+If JMH fails with `java.lang.Error: Unresolved compilation problems` in a
+generated mapper despite `BUILD SUCCESS`, the editor's automatic compiler may
+have overwritten Maven's output under `target` during the build. Close the
+editor and rebuild from an external terminal with JDK 11 before running JMH
+again. Do not edit generated mapper or JMH sources directly.
+
 ## Run
 
 List the available benchmarks:
@@ -93,6 +99,49 @@ lasting one second each, and 2 separate JVM forks for each list size.
 For new measurements, prepare inputs outside the measured method and return
 the result or consume it with `Blackhole`. Place benchmark-specific resources
 in this module's `src/main/resources/` directory.
+
+## Detailed category mapping
+
+`CategoryDetailedMapperBenchmark.mapCategoryDetails` measures
+`CategoryMapper.categoryToCategoryDetailedDto` on one category with **0, 10,
+100, or 1000 children**, selected by `childrenCount`. The parent, author,
+timestamps, and category ID and name remain fixed; the deck collection is
+always empty. All entities are prepared in memory in `@Setup`, without Spring
+or a database. Children are stored in the entity's default `HashSet`; the
+benchmark does not impose or measure sorting.
+
+One operation maps the entire category, including its children, to a detailed
+DTO. Results are **ns per detailed category conversion**, not per child. The
+configuration matches the simple mapper benchmark: 3 one-second warmup
+iterations, 5 one-second measurement iterations, and 2 JVM forks per input
+size. Across four input sizes, this is approximately 64 seconds plus startup
+and other overhead. Use the same benchmark on both application versions to
+evaluate changes to child mapping.
+
+After rebuilding from the repository root, check all four cases with a short
+smoke run (do not use these timings as report measurements):
+
+```sh
+mvn -pl benchmarks -am clean package -DskipTests
+java -jar benchmarks/target/benchmarks.jar 'CategoryDetailedMapperBenchmark.mapCategoryDetails' \
+  -wi 1 -i 1 -w 100ms -r 100ms -f 1 -t 1 -foe true
+```
+
+To measure the initial application version and preserve the results:
+
+```sh
+mkdir -p sse-reports/baseline/jmh/category-mapper
+java -jar benchmarks/target/benchmarks.jar 'CategoryDetailedMapperBenchmark.mapCategoryDetails' \
+  -t 1 -foe true -rf json \
+  -rff sse-reports/baseline/jmh/category-mapper/category-detailed-mapper-run01.json
+```
+
+Use a new filename for each run; an existing result file will be overwritten.
+For an optimized application version, use
+`sse-reports/sse-improvements/jmh/category-mapper/` instead. Compare the same
+detailed mapper benchmark before and after a change,
+separately for each `childrenCount`; its scores measure a different operation
+from `CategoryMapperBenchmark.mapCategories`.
 
 ## Store SSE results
 

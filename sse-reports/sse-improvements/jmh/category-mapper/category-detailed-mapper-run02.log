@@ -1,0 +1,183 @@
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.CategoryDetailedMapperBenchmark.mapCategoryDetails
+# Parameters: (childrenCount = 0)
+
+# Run progress: 0,00% complete, ETA 00:01:04
+# Fork: 1 of 2
+# Warmup Iteration   1: 13,266 ns/op
+# Warmup Iteration   2: 11,192 ns/op
+# Warmup Iteration   3: 11,136 ns/op
+Iteration   1: 11,137 ns/op
+Iteration   2: 11,147 ns/op
+Iteration   3: 11,099 ns/op
+Iteration   4: 11,136 ns/op
+Iteration   5: 11,447 ns/op
+
+# Run progress: 12,50% complete, ETA 00:00:57
+# Fork: 2 of 2
+# Warmup Iteration   1: 12,788 ns/op
+# Warmup Iteration   2: 11,189 ns/op
+# Warmup Iteration   3: 11,148 ns/op
+Iteration   1: 11,112 ns/op
+Iteration   2: 11,169 ns/op
+Iteration   3: 11,085 ns/op
+Iteration   4: 11,099 ns/op
+Iteration   5: 11,142 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.CategoryDetailedMapperBenchmark.mapCategoryDetails":
+  11,157 ±(99.9%) 0,159 ns/op [Average]
+  (min, avg, max) = (11,085, 11,157, 11,447), stdev = 0,105
+  CI (99.9%): [10,999, 11,316] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.CategoryDetailedMapperBenchmark.mapCategoryDetails
+# Parameters: (childrenCount = 10)
+
+# Run progress: 25,00% complete, ETA 00:00:49
+# Fork: 1 of 2
+# Warmup Iteration   1: 45,171 ns/op
+# Warmup Iteration   2: 40,143 ns/op
+# Warmup Iteration   3: 40,227 ns/op
+Iteration   1: 40,125 ns/op
+Iteration   2: 40,131 ns/op
+Iteration   3: 40,523 ns/op
+Iteration   4: 40,198 ns/op
+Iteration   5: 40,065 ns/op
+
+# Run progress: 37,50% complete, ETA 00:00:40
+# Fork: 2 of 2
+# Warmup Iteration   1: 44,838 ns/op
+# Warmup Iteration   2: 40,183 ns/op
+# Warmup Iteration   3: 40,315 ns/op
+Iteration   1: 40,487 ns/op
+Iteration   2: 39,951 ns/op
+Iteration   3: 39,916 ns/op
+Iteration   4: 39,914 ns/op
+Iteration   5: 40,031 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.CategoryDetailedMapperBenchmark.mapCategoryDetails":
+  40,134 ±(99.9%) 0,328 ns/op [Average]
+  (min, avg, max) = (39,914, 40,134, 40,523), stdev = 0,217
+  CI (99.9%): [39,806, 40,463] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.CategoryDetailedMapperBenchmark.mapCategoryDetails
+# Parameters: (childrenCount = 100)
+
+# Run progress: 50,00% complete, ETA 00:00:32
+# Fork: 1 of 2
+# Warmup Iteration   1: 339,930 ns/op
+# Warmup Iteration   2: 306,275 ns/op
+# Warmup Iteration   3: 305,782 ns/op
+Iteration   1: 308,722 ns/op
+Iteration   2: 307,588 ns/op
+Iteration   3: 309,257 ns/op
+Iteration   4: 310,117 ns/op
+Iteration   5: 311,548 ns/op
+
+# Run progress: 62,50% complete, ETA 00:00:24
+# Fork: 2 of 2
+# Warmup Iteration   1: 364,628 ns/op
+# Warmup Iteration   2: 314,815 ns/op
+# Warmup Iteration   3: 322,424 ns/op
+Iteration   1: 313,305 ns/op
+Iteration   2: 313,438 ns/op
+Iteration   3: 322,473 ns/op
+Iteration   4: 314,150 ns/op
+Iteration   5: 323,204 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.CategoryDetailedMapperBenchmark.mapCategoryDetails":
+  313,380 ±(99.9%) 8,220 ns/op [Average]
+  (min, avg, max) = (307,588, 313,380, 323,204), stdev = 5,437
+  CI (99.9%): [305,160, 321,600] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.CategoryDetailedMapperBenchmark.mapCategoryDetails
+# Parameters: (childrenCount = 1000)
+
+# Run progress: 75,00% complete, ETA 00:00:16
+# Fork: 1 of 2
+# Warmup Iteration   1: 7803,554 ns/op
+# Warmup Iteration   2: 7078,955 ns/op
+# Warmup Iteration   3: 7228,736 ns/op
+Iteration   1: 7242,337 ns/op
+Iteration   2: 7054,378 ns/op
+Iteration   3: 7076,872 ns/op
+Iteration   4: 7258,097 ns/op
+Iteration   5: 7246,143 ns/op
+
+# Run progress: 87,50% complete, ETA 00:00:08
+# Fork: 2 of 2
+# Warmup Iteration   1: 7508,592 ns/op
+# Warmup Iteration   2: 7149,876 ns/op
+# Warmup Iteration   3: 7463,651 ns/op
+Iteration   1: 7362,516 ns/op
+Iteration   2: 7300,242 ns/op
+Iteration   3: 7102,916 ns/op
+Iteration   4: 7074,538 ns/op
+Iteration   5: 7262,093 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.CategoryDetailedMapperBenchmark.mapCategoryDetails":
+  7198,013 ±(99.9%) 166,461 ns/op [Average]
+  (min, avg, max) = (7054,378, 7198,013, 7362,516), stdev = 110,104
+  CI (99.9%): [7031,552, 7364,474] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:01:05
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                                           (childrenCount)  Mode  Cnt     Score     Error  Units
+CategoryDetailedMapperBenchmark.mapCategoryDetails                0  avgt   10    11,157 ±   0,159  ns/op
+CategoryDetailedMapperBenchmark.mapCategoryDetails               10  avgt   10    40,134 ±   0,328  ns/op
+CategoryDetailedMapperBenchmark.mapCategoryDetails              100  avgt   10   313,380 ±   8,220  ns/op
+CategoryDetailedMapperBenchmark.mapCategoryDetails             1000  avgt   10  7198,013 ± 166,461  ns/op
+
+Benchmark result is saved to sse-reports/sse-improvements/jmh/category-detailed-mapper-run02.json
