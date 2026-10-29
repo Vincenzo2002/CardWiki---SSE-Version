@@ -147,13 +147,3 @@ JDK setup and further commands.
 Removing the temporary list reduced detailed category mapping time for our
 test inputs. The improvement appeared in both repeated runs, while the simple
 mapping path stayed compatible with unchanged performance.
-
-These results concern one in-memory operation on one machine. They do not
-show how much faster the full application becomes, and they do not measure
-memory allocation or energy consumption. Background workload and power
-conditions were not recorded, and we did not alternate the two versions
-between measurements.
-
-The base checkout was `7f3462b10b868990cb518d2448826aff041101b9`; the optimization
-was a local change when measured. The JSON files do not record the exact source
-commit or JAR identity, which limits independent reproduction of these runs.
