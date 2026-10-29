@@ -186,6 +186,73 @@ rebuild and save new measurements under
 `sse-reports/sse-improvements/jmh/simple-image-service/`. Results are in
 **ns per single 32-byte conversion**, rather than per image upload.
 
+## Saving learning attempts
+
+`SimpleLearnServiceBenchmark.saveAttempt` calls the real
+`SimpleLearnService.saveAttempt` method without Spring or a database. One
+operation resets the fixture, processes one answer, and returns the `Progress`
+passed to the simulated repository's `saveAndFlush` method.
+
+The benchmark covers nine combinations:
+
+| Parameter | Values |
+| --- | --- |
+| `progressState` | `NEW`, `LEARNING`, `REVIEWING` |
+| `answer` | `AGAIN`, `GOOD`, `EASY` |
+
+`NEW` simulates an absent progress record on every invocation. Existing
+learning progress starts at interval 10, while reviewing progress starts at
+interval 4; both have easiness factor 2.5. The user ID is 1, the card ID is 7,
+and `reverse` is false. The learning case exercises the graduation threshold
+for a `GOOD` answer; it does not cover every learning interval.
+
+The service mutates existing progress, so its status, interval, easiness factor,
+and due date are reset inside each measured operation. Without this reset,
+repeated answers would change the scenario and could grow review intervals.
+The reset cost is included in the result. A `NEW` case remains absent on the
+next call; this intentionally simulates independent first attempts rather
+than a persistent sequence of attempts.
+
+Small JDK dynamic proxies simulate the current user and progress repository.
+They return a prepared user and lookup result, capture only the latest saved
+progress, and do not record invocation history. Proxy calls, fixture reset,
+entity construction, scheduling calculations, and `LocalDateTime.now()` are
+part of the measured operation. Debug logging is disabled for this service
+in the benchmark JVM. Actual authentication, SQL, flushing, transactions,
+network calls, and HTTP handling are not measured.
+
+With JDK 11 selected, rebuild and check all nine cases from the repository root:
+
+```sh
+mvn clean package
+java -jar benchmarks/target/benchmarks.jar 'SimpleLearnServiceBenchmark.saveAttempt' \
+  -wi 1 -i 1 -w 100ms -r 100ms -f 1 -t 1 -foe true
+```
+
+This short run only checks execution. For baseline measurements, keep the
+production implementation unchanged and use the default configuration:
+
+```sh
+mkdir -p sse-reports/baseline/jmh/simple-learn-service
+set -o pipefail
+java -jar benchmarks/target/benchmarks.jar 'SimpleLearnServiceBenchmark.saveAttempt' \
+  -t 1 -foe true -rf json \
+  -rff sse-reports/baseline/jmh/simple-learn-service/save-attempt-run01.json \
+  2>&1 | tee sse-reports/baseline/jmh/simple-learn-service/save-attempt-run01.log
+```
+
+Repeat with `run02` in both output filenames. Each complete run takes about
+three minutes: nine cases, two JVM forks per case, three one-second warmup
+iterations, and five one-second measurement iterations per fork.
+
+After any production change, rebuild and save measurements under
+`sse-reports/sse-improvements/jmh/simple-learn-service/`. Keep this benchmark
+unchanged and compare the same parameter combination before and after.
+Scores are **ns per in-memory attempt with fixture reset**, not per database
+write or API request. A small source-level optimization may not produce a
+clear timing improvement: the JVM may already eliminate unnecessary work,
+and the clock, proxy calls, and reset also contribute to the score.
+
 ## Store SSE results
 
 Copy outputs out of `target/` before running `mvn clean`, which deletes them.

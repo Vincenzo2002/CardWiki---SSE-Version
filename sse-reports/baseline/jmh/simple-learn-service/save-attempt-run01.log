@@ -1,0 +1,398 @@
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt
+# Parameters: (answer = AGAIN, progressState = NEW)
+
+# Run progress: 0,00% complete, ETA 00:02:24
+# Fork: 1 of 2
+# Warmup Iteration   1: 115,224 ns/op
+# Warmup Iteration   2: 100,981 ns/op
+# Warmup Iteration   3: 100,700 ns/op
+Iteration   1: 100,097 ns/op
+Iteration   2: 100,163 ns/op
+Iteration   3: 100,109 ns/op
+Iteration   4: 100,052 ns/op
+Iteration   5: 100,909 ns/op
+
+# Run progress: 5,56% complete, ETA 00:02:20
+# Fork: 2 of 2
+# Warmup Iteration   1: 111,412 ns/op
+# Warmup Iteration   2: 100,154 ns/op
+# Warmup Iteration   3: 100,543 ns/op
+Iteration   1: 99,684 ns/op
+Iteration   2: 100,517 ns/op
+Iteration   3: 100,087 ns/op
+Iteration   4: 100,797 ns/op
+Iteration   5: 102,349 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt":
+  100,477 ±(99.9%) 1,142 ns/op [Average]
+  (min, avg, max) = (99,684, 100,477, 102,349), stdev = 0,755
+  CI (99.9%): [99,335, 101,618] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt
+# Parameters: (answer = AGAIN, progressState = LEARNING)
+
+# Run progress: 11,11% complete, ETA 00:02:11
+# Fork: 1 of 2
+# Warmup Iteration   1: 124,240 ns/op
+# Warmup Iteration   2: 109,015 ns/op
+# Warmup Iteration   3: 107,880 ns/op
+Iteration   1: 108,609 ns/op
+Iteration   2: 107,949 ns/op
+Iteration   3: 109,127 ns/op
+Iteration   4: 108,693 ns/op
+Iteration   5: 108,894 ns/op
+
+# Run progress: 16,67% complete, ETA 00:02:03
+# Fork: 2 of 2
+# Warmup Iteration   1: 118,480 ns/op
+# Warmup Iteration   2: 109,194 ns/op
+# Warmup Iteration   3: 107,744 ns/op
+Iteration   1: 106,639 ns/op
+Iteration   2: 109,511 ns/op
+Iteration   3: 107,442 ns/op
+Iteration   4: 107,105 ns/op
+Iteration   5: 108,151 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt":
+  108,212 ±(99.9%) 1,402 ns/op [Average]
+  (min, avg, max) = (106,639, 108,212, 109,511), stdev = 0,928
+  CI (99.9%): [106,810, 109,614] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt
+# Parameters: (answer = AGAIN, progressState = REVIEWING)
+
+# Run progress: 22,22% complete, ETA 00:01:55
+# Fork: 1 of 2
+# Warmup Iteration   1: 108,039 ns/op
+# Warmup Iteration   2: 98,351 ns/op
+# Warmup Iteration   3: 97,056 ns/op
+Iteration   1: 96,360 ns/op
+Iteration   2: 97,745 ns/op
+Iteration   3: 97,224 ns/op
+Iteration   4: 97,004 ns/op
+Iteration   5: 97,369 ns/op
+
+# Run progress: 27,78% complete, ETA 00:01:46
+# Fork: 2 of 2
+# Warmup Iteration   1: 113,166 ns/op
+# Warmup Iteration   2: 101,466 ns/op
+# Warmup Iteration   3: 99,942 ns/op
+Iteration   1: 100,419 ns/op
+Iteration   2: 99,514 ns/op
+Iteration   3: 99,428 ns/op
+Iteration   4: 100,780 ns/op
+Iteration   5: 99,576 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt":
+  98,542 ±(99.9%) 2,375 ns/op [Average]
+  (min, avg, max) = (96,360, 98,542, 100,780), stdev = 1,571
+  CI (99.9%): [96,167, 100,917] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt
+# Parameters: (answer = GOOD, progressState = NEW)
+
+# Run progress: 33,33% complete, ETA 00:01:38
+# Fork: 1 of 2
+# Warmup Iteration   1: 121,222 ns/op
+# Warmup Iteration   2: 110,811 ns/op
+# Warmup Iteration   3: 107,520 ns/op
+Iteration   1: 110,051 ns/op
+Iteration   2: 107,079 ns/op
+Iteration   3: 107,899 ns/op
+Iteration   4: 106,739 ns/op
+Iteration   5: 107,502 ns/op
+
+# Run progress: 38,89% complete, ETA 00:01:30
+# Fork: 2 of 2
+# Warmup Iteration   1: 121,538 ns/op
+# Warmup Iteration   2: 109,474 ns/op
+# Warmup Iteration   3: 108,278 ns/op
+Iteration   1: 107,853 ns/op
+Iteration   2: 108,508 ns/op
+Iteration   3: 107,579 ns/op
+Iteration   4: 107,561 ns/op
+Iteration   5: 110,036 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt":
+  108,081 ±(99.9%) 1,719 ns/op [Average]
+  (min, avg, max) = (106,739, 108,081, 110,051), stdev = 1,137
+  CI (99.9%): [106,362, 109,800] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt
+# Parameters: (answer = GOOD, progressState = LEARNING)
+
+# Run progress: 44,44% complete, ETA 00:01:22
+# Fork: 1 of 2
+# Warmup Iteration   1: 105,937 ns/op
+# Warmup Iteration   2: 97,578 ns/op
+# Warmup Iteration   3: 96,497 ns/op
+Iteration   1: 96,503 ns/op
+Iteration   2: 96,400 ns/op
+Iteration   3: 96,718 ns/op
+Iteration   4: 97,381 ns/op
+Iteration   5: 96,779 ns/op
+
+# Run progress: 50,00% complete, ETA 00:01:14
+# Fork: 2 of 2
+# Warmup Iteration   1: 105,737 ns/op
+# Warmup Iteration   2: 96,393 ns/op
+# Warmup Iteration   3: 95,911 ns/op
+Iteration   1: 98,852 ns/op
+Iteration   2: 96,023 ns/op
+Iteration   3: 96,300 ns/op
+Iteration   4: 96,191 ns/op
+Iteration   5: 95,962 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt":
+  96,711 ±(99.9%) 1,300 ns/op [Average]
+  (min, avg, max) = (95,962, 96,711, 98,852), stdev = 0,860
+  CI (99.9%): [95,411, 98,010] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt
+# Parameters: (answer = GOOD, progressState = REVIEWING)
+
+# Run progress: 55,56% complete, ETA 00:01:05
+# Fork: 1 of 2
+# Warmup Iteration   1: 106,443 ns/op
+# Warmup Iteration   2: 97,602 ns/op
+# Warmup Iteration   3: 97,450 ns/op
+Iteration   1: 97,901 ns/op
+Iteration   2: 97,419 ns/op
+Iteration   3: 98,316 ns/op
+Iteration   4: 97,141 ns/op
+Iteration   5: 98,698 ns/op
+
+# Run progress: 61,11% complete, ETA 00:00:57
+# Fork: 2 of 2
+# Warmup Iteration   1: 115,649 ns/op
+# Warmup Iteration   2: 107,792 ns/op
+# Warmup Iteration   3: 105,025 ns/op
+Iteration   1: 104,478 ns/op
+Iteration   2: 104,130 ns/op
+Iteration   3: 103,466 ns/op
+Iteration   4: 103,966 ns/op
+Iteration   5: 104,579 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt":
+  101,009 ±(99.9%) 5,025 ns/op [Average]
+  (min, avg, max) = (97,141, 101,009, 104,579), stdev = 3,323
+  CI (99.9%): [95,985, 106,034] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt
+# Parameters: (answer = EASY, progressState = NEW)
+
+# Run progress: 66,67% complete, ETA 00:00:49
+# Fork: 1 of 2
+# Warmup Iteration   1: 107,690 ns/op
+# Warmup Iteration   2: 97,496 ns/op
+# Warmup Iteration   3: 96,620 ns/op
+Iteration   1: 96,731 ns/op
+Iteration   2: 99,608 ns/op
+Iteration   3: 97,588 ns/op
+Iteration   4: 97,622 ns/op
+Iteration   5: 97,692 ns/op
+
+# Run progress: 72,22% complete, ETA 00:00:41
+# Fork: 2 of 2
+# Warmup Iteration   1: 106,820 ns/op
+# Warmup Iteration   2: 97,143 ns/op
+# Warmup Iteration   3: 95,743 ns/op
+Iteration   1: 95,964 ns/op
+Iteration   2: 95,997 ns/op
+Iteration   3: 96,235 ns/op
+Iteration   4: 95,890 ns/op
+Iteration   5: 95,904 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt":
+  96,923 ±(99.9%) 1,826 ns/op [Average]
+  (min, avg, max) = (95,890, 96,923, 99,608), stdev = 1,208
+  CI (99.9%): [95,097, 98,749] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt
+# Parameters: (answer = EASY, progressState = LEARNING)
+
+# Run progress: 77,78% complete, ETA 00:00:32
+# Fork: 1 of 2
+# Warmup Iteration   1: 107,104 ns/op
+# Warmup Iteration   2: 95,989 ns/op
+# Warmup Iteration   3: 95,695 ns/op
+Iteration   1: 95,677 ns/op
+Iteration   2: 95,266 ns/op
+Iteration   3: 95,553 ns/op
+Iteration   4: 96,151 ns/op
+Iteration   5: 95,923 ns/op
+
+# Run progress: 83,33% complete, ETA 00:00:24
+# Fork: 2 of 2
+# Warmup Iteration   1: 104,794 ns/op
+# Warmup Iteration   2: 96,610 ns/op
+# Warmup Iteration   3: 95,769 ns/op
+Iteration   1: 95,957 ns/op
+Iteration   2: 98,585 ns/op
+Iteration   3: 95,569 ns/op
+Iteration   4: 95,792 ns/op
+Iteration   5: 95,691 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt":
+  96,016 ±(99.9%) 1,415 ns/op [Average]
+  (min, avg, max) = (95,266, 96,016, 98,585), stdev = 0,936
+  CI (99.9%): [94,602, 97,431] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt
+# Parameters: (answer = EASY, progressState = REVIEWING)
+
+# Run progress: 88,89% complete, ETA 00:00:16
+# Fork: 1 of 2
+# Warmup Iteration   1: 111,913 ns/op
+# Warmup Iteration   2: 103,239 ns/op
+# Warmup Iteration   3: 103,774 ns/op
+Iteration   1: 103,653 ns/op
+Iteration   2: 102,760 ns/op
+Iteration   3: 103,245 ns/op
+Iteration   4: 103,293 ns/op
+Iteration   5: 103,010 ns/op
+
+# Run progress: 94,44% complete, ETA 00:00:08
+# Fork: 2 of 2
+# Warmup Iteration   1: 110,909 ns/op
+# Warmup Iteration   2: 105,140 ns/op
+# Warmup Iteration   3: 102,958 ns/op
+Iteration   1: 102,794 ns/op
+Iteration   2: 102,208 ns/op
+Iteration   3: 101,992 ns/op
+Iteration   4: 102,550 ns/op
+Iteration   5: 102,503 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleLearnServiceBenchmark.saveAttempt":
+  102,801 ±(99.9%) 0,776 ns/op [Average]
+  (min, avg, max) = (101,992, 102,801, 103,653), stdev = 0,513
+  CI (99.9%): [102,025, 103,576] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:02:27
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                                (answer)  (progressState)  Mode  Cnt    Score   Error  Units
+SimpleLearnServiceBenchmark.saveAttempt     AGAIN              NEW  avgt   10  100,477 ± 1,142  ns/op
+SimpleLearnServiceBenchmark.saveAttempt     AGAIN         LEARNING  avgt   10  108,212 ± 1,402  ns/op
+SimpleLearnServiceBenchmark.saveAttempt     AGAIN        REVIEWING  avgt   10   98,542 ± 2,375  ns/op
+SimpleLearnServiceBenchmark.saveAttempt      GOOD              NEW  avgt   10  108,081 ± 1,719  ns/op
+SimpleLearnServiceBenchmark.saveAttempt      GOOD         LEARNING  avgt   10   96,711 ± 1,300  ns/op
+SimpleLearnServiceBenchmark.saveAttempt      GOOD        REVIEWING  avgt   10  101,009 ± 5,025  ns/op
+SimpleLearnServiceBenchmark.saveAttempt      EASY              NEW  avgt   10   96,923 ± 1,826  ns/op
+SimpleLearnServiceBenchmark.saveAttempt      EASY         LEARNING  avgt   10   96,016 ± 1,415  ns/op
+SimpleLearnServiceBenchmark.saveAttempt      EASY        REVIEWING  avgt   10  102,801 ± 0,776  ns/op
+
+Benchmark result is saved to sse-reports/baseline/jmh/simple-learn-service/save-attempt-run01.json
