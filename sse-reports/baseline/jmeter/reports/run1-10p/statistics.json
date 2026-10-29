@@ -1,0 +1,50 @@
+{
+  "Open Deck" : {
+    "transaction" : "Open Deck",
+    "sampleCount" : 100,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 1.3800000000000001,
+    "medianResTime" : 1.0,
+    "minResTime" : 0.0,
+    "maxResTime" : 6.0,
+    "pct1ResTime" : 2.9000000000000057,
+    "pct2ResTime" : 3.0,
+    "pct3ResTime" : 5.989999999999995,
+    "throughput" : 5.54385186827808,
+    "receivedKBytesPerSec" : 3.6164971171970284,
+    "sentKBytesPerSec" : 0.7200510727353365
+  },
+  "Search Deck" : {
+    "transaction" : "Search Deck",
+    "sampleCount" : 100,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 3.5900000000000007,
+    "medianResTime" : 2.0,
+    "minResTime" : 1.0,
+    "maxResTime" : 23.0,
+    "pct1ResTime" : 9.700000000000017,
+    "pct2ResTime" : 12.949999999999989,
+    "pct3ResTime" : 22.929999999999964,
+    "throughput" : 5.537098560354375,
+    "receivedKBytesPerSec" : 5.33702761627907,
+    "sentKBytesPerSec" : 0.865171650055371
+  },
+  "Total" : {
+    "transaction" : "Total",
+    "sampleCount" : 200,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 2.4850000000000008,
+    "medianResTime" : 2.0,
+    "minResTime" : 0.0,
+    "maxResTime" : 23.0,
+    "pct1ResTime" : 5.0,
+    "pct2ResTime" : 9.849999999999966,
+    "pct3ResTime" : 15.990000000000009,
+    "throughput" : 11.073583965450418,
+    "receivedKBytesPerSec" : 8.948623761142795,
+    "sentKBytesPerSec" : 1.5842578622446155
+  }
+}
