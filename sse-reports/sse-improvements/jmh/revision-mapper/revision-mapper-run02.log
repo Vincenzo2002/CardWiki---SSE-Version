@@ -1,0 +1,398 @@
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions
+# Parameters: (imagesPerRevision = 0, size = 10)
+
+# Run progress: 0,00% complete, ETA 00:02:24
+# Fork: 1 of 2
+# Warmup Iteration   1: 82,091 ns/op
+# Warmup Iteration   2: 76,933 ns/op
+# Warmup Iteration   3: 72,103 ns/op
+Iteration   1: 73,126 ns/op
+Iteration   2: 77,512 ns/op
+Iteration   3: 72,299 ns/op
+Iteration   4: 73,063 ns/op
+Iteration   5: 72,667 ns/op
+
+# Run progress: 5,56% complete, ETA 00:02:19
+# Fork: 2 of 2
+# Warmup Iteration   1: 81,541 ns/op
+# Warmup Iteration   2: 77,020 ns/op
+# Warmup Iteration   3: 72,612 ns/op
+Iteration   1: 72,653 ns/op
+Iteration   2: 73,078 ns/op
+Iteration   3: 72,799 ns/op
+Iteration   4: 71,971 ns/op
+Iteration   5: 71,988 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions":
+  73,116 ±(99.9%) 2,422 ns/op [Average]
+  (min, avg, max) = (71,971, 73,116, 77,512), stdev = 1,602
+  CI (99.9%): [70,694, 75,537] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions
+# Parameters: (imagesPerRevision = 0, size = 100)
+
+# Run progress: 11,11% complete, ETA 00:02:10
+# Fork: 1 of 2
+# Warmup Iteration   1: 745,508 ns/op
+# Warmup Iteration   2: 690,774 ns/op
+# Warmup Iteration   3: 684,430 ns/op
+Iteration   1: 684,789 ns/op
+Iteration   2: 688,851 ns/op
+Iteration   3: 686,596 ns/op
+Iteration   4: 684,287 ns/op
+Iteration   5: 683,870 ns/op
+
+# Run progress: 16,67% complete, ETA 00:02:02
+# Fork: 2 of 2
+# Warmup Iteration   1: 757,644 ns/op
+# Warmup Iteration   2: 684,963 ns/op
+# Warmup Iteration   3: 686,491 ns/op
+Iteration   1: 684,690 ns/op
+Iteration   2: 686,527 ns/op
+Iteration   3: 687,694 ns/op
+Iteration   4: 686,854 ns/op
+Iteration   5: 685,529 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions":
+  685,969 ±(99.9%) 2,429 ns/op [Average]
+  (min, avg, max) = (683,870, 685,969, 688,851), stdev = 1,606
+  CI (99.9%): [683,540, 688,397] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions
+# Parameters: (imagesPerRevision = 0, size = 1000)
+
+# Run progress: 22,22% complete, ETA 00:01:54
+# Fork: 1 of 2
+# Warmup Iteration   1: 7435,128 ns/op
+# Warmup Iteration   2: 7110,759 ns/op
+# Warmup Iteration   3: 7369,568 ns/op
+Iteration   1: 7328,253 ns/op
+Iteration   2: 7347,184 ns/op
+Iteration   3: 7353,422 ns/op
+Iteration   4: 7316,462 ns/op
+Iteration   5: 7357,449 ns/op
+
+# Run progress: 27,78% complete, ETA 00:01:46
+# Fork: 2 of 2
+# Warmup Iteration   1: 7368,195 ns/op
+# Warmup Iteration   2: 7080,840 ns/op
+# Warmup Iteration   3: 7315,014 ns/op
+Iteration   1: 7305,262 ns/op
+Iteration   2: 7353,911 ns/op
+Iteration   3: 7317,379 ns/op
+Iteration   4: 7313,250 ns/op
+Iteration   5: 7309,031 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions":
+  7330,160 ±(99.9%) 31,256 ns/op [Average]
+  (min, avg, max) = (7305,262, 7330,160, 7357,449), stdev = 20,674
+  CI (99.9%): [7298,905, 7361,416] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions
+# Parameters: (imagesPerRevision = 1, size = 10)
+
+# Run progress: 33,33% complete, ETA 00:01:38
+# Fork: 1 of 2
+# Warmup Iteration   1: 952,679 ns/op
+# Warmup Iteration   2: 853,102 ns/op
+# Warmup Iteration   3: 848,394 ns/op
+Iteration   1: 850,698 ns/op
+Iteration   2: 850,407 ns/op
+Iteration   3: 850,029 ns/op
+Iteration   4: 850,579 ns/op
+Iteration   5: 847,742 ns/op
+
+# Run progress: 38,89% complete, ETA 00:01:30
+# Fork: 2 of 2
+# Warmup Iteration   1: 893,191 ns/op
+# Warmup Iteration   2: 859,610 ns/op
+# Warmup Iteration   3: 853,342 ns/op
+Iteration   1: 853,465 ns/op
+Iteration   2: 863,376 ns/op
+Iteration   3: 854,944 ns/op
+Iteration   4: 865,846 ns/op
+Iteration   5: 852,098 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions":
+  853,918 ±(99.9%) 9,063 ns/op [Average]
+  (min, avg, max) = (847,742, 853,918, 865,846), stdev = 5,995
+  CI (99.9%): [844,855, 862,981] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions
+# Parameters: (imagesPerRevision = 1, size = 100)
+
+# Run progress: 44,44% complete, ETA 00:01:21
+# Fork: 1 of 2
+# Warmup Iteration   1: 8774,054 ns/op
+# Warmup Iteration   2: 8365,358 ns/op
+# Warmup Iteration   3: 8323,058 ns/op
+Iteration   1: 8313,982 ns/op
+Iteration   2: 8350,963 ns/op
+Iteration   3: 8339,424 ns/op
+Iteration   4: 8443,233 ns/op
+Iteration   5: 8417,263 ns/op
+
+# Run progress: 50,00% complete, ETA 00:01:13
+# Fork: 2 of 2
+# Warmup Iteration   1: 8720,025 ns/op
+# Warmup Iteration   2: 8426,404 ns/op
+# Warmup Iteration   3: 8315,009 ns/op
+Iteration   1: 8307,733 ns/op
+Iteration   2: 8481,515 ns/op
+Iteration   3: 8338,198 ns/op
+Iteration   4: 8330,885 ns/op
+Iteration   5: 8313,350 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions":
+  8363,655 ±(99.9%) 92,504 ns/op [Average]
+  (min, avg, max) = (8307,733, 8363,655, 8481,515), stdev = 61,185
+  CI (99.9%): [8271,151, 8456,158] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions
+# Parameters: (imagesPerRevision = 1, size = 1000)
+
+# Run progress: 55,56% complete, ETA 00:01:05
+# Fork: 1 of 2
+# Warmup Iteration   1: 84805,368 ns/op
+# Warmup Iteration   2: 77347,326 ns/op
+# Warmup Iteration   3: 71688,359 ns/op
+Iteration   1: 71807,063 ns/op
+Iteration   2: 71418,462 ns/op
+Iteration   3: 71257,025 ns/op
+Iteration   4: 70849,198 ns/op
+Iteration   5: 71202,247 ns/op
+
+# Run progress: 61,11% complete, ETA 00:00:57
+# Fork: 2 of 2
+# Warmup Iteration   1: 74307,750 ns/op
+# Warmup Iteration   2: 73292,791 ns/op
+# Warmup Iteration   3: 74166,199 ns/op
+Iteration   1: 72177,992 ns/op
+Iteration   2: 71930,066 ns/op
+Iteration   3: 72291,933 ns/op
+Iteration   4: 71890,312 ns/op
+Iteration   5: 71766,753 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions":
+  71659,105 ±(99.9%) 697,263 ns/op [Average]
+  (min, avg, max) = (70849,198, 71659,105, 72291,933), stdev = 461,196
+  CI (99.9%): [70961,842, 72356,368] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions
+# Parameters: (imagesPerRevision = 2, size = 10)
+
+# Run progress: 66,67% complete, ETA 00:00:49
+# Fork: 1 of 2
+# Warmup Iteration   1: 1822,338 ns/op
+# Warmup Iteration   2: 1792,282 ns/op
+# Warmup Iteration   3: 1789,172 ns/op
+Iteration   1: 1782,162 ns/op
+Iteration   2: 1780,991 ns/op
+Iteration   3: 1784,601 ns/op
+Iteration   4: 1782,596 ns/op
+Iteration   5: 1789,809 ns/op
+
+# Run progress: 72,22% complete, ETA 00:00:40
+# Fork: 2 of 2
+# Warmup Iteration   1: 1811,374 ns/op
+# Warmup Iteration   2: 1784,813 ns/op
+# Warmup Iteration   3: 1770,517 ns/op
+Iteration   1: 1775,215 ns/op
+Iteration   2: 1781,250 ns/op
+Iteration   3: 1772,880 ns/op
+Iteration   4: 1776,343 ns/op
+Iteration   5: 1769,279 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions":
+  1779,512 ±(99.9%) 9,167 ns/op [Average]
+  (min, avg, max) = (1769,279, 1779,512, 1789,809), stdev = 6,063
+  CI (99.9%): [1770,345, 1788,679] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions
+# Parameters: (imagesPerRevision = 2, size = 100)
+
+# Run progress: 77,78% complete, ETA 00:00:32
+# Fork: 1 of 2
+# Warmup Iteration   1: 18599,441 ns/op
+# Warmup Iteration   2: 18074,424 ns/op
+# Warmup Iteration   3: 17858,377 ns/op
+Iteration   1: 17865,804 ns/op
+Iteration   2: 17880,119 ns/op
+Iteration   3: 17947,850 ns/op
+Iteration   4: 17861,349 ns/op
+Iteration   5: 17857,608 ns/op
+
+# Run progress: 83,33% complete, ETA 00:00:24
+# Fork: 2 of 2
+# Warmup Iteration   1: 18542,132 ns/op
+# Warmup Iteration   2: 17969,243 ns/op
+# Warmup Iteration   3: 17812,956 ns/op
+Iteration   1: 17784,707 ns/op
+Iteration   2: 17782,462 ns/op
+Iteration   3: 17837,687 ns/op
+Iteration   4: 17799,487 ns/op
+Iteration   5: 17803,508 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions":
+  17842,058 ±(99.9%) 78,034 ns/op [Average]
+  (min, avg, max) = (17782,462, 17842,058, 17947,850), stdev = 51,615
+  CI (99.9%): [17764,024, 17920,092] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions
+# Parameters: (imagesPerRevision = 2, size = 1000)
+
+# Run progress: 88,89% complete, ETA 00:00:16
+# Fork: 1 of 2
+# Warmup Iteration   1: 145610,095 ns/op
+# Warmup Iteration   2: 134786,292 ns/op
+# Warmup Iteration   3: 134902,776 ns/op
+Iteration   1: 134728,346 ns/op
+Iteration   2: 135445,697 ns/op
+Iteration   3: 134828,982 ns/op
+Iteration   4: 135009,822 ns/op
+Iteration   5: 134795,807 ns/op
+
+# Run progress: 94,44% complete, ETA 00:00:08
+# Fork: 2 of 2
+# Warmup Iteration   1: 157942,581 ns/op
+# Warmup Iteration   2: 129003,055 ns/op
+# Warmup Iteration   3: 127983,379 ns/op
+Iteration   1: 127473,482 ns/op
+Iteration   2: 127482,902 ns/op
+Iteration   3: 127746,990 ns/op
+Iteration   4: 128468,281 ns/op
+Iteration   5: 127947,732 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.RevisionMapperBenchmark.mapRevisions":
+  131392,804 ±(99.9%) 5710,118 ns/op [Average]
+  (min, avg, max) = (127473,482, 131392,804, 135445,697), stdev = 3776,890
+  CI (99.9%): [125682,686, 137102,923] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:02:27
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                             (imagesPerRevision)  (size)  Mode  Cnt       Score      Error  Units
+RevisionMapperBenchmark.mapRevisions                    0      10  avgt   10      73,116 ±    2,422  ns/op
+RevisionMapperBenchmark.mapRevisions                    0     100  avgt   10     685,969 ±    2,429  ns/op
+RevisionMapperBenchmark.mapRevisions                    0    1000  avgt   10    7330,160 ±   31,256  ns/op
+RevisionMapperBenchmark.mapRevisions                    1      10  avgt   10     853,918 ±    9,063  ns/op
+RevisionMapperBenchmark.mapRevisions                    1     100  avgt   10    8363,655 ±   92,504  ns/op
+RevisionMapperBenchmark.mapRevisions                    1    1000  avgt   10   71659,105 ±  697,263  ns/op
+RevisionMapperBenchmark.mapRevisions                    2      10  avgt   10    1779,512 ±    9,167  ns/op
+RevisionMapperBenchmark.mapRevisions                    2     100  avgt   10   17842,058 ±   78,034  ns/op
+RevisionMapperBenchmark.mapRevisions                    2    1000  avgt   10  131392,804 ± 5710,118  ns/op
+
+Benchmark result is saved to sse-reports/sse-improvements/jmh/revision-mapper/revision-mapper-run02.json
