@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class SimpleImageService implements ImageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
     private final Path imageSavedPath;
     private final ImageRepository imageRepository;
     private final UserService userService;
@@ -114,12 +115,12 @@ public class SimpleImageService implements ImageService {
     }
 
     private String bytesToHex(byte[] hash) {
-        StringBuffer hexString = new StringBuffer();
-        for (byte b : hash) {
-            String hex = Integer.toHexString(0xff & b);
-            if (hex.length() == 1) hexString.append('0');
-            hexString.append(hex);
+        char[] hex = new char[hash.length * 2];
+        for (int i = 0; i < hash.length; i++) {
+            int value = hash[i] & 0xff;
+            hex[i * 2] = HEX_DIGITS[value >>> 4];
+            hex[i * 2 + 1] = HEX_DIGITS[value & 0x0f];
         }
-        return hexString.toString();
+        return new String(hex);
     }
 }

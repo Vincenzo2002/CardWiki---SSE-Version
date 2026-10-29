@@ -1,0 +1,53 @@
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleImageServiceBenchmark.bytesToHex
+
+# Run progress: 0,00% complete, ETA 00:00:16
+# Fork: 1 of 2
+# Warmup Iteration   1: 29,489 ns/op
+# Warmup Iteration   2: 25,452 ns/op
+# Warmup Iteration   3: 26,192 ns/op
+Iteration   1: 26,672 ns/op
+Iteration   2: 27,075 ns/op
+Iteration   3: 27,095 ns/op
+Iteration   4: 26,562 ns/op
+Iteration   5: 27,262 ns/op
+
+# Run progress: 50,00% complete, ETA 00:00:08
+# Fork: 2 of 2
+# Warmup Iteration   1: 30,812 ns/op
+# Warmup Iteration   2: 25,393 ns/op
+# Warmup Iteration   3: 27,383 ns/op
+Iteration   1: 27,171 ns/op
+Iteration   2: 27,390 ns/op
+Iteration   3: 26,942 ns/op
+Iteration   4: 26,774 ns/op
+Iteration   5: 27,239 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleImageServiceBenchmark.bytesToHex":
+  27,018 ±(99.9%) 0,413 ns/op [Average]
+  (min, avg, max) = (26,562, 27,018, 27,390), stdev = 0,273
+  CI (99.9%): [26,605, 27,431] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:00:16
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                               Mode  Cnt   Score   Error  Units
+SimpleImageServiceBenchmark.bytesToHex  avgt   10  27,018 ± 0,413  ns/op
+
+Benchmark result is saved to sse-reports/sse-improvements/jmh/simple-image-service/bytes-to-hex-run01.json

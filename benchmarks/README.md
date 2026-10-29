@@ -143,6 +143,49 @@ detailed mapper benchmark before and after a change,
 separately for each `childrenCount`; its scores measure a different operation
 from `CategoryMapperBenchmark.mapCategories`.
 
+## Image hash conversion
+
+`SimpleImageServiceBenchmark.bytesToHex` measures the existing private
+`SimpleImageService.bytesToHex` method. One operation converts a 32-byte
+SHA-256 hash to a 64-character lowercase hexadecimal string. This matches
+the hash length used when creating an image filename in the application.
+It does not measure SHA-256 calculation, file I/O, or database access.
+
+Setup creates a service without Spring and prepares deterministic input
+bytes using a fixed random seed. No repository or user service is called.
+A static final `MethodHandle` resolves access to the private method once,
+outside measurement; each timed operation invokes it and returns the result
+to JMH. The measurement includes any invocation overhead that remains after
+JIT optimization. Keep the benchmark and invocation approach unchanged when
+comparing the original and optimized implementations.
+
+With JDK 11 selected, rebuild and check the benchmark from the repository root:
+
+```sh
+mvn clean package
+java -jar benchmarks/target/benchmarks.jar 'SimpleImageServiceBenchmark.bytesToHex' \
+  -wi 1 -i 1 -w 100ms -r 100ms -f 1 -t 1 -foe true
+```
+
+This short run only checks execution; use the default configuration for
+report measurements (3 one-second warmup iterations, 5 one-second measurement
+iterations, and 2 JVM forks). Save the original implementation's results:
+
+```sh
+mkdir -p sse-reports/baseline/jmh/simple-image-service
+set -o pipefail
+java -jar benchmarks/target/benchmarks.jar 'SimpleImageServiceBenchmark.bytesToHex' \
+  -t 1 -foe true -rf json \
+  -rff sse-reports/baseline/jmh/simple-image-service/bytes-to-hex-run01.json \
+  2>&1 | tee sse-reports/baseline/jmh/simple-image-service/bytes-to-hex-run01.log
+```
+
+Repeat with `run02` in both output filenames. Do not change the production
+method between the two baseline runs. After changing the implementation,
+rebuild and save new measurements under
+`sse-reports/sse-improvements/jmh/simple-image-service/`. Results are in
+**ns per single 32-byte conversion**, rather than per image upload.
+
 ## Store SSE results
 
 Copy outputs out of `target/` before running `mvn clean`, which deletes them.
