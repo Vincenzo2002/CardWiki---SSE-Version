@@ -50,7 +50,7 @@ unchanged between versions, and both optimized runs used the same rebuilt JAR.
 | Setting | Value |
 | --- | --- |
 | JMH / JDK | 1.37 / Temurin 11.0.32.1 |
-| Operating system / architecture | macOS 27.0.1 / arm64 |
+| Machine | Apple M3, 16 GiB RAM, macOS 27.0.1, arm64 |
 | Mode | Average time, in nanoseconds per conversion (`ns/op`) |
 | Threads | 1 |
 | JVM forks per run | 2 |
@@ -58,9 +58,7 @@ unchanged between versions, and both optimized runs used the same rebuilt JAR.
 | Measurement per fork | 5 iterations of 1 second |
 | Complete runs per version | 2 |
 
-The measurements used local changes based on commit `8e6056d`. The baseline
-used the original conversion method; the optimized version used the character
-array implementation above. The SHA-256 checksum of the optimized JAR used
+The baseline used the original conversion method; the optimized version used the character array implementation above. The SHA-256 checksum of the optimized JAR used
 for both runs was:
 
 ```text
