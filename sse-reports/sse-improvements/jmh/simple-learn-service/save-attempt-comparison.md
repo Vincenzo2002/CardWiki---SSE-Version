@@ -6,6 +6,9 @@ We used JMH to compare `SimpleLearnService.saveAttempt` before and after
 changing the creation of its default `Progress` object. The tests passed,
 but the measurements **do not show a consistent execution-time improvement**.
 
+See the [JMH overview](../jmh-overview.md) for shared methodology, limitations,
+and the results of the other experiments.
+
 ## 1. What we changed
 
 [`SimpleLearnService.saveAttempt`](../../../../backend/src/main/java/at/ac/tuwien/sepm/groupphase/backend/service/impl/SimpleLearnService.java)
@@ -67,12 +70,8 @@ authentication, SQL, database flushing, transactions, or HTTP processing.
 | Measurement per fork | 5 iterations of 1 second |
 | Complete runs per version | 2 |
 
-The benchmark source and recorded JMH/JVM settings were unchanged between versions.
-Both candidate runs used the same rebuilt JAR, with SHA-256 checksum:
-
-```text
-045d0c0aa6b635a44029c2544e1b05d17010fd2d080cf96b773352d4d93782fc
-```
+The benchmark source and recorded JMH/JVM settings were unchanged between
+versions.
 
 We added **26 cases** to
 [`LearnServiceTest`](../../../../backend/src/test/java/at/ac/tuwien/sepm/groupphase/backend/unittests/LearnServiceTest.java),

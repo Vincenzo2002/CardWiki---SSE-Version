@@ -14,6 +14,9 @@ benchmarks/
 The frontend is still managed with npm. JMH is a dependency of the `benchmarks`
 module only.
 
+See the [JMH overview](../sse-reports/sse-improvements/jmh/jmh-overview.md) for
+the experiment summary, measured improvements, and limitations.
+
 ## Build
 
 Use **JDK 11** for both Maven and benchmark execution, as required by the backend.

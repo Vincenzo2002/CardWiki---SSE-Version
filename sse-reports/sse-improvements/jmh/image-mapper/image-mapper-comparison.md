@@ -6,6 +6,9 @@ We used JMH to compare image mapping before and after changing how image URLs
 are built. The optimized version was faster in both repeated runs, with an
 average time reduction of about **52–58%** for the tested batch sizes.
 
+See the [JMH overview](../jmh-overview.md) for shared methodology, limitations,
+and the results of the other experiments.
+
 ## 1. What we changed
 
 The method
@@ -105,7 +108,6 @@ Original results:
 - Before: [run 01](../../../baseline/jmh/image-mapper/image-mapper-run01.json),
   [run 02](../../../baseline/jmh/image-mapper/image-mapper-run02.json).
 - After: [run 01](image-mapper-run01.json), [run 02](image-mapper-run02.json).
-- Initial measurement details: [baseline note](../../../baseline/jmh/image-mapper/image-mapper-baseline.md).
 
 ## 4. How to repeat the experiment
 

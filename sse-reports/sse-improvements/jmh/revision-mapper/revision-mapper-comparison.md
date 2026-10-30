@@ -6,6 +6,9 @@ We compared revision mapping before and after caching image URL prefixes.
 Both optimized runs were faster when revisions contained images. Cases
 without images showed small differences compatible with measurement noise.
 
+See the [JMH overview](../jmh-overview.md) for shared methodology, limitations,
+and the results of the other experiments.
+
 ## 1. What we changed
 
 [`RevisionMapper.prefixImageServedPath`](../../../../backend/src/main/java/at/ac/tuwien/sepm/groupphase/backend/endpoint/mapper/RevisionMapper.java)

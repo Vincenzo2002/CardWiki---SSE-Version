@@ -7,6 +7,9 @@ message is built. The measured time decreased by about **68–78% for non-empty
 decks**. Empty decks were about **6 ns slower**, so the change did not improve
 every case.
 
+See the [JMH overview](../jmh-overview.md) for shared methodology, limitations,
+and the results of the other experiments.
+
 ## 1. What we changed
 
 [`SimpleDeckService.copy`](../../../../backend/src/main/java/at/ac/tuwien/sepm/groupphase/backend/service/impl/SimpleDeckService.java)
@@ -56,7 +59,6 @@ callbacks, real flushing, transactions, image-file copying, or HTTP handling.
 | Measurement per fork | 5 iterations of 1 second |
 | Complete runs per version | 2 |
 
-
 The 18 cases in
 [`DeckCopyTest`](../../../../backend/src/test/java/at/ac/tuwien/sepm/groupphase/backend/unittests/DeckCopyTest.java)
 passed on the original and final implementations. They check all five sizes,
@@ -91,7 +93,6 @@ baseline runs. Final run scores differed by at most about 3.32% of their mean.
 
 For 1000 cards, the mean time decreased from about **381.52 to 92.13
 microseconds per deck**, saving about **289.38 microseconds**.
-
 
 Original results and logs:
 

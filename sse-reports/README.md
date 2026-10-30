@@ -20,6 +20,10 @@ These names identify result sets, not Git branches. The permanent branches are
 `master` and `baseline`; measurements of improved versions on temporary branches
 or `master` are stored under `sse-improvements/`.
 
+The [JMH overview](sse-improvements/jmh/jmh-overview.md) summarizes the
+microbenchmark experiments, their results, and their limitations, with links
+to the six detailed comparison reports.
+
 Save original outputs and short English notes in the tool's directory,
 optionally grouped by benchmark. For example, category mapper measurements
 are stored under `baseline/jmh/category-mapper/` and

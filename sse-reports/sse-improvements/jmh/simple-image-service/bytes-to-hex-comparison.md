@@ -6,6 +6,9 @@ We used JMH to compare `SimpleImageService.bytesToHex` before and after
 changing how the hexadecimal string is built. The average measured time
 decreased by **88.90%**, from **243.94 to 27.08 ns per conversion**.
 
+See the [JMH overview](../jmh-overview.md) for shared methodology, limitations,
+and the results of the other experiments.
+
 ## 1. What we changed
 
 [`SimpleImageService.bytesToHex`](../../../../backend/src/main/java/at/ac/tuwien/sepm/groupphase/backend/service/impl/SimpleImageService.java)
@@ -58,12 +61,8 @@ unchanged between versions, and both optimized runs used the same rebuilt JAR.
 | Measurement per fork | 5 iterations of 1 second |
 | Complete runs per version | 2 |
 
-The baseline used the original conversion method; the optimized version used the character array implementation above. The SHA-256 checksum of the optimized JAR used
-for both runs was:
-
-```text
-fb16887a4e73e3f4f86a6ffad3eca1af95375ccb7cd02be52acc09b095ad573f
-```
+The baseline used the original conversion method; the optimized version used
+the character array implementation above.
 
 The 15 cases in
 [`SimpleImageServiceTest`](../../../../backend/src/test/java/at/ac/tuwien/sepm/groupphase/backend/unittests/SimpleImageServiceTest.java)

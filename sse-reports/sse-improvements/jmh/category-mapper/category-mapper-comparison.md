@@ -6,6 +6,9 @@ We used JMH to compare category mapping before and after a small optimization.
 The detailed mapper became faster in both repeated measurements. The simple
 mapper showed no clear performance change.
 
+See the [JMH overview](../jmh-overview.md) for shared methodology, limitations,
+and the results of the other experiments.
+
 ## 1. What we changed
 
 The method
