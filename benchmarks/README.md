@@ -253,6 +253,63 @@ write or API request. A small source-level optimization may not produce a
 clear timing improvement: the JVM may already eliminate unnecessary work,
 and the clock, proxy calls, and reset also contribute to the score.
 
+## Copying decks
+
+`SimpleDeckServiceBenchmark.copyDeck` calls the real `SimpleDeckService.copy`
+method for decks with **0, 1, 10, 100, and 1000 cards**, selected by `size`.
+The zero-card and one-card cases complement the larger batch sizes.
+
+Setup prepares a source deck with ID 42, author ID 2, distinct front/back
+texts, and two shared image references per revision. The source has no
+categories. The current user has ID 1. Source entities and dependency stubs
+are created outside measurement, without Spring or a database.
+
+Each operation creates a new destination deck and copies the entire source.
+The repository stubs use JDK dynamic proxies: deck saves return their input,
+card saves return the input list, and flushing does nothing. The source
+revision lookup returns a fresh stream on every invocation. No invocation
+history or destination collection is retained between calls, and empty
+source categories avoid accumulating category back-references. Debug logging
+is disabled for this service in the benchmark JVM.
+
+The timing includes destination creation, proxy calls, stream creation,
+card/revision creation, copy messages, and output collections. Images are
+referenced rather than read or copied as files. Generated IDs, persistence
+callbacks, SQL, actual flushing, transactions, and HTTP handling are not
+measured. One operation is **one complete in-memory deck copy**, not one card.
+
+With JDK 11 selected, rebuild and check all five cases from the repository root:
+
+```sh
+mvn clean package
+java -jar benchmarks/target/benchmarks.jar 'SimpleDeckServiceBenchmark.copyDeck' \
+  -wi 1 -i 1 -w 100ms -r 100ms -f 1 -t 1 -foe true
+```
+
+This short run checks execution only. For a complete baseline measurement,
+keep the production method unchanged and use the default timing settings:
+
+```sh
+mkdir -p sse-reports/baseline/jmh/simple-deck-service
+set -o pipefail
+java -jar benchmarks/target/benchmarks.jar 'SimpleDeckServiceBenchmark.copyDeck' \
+  -t 1 -foe true -rf json \
+  -rff sse-reports/baseline/jmh/simple-deck-service/deck-copy-run03.json \
+  2>&1 | tee sse-reports/baseline/jmh/simple-deck-service/deck-copy-run03.log
+```
+
+Use unused run numbers to preserve earlier results. The annotations supply
+three one-second warmup iterations, five one-second measurement iterations,
+and two JVM forks per size. A complete run takes about 90 seconds.
+Measure the original version twice before changing it. After a production
+change, rebuild and save measurements under
+`sse-reports/sse-improvements/jmh/simple-deck-service/`, keeping the same
+benchmark and comparing each size separately. A gain here describes the
+in-memory copy operation; database work may affect the overall request time.
+
+The before/after results, including the empty-deck case, are in the
+[deck copy comparison report](../sse-reports/sse-improvements/jmh/simple-deck-service/deck-copy-comparison.md).
+
 ## Store SSE results
 
 Copy outputs out of `target/` before running `mvn clean`, which deletes them.
