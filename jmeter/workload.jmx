@@ -25,7 +25,7 @@
               <elementProp name="name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">name</stringProp>
-                <stringProp name="Argument.value">${__P(search,Haupt)}</stringProp>
+                <stringProp name="Argument.value">${search}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -48,7 +48,7 @@
         </HTTPSamplerProxy>
         <hashTree />
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Open Deck" enabled="true">
-          <stringProp name="HTTPSampler.path">/api/v1/decks/${__P(deck_id,1)}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/v1/decks/${deck_id}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -74,7 +74,11 @@ try {
             || !data.content.every { it instanceof Map &amp;&amp; it.id instanceof Number &amp;&amp; it.name instanceof String }) {
             throw new IllegalArgumentException('Expected a nonempty page of decks')
         }
-    } else if (!(data instanceof Map) || data.id?.toString() != props.getProperty('deck_id', '1')
+        if (props.getProperty('data_mode') == 'csv'
+            &amp;&amp; !data.content.any { it.id.toString() == vars.get('deck_id') }) {
+            throw new IllegalArgumentException('Expected the CSV deck in its search page')
+        }
+    } else if (!(data instanceof Map) || data.id?.toString() != vars.get('deck_id')
                || !(data.name instanceof String)) {
         throw new IllegalArgumentException('Expected the configured deck ID and name')
     }
