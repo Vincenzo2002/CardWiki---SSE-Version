@@ -32,31 +32,33 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
 
     private final ConversionService conversionService = new DefaultConversionService();
 
+    private static final String REQUEST_CANNOT_BE_NULL = "request cannot be null";
+
     @Override
-    public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
-        Assert.notNull(request, "request cannot be null");
+    public OAuth2AuthorizationRequest loadAuthorizationRequest(final HttpServletRequest request) {
+        Assert.notNull(request, REQUEST_CANNOT_BE_NULL);
 
         if (request.getCookies() == null)
             return null;
 
-        return Arrays.stream(request.getCookies()).filter(c -> c.getName().equals(COOKIE_NAME))
+        return Arrays.stream(request.getCookies()).filter((final Cookie c) -> c.getName().equals(COOKIE_NAME))
             .findFirst()
-            .map(cookie -> {
+            .map((final Cookie cookie) -> {
                 try {
                     // We do not use (de)serialization for untrusted data because that can lead to security vulnerabilities.
 
-                    JsonNode node = objectMapper.reader().readTree(Base64.getDecoder().decode(cookie.getValue().getBytes()));
+                    final JsonNode node = objectMapper.reader().readTree(Base64.getDecoder().decode(cookie.getValue().getBytes()));
 
-                    Map<String,Object> attributesMap = new HashMap<>();
-                    node.get("attributes").fields().forEachRemaining(entry -> {
+                   final Map<String,Object> attributesMap = new HashMap<>();
+                    node.get("attributes").fields().forEachRemaining((final  Map.Entry<String, JsonNode>entry) -> {
                         attributesMap.put(entry.getKey(), conversionService.convert(entry.getValue().textValue(), Object.class));
                     });
-                    Map<String,Object> additionalParamsMap = new HashMap<>();
-                    node.get("additionalParams").fields().forEachRemaining(entry -> {
+                    final Map<String,Object> additionalParamsMap = new HashMap<>();
+                    node.get("additionalParams").fields().forEachRemaining((final  Map.Entry<String, JsonNode>entry) -> {
                         additionalParamsMap.put(entry.getKey(), conversionService.convert(entry.getValue().textValue(), Object.class));
                     });
-                    Set<String> scopes = new HashSet<>();
-                    node.withArray("scopes").forEach(scopeNode -> scopes.add(scopeNode.textValue()));
+                    final Set<String> scopes = new HashSet<>();
+                    node.withArray("scopes").forEach((final JsonNode scopeNode) -> scopes.add(scopeNode.textValue()));
 
                     return OAuth2AuthorizationRequest
                         .authorizationCode().authorizationUri(node.get("authorizationUri").textValue())
@@ -68,7 +70,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
                         .attributes(attributesMap)
                         .additionalParameters(additionalParamsMap)
                         .build();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     LOGGER.error("IO Exception: {}", e.getMessage());
                     return null;
                 }
@@ -76,8 +78,8 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
     }
 
     @Override
-    public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
-        Assert.notNull(request, "request cannot be null");
+    public void saveAuthorizationRequest(final OAuth2AuthorizationRequest authorizationRequest, final HttpServletRequest request, final HttpServletResponse response) {
+        Assert.notNull(request, REQUEST_CANNOT_BE_NULL);
         Assert.notNull(response, "response cannot be null");
 
         if (authorizationRequest == null){
@@ -85,30 +87,30 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
             return;
         }
 
-        ObjectNode node = objectMapper.createObjectNode();
+        final ObjectNode node = objectMapper.createObjectNode();
         node.put("authorizationUri", authorizationRequest.getAuthorizationUri());
         node.put("authorizationRequestUri", authorizationRequest.getAuthorizationRequestUri());
         // not putting in grantType because it's always authorization_code
         node.put("clientId", authorizationRequest.getClientId());
         node.put("redirectUri", authorizationRequest.getRedirectUri());
-        ArrayNode scopeArrayNode = node.putArray("scopes");
+        final ArrayNode scopeArrayNode = node.putArray("scopes");
         authorizationRequest.getScopes().forEach(scopeArrayNode::add);
         node.put("state", authorizationRequest.getState());
 
-        ObjectNode attributesNode = node.putObject("attributes");
-        authorizationRequest.getAttributes().forEach((key, value) -> {
+        final ObjectNode attributesNode = node.putObject("attributes");
+        authorizationRequest.getAttributes().forEach((final String key, final Object value) -> {
             attributesNode.put(key, conversionService.convert(value, String.class));
         });
 
-        ObjectNode additionalParamsNode = node.putObject("additionalParams");
-        authorizationRequest.getAdditionalParameters().forEach((key, value) -> {
+        final ObjectNode additionalParamsNode = node.putObject("additionalParams");
+        authorizationRequest.getAdditionalParameters().forEach((final String key, final Object value) -> {
             additionalParamsNode.put(key, conversionService.convert(value, String.class));
         });
         response.addCookie(buildCookie(Base64.getEncoder().encodeToString(node.toString().getBytes()), request));
     }
 
-    private Cookie buildCookie(String value, HttpServletRequest request){
-        Cookie cookie = new Cookie(COOKIE_NAME, value);
+    private Cookie buildCookie(final String value, final HttpServletRequest request){
+        final Cookie cookie = new Cookie(COOKIE_NAME, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setSecure(request.getServletContext().getSessionCookieConfig().isSecure());
@@ -116,23 +118,23 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
         return cookie;
     }
 
-    private Cookie expiredCookie(HttpServletRequest request){
-        Cookie cookie = buildCookie("", request);
+    private Cookie expiredCookie(final HttpServletRequest request){
+        final Cookie cookie = buildCookie("", request);
         cookie.setMaxAge(0);
         return cookie;
     }
 
     @Override
-    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request, HttpServletResponse response) {
-        Assert.notNull(request, "request cannot be null");
+    public OAuth2AuthorizationRequest removeAuthorizationRequest(final HttpServletRequest request, final HttpServletResponse response) {
+        Assert.notNull(request, REQUEST_CANNOT_BE_NULL);
         Assert.notNull(response, "response cannot be null");
         response.addCookie(expiredCookie(request));
         return loadAuthorizationRequest(request);
     }
 
     @Override
-    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
-        Assert.notNull(request, "request cannot be null");
+    public OAuth2AuthorizationRequest removeAuthorizationRequest(final HttpServletRequest request) {
+        Assert.notNull(request, REQUEST_CANNOT_BE_NULL);
         // we cannot actually remove the authorizationRequest here because we don't have access to the httpServletResponse
         return loadAuthorizationRequest(request);
     }
