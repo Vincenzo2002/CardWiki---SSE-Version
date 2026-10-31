@@ -14,6 +14,9 @@ benchmarks/
 The frontend is still managed with npm. JMH is a dependency of the `benchmarks`
 module only.
 
+See the [JMH overview](../sse-reports/sse-improvements/jmh/jmh-overview.md) for
+the experiment summary, measured improvements, and limitations.
+
 ## Build
 
 Use **JDK 11** for both Maven and benchmark execution, as required by the backend.
@@ -45,6 +48,12 @@ The backend produces both `backend/target/backend-0.0.1-SNAPSHOT.jar`, the
 executable Spring Boot JAR, and `backend/target/backend-0.0.1-SNAPSHOT-plain.jar`,
 used as a dependency by JMH. The `plain` JAR exposes classes on the standard Java
 classpath; in the Spring Boot JAR, application classes are under `BOOT-INF/classes`.
+
+If JMH fails with `java.lang.Error: Unresolved compilation problems` in a
+generated mapper despite `BUILD SUCCESS`, the editor's automatic compiler may
+have overwritten Maven's output under `target` during the build. Close the
+editor and rebuild from an external terminal with JDK 11 before running JMH
+again. Do not edit generated mapper or JMH sources directly.
 
 ## Run
 
@@ -93,6 +102,216 @@ lasting one second each, and 2 separate JVM forks for each list size.
 For new measurements, prepare inputs outside the measured method and return
 the result or consume it with `Blackhole`. Place benchmark-specific resources
 in this module's `src/main/resources/` directory.
+
+## Detailed category mapping
+
+`CategoryDetailedMapperBenchmark.mapCategoryDetails` measures
+`CategoryMapper.categoryToCategoryDetailedDto` on one category with **0, 10,
+100, or 1000 children**, selected by `childrenCount`. The parent, author,
+timestamps, and category ID and name remain fixed; the deck collection is
+always empty. All entities are prepared in memory in `@Setup`, without Spring
+or a database. Children are stored in the entity's default `HashSet`; the
+benchmark does not impose or measure sorting.
+
+One operation maps the entire category, including its children, to a detailed
+DTO. Results are **ns per detailed category conversion**, not per child. The
+configuration matches the simple mapper benchmark: 3 one-second warmup
+iterations, 5 one-second measurement iterations, and 2 JVM forks per input
+size. Across four input sizes, this is approximately 64 seconds plus startup
+and other overhead. Use the same benchmark on both application versions to
+evaluate changes to child mapping.
+
+After rebuilding from the repository root, check all four cases with a short
+smoke run (do not use these timings as report measurements):
+
+```sh
+mvn -pl benchmarks -am clean package -DskipTests
+java -jar benchmarks/target/benchmarks.jar 'CategoryDetailedMapperBenchmark.mapCategoryDetails' \
+  -wi 1 -i 1 -w 100ms -r 100ms -f 1 -t 1 -foe true
+```
+
+To measure the initial application version and preserve the results:
+
+```sh
+mkdir -p sse-reports/baseline/jmh/category-mapper
+java -jar benchmarks/target/benchmarks.jar 'CategoryDetailedMapperBenchmark.mapCategoryDetails' \
+  -t 1 -foe true -rf json \
+  -rff sse-reports/baseline/jmh/category-mapper/category-detailed-mapper-run01.json
+```
+
+Use a new filename for each run; an existing result file will be overwritten.
+For an optimized application version, use
+`sse-reports/sse-improvements/jmh/category-mapper/` instead. Compare the same
+detailed mapper benchmark before and after a change,
+separately for each `childrenCount`; its scores measure a different operation
+from `CategoryMapperBenchmark.mapCategories`.
+
+## Image hash conversion
+
+`SimpleImageServiceBenchmark.bytesToHex` measures the existing private
+`SimpleImageService.bytesToHex` method. One operation converts a 32-byte
+SHA-256 hash to a 64-character lowercase hexadecimal string. This matches
+the hash length used when creating an image filename in the application.
+It does not measure SHA-256 calculation, file I/O, or database access.
+
+Setup creates a service without Spring and prepares deterministic input
+bytes using a fixed random seed. No repository or user service is called.
+A static final `MethodHandle` resolves access to the private method once,
+outside measurement; each timed operation invokes it and returns the result
+to JMH. The measurement includes any invocation overhead that remains after
+JIT optimization. Keep the benchmark and invocation approach unchanged when
+comparing the original and optimized implementations.
+
+With JDK 11 selected, rebuild and check the benchmark from the repository root:
+
+```sh
+mvn clean package
+java -jar benchmarks/target/benchmarks.jar 'SimpleImageServiceBenchmark.bytesToHex' \
+  -wi 1 -i 1 -w 100ms -r 100ms -f 1 -t 1 -foe true
+```
+
+This short run only checks execution; use the default configuration for
+report measurements (3 one-second warmup iterations, 5 one-second measurement
+iterations, and 2 JVM forks). Save the original implementation's results:
+
+```sh
+mkdir -p sse-reports/baseline/jmh/simple-image-service
+set -o pipefail
+java -jar benchmarks/target/benchmarks.jar 'SimpleImageServiceBenchmark.bytesToHex' \
+  -t 1 -foe true -rf json \
+  -rff sse-reports/baseline/jmh/simple-image-service/bytes-to-hex-run01.json \
+  2>&1 | tee sse-reports/baseline/jmh/simple-image-service/bytes-to-hex-run01.log
+```
+
+Repeat with `run02` in both output filenames. Do not change the production
+method between the two baseline runs. After changing the implementation,
+rebuild and save new measurements under
+`sse-reports/sse-improvements/jmh/simple-image-service/`. Results are in
+**ns per single 32-byte conversion**, rather than per image upload.
+
+## Saving learning attempts
+
+`SimpleLearnServiceBenchmark.saveAttempt` calls the real
+`SimpleLearnService.saveAttempt` method without Spring or a database. One
+operation resets the fixture, processes one answer, and returns the `Progress`
+passed to the simulated repository's `saveAndFlush` method.
+
+The benchmark covers nine combinations:
+
+| Parameter | Values |
+| --- | --- |
+| `progressState` | `NEW`, `LEARNING`, `REVIEWING` |
+| `answer` | `AGAIN`, `GOOD`, `EASY` |
+
+`NEW` simulates an absent progress record on every invocation. Existing
+learning progress starts at interval 10, while reviewing progress starts at
+interval 4; both have easiness factor 2.5. The user ID is 1, the card ID is 7,
+and `reverse` is false. The learning case exercises the graduation threshold
+for a `GOOD` answer; it does not cover every learning interval.
+
+The service mutates existing progress, so its status, interval, easiness factor,
+and due date are reset inside each measured operation. Without this reset,
+repeated answers would change the scenario and could grow review intervals.
+The reset cost is included in the result. A `NEW` case remains absent on the
+next call; this intentionally simulates independent first attempts rather
+than a persistent sequence of attempts.
+
+Small JDK dynamic proxies simulate the current user and progress repository.
+They return a prepared user and lookup result, capture only the latest saved
+progress, and do not record invocation history. Proxy calls, fixture reset,
+entity construction, scheduling calculations, and `LocalDateTime.now()` are
+part of the measured operation. Debug logging is disabled for this service
+in the benchmark JVM. Actual authentication, SQL, flushing, transactions,
+network calls, and HTTP handling are not measured.
+
+With JDK 11 selected, rebuild and check all nine cases from the repository root:
+
+```sh
+mvn clean package
+java -jar benchmarks/target/benchmarks.jar 'SimpleLearnServiceBenchmark.saveAttempt' \
+  -wi 1 -i 1 -w 100ms -r 100ms -f 1 -t 1 -foe true
+```
+
+This short run only checks execution. For baseline measurements, keep the
+production implementation unchanged and use the default configuration:
+
+```sh
+mkdir -p sse-reports/baseline/jmh/simple-learn-service
+set -o pipefail
+java -jar benchmarks/target/benchmarks.jar 'SimpleLearnServiceBenchmark.saveAttempt' \
+  -t 1 -foe true -rf json \
+  -rff sse-reports/baseline/jmh/simple-learn-service/save-attempt-run01.json \
+  2>&1 | tee sse-reports/baseline/jmh/simple-learn-service/save-attempt-run01.log
+```
+
+Repeat with `run02` in both output filenames. Each complete run takes about
+three minutes: nine cases, two JVM forks per case, three one-second warmup
+iterations, and five one-second measurement iterations per fork.
+
+After any production change, rebuild and save measurements under
+`sse-reports/sse-improvements/jmh/simple-learn-service/`. Keep this benchmark
+unchanged and compare the same parameter combination before and after.
+Scores are **ns per in-memory attempt with fixture reset**, not per database
+write or API request. A small source-level optimization may not produce a
+clear timing improvement: the JVM may already eliminate unnecessary work,
+and the clock, proxy calls, and reset also contribute to the score.
+
+## Copying decks
+
+`SimpleDeckServiceBenchmark.copyDeck` calls the real `SimpleDeckService.copy`
+method for decks with **0, 1, 10, 100, and 1000 cards**, selected by `size`.
+The zero-card and one-card cases complement the larger batch sizes.
+
+Setup prepares a source deck with ID 42, author ID 2, distinct front/back
+texts, and two shared image references per revision. The source has no
+categories. The current user has ID 1. Source entities and dependency stubs
+are created outside measurement, without Spring or a database.
+
+Each operation creates a new destination deck and copies the entire source.
+The repository stubs use JDK dynamic proxies: deck saves return their input,
+card saves return the input list, and flushing does nothing. The source
+revision lookup returns a fresh stream on every invocation. No invocation
+history or destination collection is retained between calls, and empty
+source categories avoid accumulating category back-references. Debug logging
+is disabled for this service in the benchmark JVM.
+
+The timing includes destination creation, proxy calls, stream creation,
+card/revision creation, copy messages, and output collections. Images are
+referenced rather than read or copied as files. Generated IDs, persistence
+callbacks, SQL, actual flushing, transactions, and HTTP handling are not
+measured. One operation is **one complete in-memory deck copy**, not one card.
+
+With JDK 11 selected, rebuild and check all five cases from the repository root:
+
+```sh
+mvn clean package
+java -jar benchmarks/target/benchmarks.jar 'SimpleDeckServiceBenchmark.copyDeck' \
+  -wi 1 -i 1 -w 100ms -r 100ms -f 1 -t 1 -foe true
+```
+
+This short run checks execution only. For a complete baseline measurement,
+keep the production method unchanged and use the default timing settings:
+
+```sh
+mkdir -p sse-reports/baseline/jmh/simple-deck-service
+set -o pipefail
+java -jar benchmarks/target/benchmarks.jar 'SimpleDeckServiceBenchmark.copyDeck' \
+  -t 1 -foe true -rf json \
+  -rff sse-reports/baseline/jmh/simple-deck-service/deck-copy-run03.json \
+  2>&1 | tee sse-reports/baseline/jmh/simple-deck-service/deck-copy-run03.log
+```
+
+Use unused run numbers to preserve earlier results. The annotations supply
+three one-second warmup iterations, five one-second measurement iterations,
+and two JVM forks per size. A complete run takes about 90 seconds.
+Measure the original version twice before changing it. After a production
+change, rebuild and save measurements under
+`sse-reports/sse-improvements/jmh/simple-deck-service/`, keeping the same
+benchmark and comparing each size separately. A gain here describes the
+in-memory copy operation; database work may affect the overall request time.
+
+The before/after results, including the empty-deck case, are in the
+[deck copy comparison report](../sse-reports/sse-improvements/jmh/simple-deck-service/deck-copy-comparison.md).
 
 ## Store SSE results
 

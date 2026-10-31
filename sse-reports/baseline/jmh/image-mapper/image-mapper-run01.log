@@ -1,0 +1,140 @@
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.ImageMapperBenchmark.mapImages
+# Parameters: (size = 10)
+
+# Run progress: 0,00% complete, ETA 00:00:48
+# Fork: 1 of 2
+# Warmup Iteration   1: 2087,847 ns/op
+# Warmup Iteration   2: 1942,132 ns/op
+# Warmup Iteration   3: 1955,688 ns/op
+Iteration   1: 1974,246 ns/op
+Iteration   2: 1960,443 ns/op
+Iteration   3: 1976,991 ns/op
+Iteration   4: 1997,850 ns/op
+Iteration   5: 1983,815 ns/op
+
+# Run progress: 16,67% complete, ETA 00:00:40
+# Fork: 2 of 2
+# Warmup Iteration   1: 2209,020 ns/op
+# Warmup Iteration   2: 2021,734 ns/op
+# Warmup Iteration   3: 2016,988 ns/op
+Iteration   1: 2014,696 ns/op
+Iteration   2: 2019,210 ns/op
+Iteration   3: 2032,856 ns/op
+Iteration   4: 2029,557 ns/op
+Iteration   5: 2023,278 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.ImageMapperBenchmark.mapImages":
+  2001,294 ±(99.9%) 39,319 ns/op [Average]
+  (min, avg, max) = (1960,443, 2001,294, 2032,856), stdev = 26,007
+  CI (99.9%): [1961,975, 2040,613] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.ImageMapperBenchmark.mapImages
+# Parameters: (size = 100)
+
+# Run progress: 33,33% complete, ETA 00:00:32
+# Fork: 1 of 2
+# Warmup Iteration   1: 18401,024 ns/op
+# Warmup Iteration   2: 16945,858 ns/op
+# Warmup Iteration   3: 17225,413 ns/op
+Iteration   1: 17522,248 ns/op
+Iteration   2: 16816,680 ns/op
+Iteration   3: 16962,484 ns/op
+Iteration   4: 16849,120 ns/op
+Iteration   5: 16842,230 ns/op
+
+# Run progress: 50,00% complete, ETA 00:00:24
+# Fork: 2 of 2
+# Warmup Iteration   1: 21031,018 ns/op
+# Warmup Iteration   2: 21868,969 ns/op
+# Warmup Iteration   3: 19922,633 ns/op
+Iteration   1: 21042,262 ns/op
+Iteration   2: 18778,240 ns/op
+Iteration   3: 18231,230 ns/op
+Iteration   4: 22067,680 ns/op
+Iteration   5: 18264,668 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.ImageMapperBenchmark.mapImages":
+  18337,684 ±(99.9%) 2795,012 ns/op [Average]
+  (min, avg, max) = (16816,680, 18337,684, 22067,680), stdev = 1848,727
+  CI (99.9%): [15542,672, 21132,696] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.ImageMapperBenchmark.mapImages
+# Parameters: (size = 1000)
+
+# Run progress: 66,67% complete, ETA 00:00:16
+# Fork: 1 of 2
+# Warmup Iteration   1: 191910,750 ns/op
+# Warmup Iteration   2: 144754,322 ns/op
+# Warmup Iteration   3: 144010,306 ns/op
+Iteration   1: 150557,257 ns/op
+Iteration   2: 146387,289 ns/op
+Iteration   3: 144949,374 ns/op
+Iteration   4: 144817,407 ns/op
+Iteration   5: 145506,116 ns/op
+
+# Run progress: 83,33% complete, ETA 00:00:08
+# Fork: 2 of 2
+# Warmup Iteration   1: 228232,056 ns/op
+# Warmup Iteration   2: 150785,600 ns/op
+# Warmup Iteration   3: 148815,825 ns/op
+Iteration   1: 160376,037 ns/op
+Iteration   2: 157997,850 ns/op
+Iteration   3: 148031,529 ns/op
+Iteration   4: 161425,767 ns/op
+Iteration   5: 154126,195 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.ImageMapperBenchmark.mapImages":
+  151417,482 ±(99.9%) 9938,333 ns/op [Average]
+  (min, avg, max) = (144817,407, 151417,482, 161425,767), stdev = 6573,592
+  CI (99.9%): [141479,149, 161355,815] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:00:49
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                       (size)  Mode  Cnt       Score      Error  Units
+ImageMapperBenchmark.mapImages      10  avgt   10    2001,294 ±   39,319  ns/op
+ImageMapperBenchmark.mapImages     100  avgt   10   18337,684 ± 2795,012  ns/op
+ImageMapperBenchmark.mapImages    1000  avgt   10  151417,482 ± 9938,333  ns/op
+
+Benchmark result is saved to sse-reports/baseline/jmh/image-mapper/image-mapper-run01.json

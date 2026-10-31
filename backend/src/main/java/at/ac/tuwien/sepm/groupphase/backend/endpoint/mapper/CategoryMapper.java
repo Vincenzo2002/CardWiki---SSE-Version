@@ -30,7 +30,13 @@ public interface CategoryMapper {
 
     @Named("childrenToSimpleChildren")
     static List<CategorySimpleDto> childrenToSimpleChildren(Set<Category> children) {
-        return INSTANCE.categoryToCategorySimpleDto(new ArrayList<>(children));
+        List<CategorySimpleDto> result = new ArrayList<>(children.size());
+
+        for (Category child : children) {
+            result.add(INSTANCE.categoryToCategorySimpleDto(child));
+        }
+
+        return result;
     }
 
     @Named("parentToSimpleParent")

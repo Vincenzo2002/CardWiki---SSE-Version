@@ -1,0 +1,226 @@
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck
+# Parameters: (size = 0)
+
+# Run progress: 0,00% complete, ETA 00:01:20
+# Fork: 1 of 2
+# Warmup Iteration   1: 91,884 ns/op
+# Warmup Iteration   2: 65,201 ns/op
+# Warmup Iteration   3: 66,045 ns/op
+Iteration   1: 63,903 ns/op
+Iteration   2: 63,792 ns/op
+Iteration   3: 63,910 ns/op
+Iteration   4: 63,670 ns/op
+Iteration   5: 63,641 ns/op
+
+# Run progress: 10,00% complete, ETA 00:01:14
+# Fork: 2 of 2
+# Warmup Iteration   1: 71,263 ns/op
+# Warmup Iteration   2: 58,968 ns/op
+# Warmup Iteration   3: 58,956 ns/op
+Iteration   1: 58,580 ns/op
+Iteration   2: 58,609 ns/op
+Iteration   3: 58,589 ns/op
+Iteration   4: 58,681 ns/op
+Iteration   5: 59,152 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck":
+  61,253 ±(99.9%) 4,042 ns/op [Average]
+  (min, avg, max) = (58,580, 61,253, 63,910), stdev = 2,674
+  CI (99.9%): [57,211, 65,295] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck
+# Parameters: (size = 1)
+
+# Run progress: 20,00% complete, ETA 00:01:05
+# Fork: 1 of 2
+# Warmup Iteration   1: 230,976 ns/op
+# Warmup Iteration   2: 149,265 ns/op
+# Warmup Iteration   3: 148,000 ns/op
+Iteration   1: 149,168 ns/op
+Iteration   2: 149,837 ns/op
+Iteration   3: 148,087 ns/op
+Iteration   4: 149,643 ns/op
+Iteration   5: 148,282 ns/op
+
+# Run progress: 30,00% complete, ETA 00:00:57
+# Fork: 2 of 2
+# Warmup Iteration   1: 185,301 ns/op
+# Warmup Iteration   2: 144,475 ns/op
+# Warmup Iteration   3: 143,156 ns/op
+Iteration   1: 144,314 ns/op
+Iteration   2: 143,149 ns/op
+Iteration   3: 143,185 ns/op
+Iteration   4: 143,561 ns/op
+Iteration   5: 143,195 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck":
+  146,242 ±(99.9%) 4,500 ns/op [Average]
+  (min, avg, max) = (143,149, 146,242, 149,837), stdev = 2,976
+  CI (99.9%): [141,742, 150,742] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck
+# Parameters: (size = 10)
+
+# Run progress: 40,00% complete, ETA 00:00:49
+# Fork: 1 of 2
+# Warmup Iteration   1: 902,246 ns/op
+# Warmup Iteration   2: 833,257 ns/op
+# Warmup Iteration   3: 835,784 ns/op
+Iteration   1: 835,925 ns/op
+Iteration   2: 834,842 ns/op
+Iteration   3: 833,418 ns/op
+Iteration   4: 834,401 ns/op
+Iteration   5: 837,597 ns/op
+
+# Run progress: 50,00% complete, ETA 00:00:41
+# Fork: 2 of 2
+# Warmup Iteration   1: 893,194 ns/op
+# Warmup Iteration   2: 800,552 ns/op
+# Warmup Iteration   3: 799,579 ns/op
+Iteration   1: 798,300 ns/op
+Iteration   2: 798,640 ns/op
+Iteration   3: 798,258 ns/op
+Iteration   4: 797,205 ns/op
+Iteration   5: 797,159 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck":
+  816,575 ±(99.9%) 29,792 ns/op [Average]
+  (min, avg, max) = (797,159, 816,575, 837,597), stdev = 19,706
+  CI (99.9%): [786,782, 846,367] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck
+# Parameters: (size = 100)
+
+# Run progress: 60,00% complete, ETA 00:00:32
+# Fork: 1 of 2
+# Warmup Iteration   1: 10205,406 ns/op
+# Warmup Iteration   2: 9941,980 ns/op
+# Warmup Iteration   3: 9564,299 ns/op
+Iteration   1: 9516,281 ns/op
+Iteration   2: 9514,087 ns/op
+Iteration   3: 9497,062 ns/op
+Iteration   4: 9537,396 ns/op
+Iteration   5: 9492,956 ns/op
+
+# Run progress: 70,00% complete, ETA 00:00:24
+# Fork: 2 of 2
+# Warmup Iteration   1: 10007,553 ns/op
+# Warmup Iteration   2: 9392,426 ns/op
+# Warmup Iteration   3: 9331,730 ns/op
+Iteration   1: 9375,504 ns/op
+Iteration   2: 9345,996 ns/op
+Iteration   3: 9324,476 ns/op
+Iteration   4: 9315,903 ns/op
+Iteration   5: 9333,359 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck":
+  9425,302 ±(99.9%) 140,573 ns/op [Average]
+  (min, avg, max) = (9315,903, 9425,302, 9537,396), stdev = 92,981
+  CI (99.9%): [9284,729, 9565,875] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 11.0.32.1, OpenJDK 64-Bit Server VM, 11.0.32.1+1
+# VM invoker: /Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java
+# VM options: <none>
+# Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck
+# Parameters: (size = 1000)
+
+# Run progress: 80,00% complete, ETA 00:00:16
+# Fork: 1 of 2
+# Warmup Iteration   1: 98060,066 ns/op
+# Warmup Iteration   2: 93557,568 ns/op
+# Warmup Iteration   3: 92740,635 ns/op
+Iteration   1: 93148,228 ns/op
+Iteration   2: 92408,760 ns/op
+Iteration   3: 92705,923 ns/op
+Iteration   4: 91062,081 ns/op
+Iteration   5: 91174,037 ns/op
+
+# Run progress: 90,00% complete, ETA 00:00:08
+# Fork: 2 of 2
+# Warmup Iteration   1: 97062,904 ns/op
+# Warmup Iteration   2: 93247,240 ns/op
+# Warmup Iteration   3: 92945,083 ns/op
+Iteration   1: 92485,861 ns/op
+Iteration   2: 92313,407 ns/op
+Iteration   3: 92498,389 ns/op
+Iteration   4: 91395,843 ns/op
+Iteration   5: 91393,677 ns/op
+
+
+Result "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck":
+  92058,621 ±(99.9%) 1107,170 ns/op [Average]
+  (min, avg, max) = (91062,081, 92058,621, 93148,228), stdev = 732,325
+  CI (99.9%): [90951,451, 93165,791] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:01:22
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                            (size)  Mode  Cnt      Score      Error  Units
+SimpleDeckServiceBenchmark.copyDeck       0  avgt   10     61,253 ±    4,042  ns/op
+SimpleDeckServiceBenchmark.copyDeck       1  avgt   10    146,242 ±    4,500  ns/op
+SimpleDeckServiceBenchmark.copyDeck      10  avgt   10    816,575 ±   29,792  ns/op
+SimpleDeckServiceBenchmark.copyDeck     100  avgt   10   9425,302 ±  140,573  ns/op
+SimpleDeckServiceBenchmark.copyDeck    1000  avgt   10  92058,621 ± 1107,170  ns/op
+
+Benchmark result is saved to sse-reports/sse-improvements/jmh/simple-deck-service/deck-copy-run02.json

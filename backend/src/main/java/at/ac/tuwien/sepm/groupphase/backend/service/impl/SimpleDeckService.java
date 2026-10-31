@@ -129,11 +129,12 @@ public class SimpleDeckService implements DeckService {
             category.getDecks().add(deck);
         }
         deckRepository.save(deck);
+        String copyMessage = "Copied from deck " + id + ".";
         List<Card> cards = cardRepository.findLatestEditRevisionsByDeck_Id(id).map(sourceRevision -> {
             Card card = new Card();
             card.setDeck(deck);
             RevisionCreate rev = new RevisionCreate();
-            rev.setMessage(String.format("Copied from deck %s.", id));
+            rev.setMessage(copyMessage);
             rev.setCreatedBy(currentUser);
             rev.setCard(card);
             rev.setTextFront(sourceRevision.getTextFront());

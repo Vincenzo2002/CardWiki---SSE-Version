@@ -1,0 +1,309 @@
+[
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "11.0.32.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "11.0.32.1+1",
+        "warmupIterations" : 3,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "size" : "0"
+        },
+        "primaryMetric" : {
+            "score" : 61.25275865167856,
+            "scoreError" : 4.042214441696846,
+            "scoreConfidence" : [
+                57.21054420998172,
+                65.2949730933754
+            ],
+            "scorePercentiles" : {
+                "0.0" : 58.57980707582911,
+                "50.0" : 61.39654373168259,
+                "90.0" : 63.90898511819598,
+                "95.0" : 63.90963729002438,
+                "99.0" : 63.90963729002438,
+                "99.9" : 63.90963729002438,
+                "99.99" : 63.90963729002438,
+                "99.999" : 63.90963729002438,
+                "99.9999" : 63.90963729002438,
+                "100.0" : 63.90963729002438
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    63.90311557174041,
+                    63.79222451202387,
+                    63.90963729002438,
+                    63.67044163492282,
+                    63.641062875010775
+                ],
+                [
+                    58.57980707582911,
+                    58.60897551590766,
+                    58.5890817687173,
+                    58.68121568425504,
+                    59.15202458835441
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "11.0.32.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "11.0.32.1+1",
+        "warmupIterations" : 3,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "size" : "1"
+        },
+        "primaryMetric" : {
+            "score" : 146.24195675128422,
+            "scoreError" : 4.499735708125525,
+            "scoreConfidence" : [
+                141.7422210431587,
+                150.74169245940973
+            ],
+            "scorePercentiles" : {
+                "0.0" : 143.14870934087259,
+                "50.0" : 146.20012849997056,
+                "90.0" : 149.8176864152002,
+                "95.0" : 149.83713603001686,
+                "99.0" : 149.83713603001686,
+                "99.9" : 149.83713603001686,
+                "99.99" : 149.83713603001686,
+                "99.999" : 149.83713603001686,
+                "99.9999" : 149.83713603001686,
+                "100.0" : 149.83713603001686
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    149.16842075891782,
+                    149.83713603001686,
+                    148.08671271072046,
+                    149.64263988185033,
+                    148.2818946979568
+                ],
+                [
+                    144.3135442892207,
+                    143.14870934087259,
+                    143.1846218306141,
+                    143.56105487521114,
+                    143.19483309746158
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "11.0.32.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "11.0.32.1+1",
+        "warmupIterations" : 3,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "size" : "10"
+        },
+        "primaryMetric" : {
+            "score" : 816.5745549679662,
+            "scoreError" : 29.792195116190147,
+            "scoreConfidence" : [
+                786.782359851776,
+                846.3667500841563
+            ],
+            "scorePercentiles" : {
+                "0.0" : 797.1592811143015,
+                "50.0" : 816.0292578377818,
+                "90.0" : 837.4297066640491,
+                "95.0" : 837.5968541183647,
+                "99.0" : 837.5968541183647,
+                "99.9" : 837.5968541183647,
+                "99.99" : 837.5968541183647,
+                "99.999" : 837.5968541183647,
+                "99.9999" : 837.5968541183647,
+                "100.0" : 837.5968541183647
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    835.925379575209,
+                    834.8423461513543,
+                    833.4183291941175,
+                    834.4005859532283,
+                    837.5968541183647
+                ],
+                [
+                    798.299866003595,
+                    798.640186481446,
+                    798.2578653337254,
+                    797.2048557543203,
+                    797.1592811143015
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "11.0.32.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "11.0.32.1+1",
+        "warmupIterations" : 3,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "size" : "100"
+        },
+        "primaryMetric" : {
+            "score" : 9425.301995852264,
+            "scoreError" : 140.57331772573264,
+            "scoreConfidence" : [
+                9284.72867812653,
+                9565.875313577997
+            ],
+            "scorePercentiles" : {
+                "0.0" : 9315.903286802737,
+                "50.0" : 9434.229957347517,
+                "90.0" : 9535.284482942088,
+                "95.0" : 9537.395982660608,
+                "99.0" : 9537.395982660608,
+                "99.9" : 9537.395982660608,
+                "99.99" : 9537.395982660608,
+                "99.999" : 9537.395982660608,
+                "99.9999" : 9537.395982660608,
+                "100.0" : 9537.395982660608
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    9516.28098547541,
+                    9514.087023608929,
+                    9497.062053520807,
+                    9537.395982660608,
+                    9492.956183351751
+                ],
+                [
+                    9375.503731343284,
+                    9345.99578757474,
+                    9324.476365424402,
+                    9315.903286802737,
+                    9333.358558759966
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "at.ac.tuwien.sepm.groupphase.benchmarks.SimpleDeckServiceBenchmark.copyDeck",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/bin/java",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "11.0.32.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "11.0.32.1+1",
+        "warmupIterations" : 3,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "size" : "1000"
+        },
+        "primaryMetric" : {
+            "score" : 92058.62066391701,
+            "scoreError" : 1107.1701555112975,
+            "scoreConfidence" : [
+                90951.45050840572,
+                93165.79081942831
+            ],
+            "scorePercentiles" : {
+                "0.0" : 91062.08099293351,
+                "50.0" : 92361.08350296131,
+                "90.0" : 93103.99711699205,
+                "95.0" : 93148.22752548657,
+                "99.0" : 93148.22752548657,
+                "99.9" : 93148.22752548657,
+                "99.99" : 93148.22752548657,
+                "99.999" : 93148.22752548657,
+                "99.9999" : 93148.22752548657,
+                "100.0" : 93148.22752548657
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    93148.22752548657,
+                    92408.76004412981,
+                    92705.92344054129,
+                    91062.08099293351,
+                    91174.03691944848
+                ],
+                [
+                    92485.86120339608,
+                    92313.4069617928,
+                    92498.38947174673,
+                    91395.84286623624,
+                    91393.67721345856
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    }
+]
+
+

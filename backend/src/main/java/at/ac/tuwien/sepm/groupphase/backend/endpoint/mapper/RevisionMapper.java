@@ -8,7 +8,10 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.RevisionEdit;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.io.File;
 import java.nio.file.Paths;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Mapper
 abstract public class RevisionMapper {
@@ -61,6 +64,9 @@ abstract public class RevisionMapper {
     @Value("${cawi.image-served-path}")
     String imageServedPath;
 
+    private final ConcurrentMap<String, String> urlPrefixes =
+        new ConcurrentHashMap<>();
+
     @Named("filenameToImage")
     public static Image filenameToImage(String filename) {
         if (filename == null)
@@ -71,11 +77,47 @@ abstract public class RevisionMapper {
     }
 
     @Named("prefixImageServedPath")
-    public String prefixImageServedPath(String filename){
-        if (filename == null)
+    public String prefixImageServedPath(String filename) {
+        if (filename == null) {
             return null;
-        return Paths.get(imageServedPath, filename).toString().replace('\\', '/');
+        }
+
+        if (File.separatorChar == '/' && imageServedPath != null
+            && isSimpleFilename(filename)) {
+            String prefix = urlPrefixes.computeIfAbsent(
+                imageServedPath, RevisionMapper::buildUrlPrefix);
+            return prefix + filename;
+        }
+
+        return Paths.get(imageServedPath, filename)
+            .toString()
+            .replace('\\', '/');
     }
 
-}
+    private static String buildUrlPrefix(String configuredPath) {
+        String prefix = Paths.get(configuredPath).toString();
 
+        if (!prefix.isEmpty() && !prefix.endsWith("/")) {
+            prefix += "/";
+        }
+
+        return prefix.replace('\\', '/');
+    }
+
+    private static boolean isSimpleFilename(String filename) {
+        if (filename == null || filename.isEmpty()) {
+            return false;
+        }
+
+        for (int i = 0; i < filename.length(); i++) {
+            char character = filename.charAt(i);
+
+            if (character == '/' || character == '\\'
+                || character == '\0' || character > 127) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}

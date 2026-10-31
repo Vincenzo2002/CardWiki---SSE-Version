@@ -67,7 +67,7 @@ public class SimpleLearnService implements LearnService {
 
         Progress.Id id = new Progress.Id(user, card, attempt.isReverse());
 
-        Progress progress = progressRepository.findById(id).orElse(new Progress(id));
+        Progress progress = progressRepository.findById(id).orElseGet(() -> new Progress(id));
 
         // This spaced-repetition algorithm is based on Anki's algorithm, which is based on SuperMemo 2.
 
