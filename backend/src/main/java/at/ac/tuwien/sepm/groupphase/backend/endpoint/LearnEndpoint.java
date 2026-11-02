@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AttemptInputDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CardSimpleDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RevisionMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Card;
 import at.ac.tuwien.sepm.groupphase.backend.entity.RevisionEdit;
 import at.ac.tuwien.sepm.groupphase.backend.service.LearnService;
 import io.swagger.annotations.ApiOperation;
@@ -10,7 +11,6 @@ import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
@@ -38,7 +38,7 @@ public class LearnEndpoint {
     @PostMapping("/attempt")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Submit an attempt at recalling a card", authorizations = {@Authorization("user")})
-    public void attempt(@Valid @RequestBody AttemptInputDto attempt){
+    public void attempt(@Valid @RequestBody final AttemptInputDto attempt){
         LOGGER.info("POST /api/v1/learn body: {}", attempt);
         learnService.saveAttempt(attempt);
     }
@@ -46,11 +46,11 @@ public class LearnEndpoint {
     @Secured("ROLE_USER")
     @GetMapping("/next")
     @ApiOperation(value = "Get the next cards of a deck to learn", authorizations = {@Authorization("user")})
-    public List<CardSimpleDto> getNextCards(@RequestParam long deckId, @RequestParam(defaultValue = "false") boolean reverse, Pageable pageable){
+    public List<CardSimpleDto> getNextCards(@RequestParam final long deckId, @RequestParam(defaultValue = "false") final boolean reverse, final Pageable pageable){
         // TODO: Return page so the frontend knows how many more cards can be learned
         LOGGER.info("GET /api/v1/learn/next?deckId={}&reverse={} {}", deckId, reverse, pageable);
         return learnService.findNextCards(deckId, reverse, pageable).stream()
-            .map(card -> revisionMapper.revisionEditToCardSimpleDto((RevisionEdit) card.getLatestRevision()))
+            .map((final Card card) -> revisionMapper.revisionEditToCardSimpleDto((RevisionEdit) card.getLatestRevision()))
             .collect(Collectors.toList());
     }
 }

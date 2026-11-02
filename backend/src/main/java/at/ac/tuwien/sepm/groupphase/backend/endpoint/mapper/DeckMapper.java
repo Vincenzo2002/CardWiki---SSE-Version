@@ -14,14 +14,14 @@ import org.mapstruct.Named;
 public interface DeckMapper {
     @Named("deckToDeckDto")
     @Mapping(source = "createdBy.id", target = "createdBy")
-    DeckDto deckToDeckDto(Deck deck);
+    DeckDto deckToDeckDto(final Deck deck);
 
-    Deck deckInputDtoToDeck(DeckInputDto deckInputDto);
+    Deck deckInputDtoToDeck(final DeckInputDto deckInputDto);
 
-    DeckSimpleDto deckToDeckSimpleDto(Deck deck);
+    DeckSimpleDto deckToDeckSimpleDto(final Deck deck);
 
-    Deck deckUpdateDtoToDeck(DeckUpdateDto deckUpdateDto);
+    Deck deckUpdateDtoToDeck(final DeckUpdateDto deckUpdateDto);
 
     @Mapping(source = "", target = "id")
-    Category idToCategory(Long id);
+    Category idToCategory(final Long id);
 }

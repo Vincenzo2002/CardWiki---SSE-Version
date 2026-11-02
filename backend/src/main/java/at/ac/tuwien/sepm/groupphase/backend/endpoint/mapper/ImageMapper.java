@@ -21,16 +21,16 @@ public abstract class ImageMapper {
     private final ConcurrentMap<String, String> urlPrefixes =
         new ConcurrentHashMap<>();
 
-    public abstract ImageDto imageToImageDto(Image image);
+    public abstract ImageDto imageToImageDto(final Image image);
 
     @AfterMapping
-    protected void filenameToUrl(@MappingTarget ImageDto imageDto) {
-        String filename = imageDto.getFilename();
+    protected void filenameToUrl(@MappingTarget final ImageDto imageDto) {
+        final String filename = imageDto.getFilename();
 
         if (File.separatorChar == '/' && imageServedPath != null
             && isSimpleFilename(filename)) {
 
-            String prefix = urlPrefixes.computeIfAbsent(
+            final String prefix = urlPrefixes.computeIfAbsent(
                 imageServedPath, ImageMapper::buildUrlPrefix);
 
             imageDto.setUrl(prefix + filename);
@@ -43,7 +43,7 @@ public abstract class ImageMapper {
         }
     }
 
-    private static String buildUrlPrefix(String configuredPath) {
+    private static String buildUrlPrefix(final String configuredPath) {
         String prefix = Paths.get(configuredPath).toString();
 
         if (!prefix.isEmpty() && !prefix.endsWith("/")) {
@@ -53,13 +53,15 @@ public abstract class ImageMapper {
         return prefix.replace('\\', '/');
     }
 
-    private static boolean isSimpleFilename(String filename) {
+    private static boolean isSimpleFilename(final String filename) {
         if (filename == null || filename.isEmpty()) {
             return false;
         }
 
-        for (int i = 0; i < filename.length(); i++) {
-            char character = filename.charAt(i);
+        final int length = filename.length();
+
+        for (int i = 0; i < length; ++i) {
+            final char character = filename.charAt(i);
 
             if (character == '/' || character == '\\'
                 || character == '\0' || character > 127) {

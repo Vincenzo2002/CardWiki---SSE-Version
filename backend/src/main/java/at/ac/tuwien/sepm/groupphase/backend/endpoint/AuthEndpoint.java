@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.WhoAmIDto;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.core.Authentication;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
@@ -28,49 +26,64 @@ import java.util.stream.StreamSupport;
 @RequestMapping(value = "/api/v1/auth")
 public class AuthEndpoint {
 
-    @Autowired
-    private ClientRegistrationRepository clientRegistrationRepository;
+    private final UserService userService;
+    private final List<OAuth2ProviderSupplier> oAuth2ProviderSuppliers;
 
-    @Autowired
-    private UserService userService;
+    public AuthEndpoint(
+        final UserService userService,
+        final List<OAuth2ProviderSupplier> oAuth2ProviderSuppliers
+    ) {
+        this.userService = userService;
+        this.oAuth2ProviderSuppliers = oAuth2ProviderSuppliers;
+    }
 
     public interface OAuth2ProviderSupplier extends Supplier<List<OAuth2ProviderDto>>{};
 
-    @Autowired
-    private List<OAuth2ProviderSupplier> oAuth2ProviderSuppliers;
-
     @Component
     @Order(1)
-    class SpringOAuth2ProviderSupplier implements OAuth2ProviderSupplier {
+    static class SpringOAuth2ProviderSupplier implements OAuth2ProviderSupplier {
+        private final ClientRegistrationRepository clientRegistrationRepository;
+
+        public SpringOAuth2ProviderSupplier(
+            final ClientRegistrationRepository clientRegistrationRepository
+        ) {
+            this.clientRegistrationRepository = clientRegistrationRepository;
+        }
+
         @Override
         public List<OAuth2ProviderDto> get() {
             Iterable<ClientRegistration> clientRegistrations = null;
-            ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)
+            final ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)
                 .as(Iterable.class);
             if (type != ResolvableType.NONE &&
                 ClientRegistration.class.isAssignableFrom(type.resolveGenerics()[0])) {
                 clientRegistrations = (Iterable<ClientRegistration>) clientRegistrationRepository;
             }
             return StreamSupport.stream(clientRegistrations.spliterator(), false)
-                .map(c -> new OAuth2ProviderDto(c.getRegistrationId(), c.getClientName())).collect(Collectors.toList());
+                .map((final ClientRegistration c) ->
+                    new OAuth2ProviderDto(c.getRegistrationId(), c.getClientName()))
+                .collect(Collectors.toList());
         }
     }
 
     @GetMapping("/providers")
     @ApiOperation(value = "Returns the available Authentication Providers.")
     public List<OAuth2ProviderDto> index() {
-        return oAuth2ProviderSuppliers.stream().map(s -> s.get()).flatMap(Collection::stream).collect(Collectors.toList());
+        return oAuth2ProviderSuppliers.stream()
+            .map(OAuth2ProviderSupplier::get)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
     }
 
     @GetMapping("/whoami")
     @ApiOperation(value = "Returns information about the currently logged in user.", authorizations = {@Authorization("user")})
-    public WhoAmIDto whoami(Authentication auth) {
-        WhoAmIDto dto = new WhoAmIDto();
+    public WhoAmIDto whoami(final Authentication auth) {
+        final WhoAmIDto dto = new WhoAmIDto();
         if (auth != null) {
             dto.setAuthId(auth.getName());
             dto.setHasAccount(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
             dto.setAdmin(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
-            userService.findUserByAuthId(auth.getName()).ifPresent(user -> {
+            userService.findUserByAuthId(auth.getName()).ifPresent((final var user) -> {
                 dto.setId(user.getId());
                 dto.setUsername(user.getUsername());
             });

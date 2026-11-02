@@ -38,17 +38,17 @@ public class CommentEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/decks/{deckId}/comments")
     @ApiOperation(value = "Add a new comment to a deck", authorizations = {@Authorization("user")})
-    public CommentSimpleDto create(@PathVariable Long deckId, @Valid @RequestBody CommentInquiryDto commentInquiryDto) {
+    public CommentSimpleDto create(@PathVariable final Long deckId, @Valid @RequestBody final CommentInquiryDto commentInquiryDto) {
         LOGGER.info("POST /api/v1/decks/{}/comments body: {}", deckId, commentInquiryDto);
-        Comment commentInput = commentMapper.commentInquiryDtoToComment(commentInquiryDto);
-        Comment commentOutput = commentService.addCommentToDeck(deckId, commentInput);
+        final Comment commentInput = commentMapper.commentInquiryDtoToComment(commentInquiryDto);
+        final Comment commentOutput = commentService.addCommentToDeck(deckId, commentInput);
 
         return commentMapper.commentToCommentSimpleDto(commentOutput);
     }
 
     @GetMapping(value = "/decks/{deckId}/comments")
     @ApiOperation(value = "Get page of comments for a deck")
-    public Page<CommentSimpleDto> getCommentsByDeckId(@PathVariable Long deckId, @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<CommentSimpleDto> getCommentsByDeckId(@PathVariable final Long deckId, @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
         LOGGER.info("GET /api/v1/decks/{}/comments", deckId);
         return commentService.findCommentsByDeckId(deckId, pageable)
             .map(commentMapper::commentToCommentSimpleDto);
@@ -56,7 +56,7 @@ public class CommentEndpoint {
 
     @GetMapping(value = "/comments/{commentId}")
     @ApiOperation(value = "Get information about a specific comment")
-    public CommentSimpleDto findOne(@PathVariable Long commentId) {
+    public CommentSimpleDto findOne(@PathVariable final Long commentId) {
         LOGGER.info("GET /api/v1/comments/{}", commentId);
         return commentMapper.commentToCommentSimpleDto(commentService.findOneOrThrow(commentId));
     }
@@ -64,10 +64,10 @@ public class CommentEndpoint {
     @Secured("ROLE_USER")
     @PutMapping(value = "/comments/{commentId}")
     @ApiOperation(value = "Edit a comment", authorizations = {@Authorization("user")})
-    public CommentSimpleDto edit(@PathVariable Long commentId, @Valid @RequestBody CommentInquiryDto commentInquiryDto) {
+    public CommentSimpleDto edit(@PathVariable final Long commentId, @Valid @RequestBody final CommentInquiryDto commentInquiryDto) {
         LOGGER.info("PUT /api/v1/comments/{} body: {}", commentId, commentInquiryDto);
-        Comment commentInput = commentMapper.commentInquiryDtoToComment(commentInquiryDto);
-        Comment commentOutput = commentService.editComment(commentId, commentInput);
+        final Comment commentInput = commentMapper.commentInquiryDtoToComment(commentInquiryDto);
+        final Comment commentOutput = commentService.editComment(commentId, commentInput);
 
         return commentMapper.commentToCommentSimpleDto(commentOutput);
     }
@@ -76,7 +76,7 @@ public class CommentEndpoint {
     @DeleteMapping(value = "/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a comment", authorizations = {@Authorization("user")})
-    public void deleteComment(@PathVariable Long commentId) {
+    public void deleteComment(@PathVariable final Long commentId) {
         LOGGER.info("DELETE /api/v1/comments/{}", commentId);
         commentService.deleteComment(commentId);
     }

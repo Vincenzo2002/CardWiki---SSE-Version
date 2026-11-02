@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface CommentMapper {
 
-    CommentSimpleDto commentToCommentSimpleDto(Comment comment);
+    CommentSimpleDto commentToCommentSimpleDto(final Comment comment);
 
-    Comment commentInquiryDtoToComment(CommentInquiryDto commentInquiryDto);
+    Comment commentInquiryDtoToComment(final CommentInquiryDto commentInquiryDto);
 }

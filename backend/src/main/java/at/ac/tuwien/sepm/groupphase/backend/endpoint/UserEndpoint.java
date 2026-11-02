@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RevisionMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserInputDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Revision;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.service.FavoriteService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -13,9 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
@@ -31,33 +30,36 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.lang.invoke.MethodHandles;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/users")
 public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final FavoriteService favoriteService;
+    private final UserMapper userMapper;
+    private final DeckMapper deckMapper;
+    private final RevisionMapper revisionMapper;
 
-    @Autowired
-    private FavoriteService favoriteService;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private DeckMapper deckMapper;
-
-    @Autowired
-    private RevisionMapper revisionMapper;
+    public UserEndpoint(
+        final UserService userService,
+        final FavoriteService favoriteService,
+        final UserMapper userMapper,
+        final DeckMapper deckMapper,
+        final RevisionMapper revisionMapper
+    ) {
+        this.userService = userService;
+        this.favoriteService = favoriteService;
+        this.userMapper = userMapper;
+        this.deckMapper = deckMapper;
+        this.revisionMapper = revisionMapper;
+    }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @ApiOperation(value = "Register the authenticated user", authorizations = {@Authorization("user")})
-    public UserDetailsDto register(Authentication token, @Valid @RequestBody UserInputDto userInputDto) {
+    public UserDetailsDto register(final Authentication token, @Valid @RequestBody final UserInputDto userInputDto) {
         LOGGER.info("POST /api/v1/users {} {}", token, userInputDto);
         if (token == null)
             throw new AccessDeniedException("Login using an Oauth2 provider first");
@@ -73,7 +75,7 @@ public class UserEndpoint {
 
     @GetMapping
     @ApiOperation(value = "Search for users")
-    public Page<UserDetailsDto> search(@Valid @NotNull @RequestParam String username, @SortDefault("username") Pageable pageable) {
+    public Page<UserDetailsDto> search(@Valid @NotNull @RequestParam final String username, @SortDefault("username") final Pageable pageable) {
         LOGGER.info("GET /api/v1/users?username={} {}", username, pageable);
         return userService.searchByUsername(username, pageable)
             .map(userMapper::userToUserDetailsDto);
@@ -81,14 +83,14 @@ public class UserEndpoint {
 
     @GetMapping(value = "/byname/{username}")
     @ApiOperation(value = "Get user profile")
-    public UserDetailsDto getProfile(@PathVariable String username) {
+    public UserDetailsDto getProfile(@PathVariable final String username) {
         LOGGER.info("GET /api/v1/users/byname/{}", username);
         return userMapper.userToUserDetailsDto(userService.findUserByUsernameOrThrow(username));
     }
 
     @GetMapping(value = "/{id}/decks")
     @ApiOperation(value = "Get decks created by user")
-    public Page<DeckSimpleDto> getDecks(@PathVariable long id, @SortDefault("name") Pageable pageable) {
+    public Page<DeckSimpleDto> getDecks(@PathVariable final long id, @SortDefault("name") final Pageable pageable) {
         LOGGER.info("GET /api/v1/users/{}/decks {}", id, pageable);
         return userService.getDecks(id, pageable)
             .map(deckMapper::deckToDeckSimpleDto);
@@ -97,16 +99,16 @@ public class UserEndpoint {
     @GetMapping(value = "/{id}/revisions")
     @ApiOperation(value = "Get revisions created by user")
     @Transactional
-    public Page<RevisionDtoWithDeck> getRevisions(@PathVariable long id, @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<RevisionDtoWithDeck> getRevisions(@PathVariable final long id, @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
         LOGGER.info("GET /api/v1/users/{}/revisions", id);
-        return userService.getRevisions(id, pageable).map(revision -> revisionMapper.revision_to_revisionDtoWithDeck(revision));
+        return userService.getRevisions(id, pageable).map((final Revision revision) -> revisionMapper.revision_to_revisionDtoWithDeck(revision));
     }
 
     @Secured("ROLE_USER")
     @PutMapping(value = "/{userId}/favorites/{deckId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Add deck to user favorites", authorizations = {@Authorization("user")})
-    public DeckSimpleDto addFavorite(@PathVariable Long userId, @PathVariable Long deckId) {
+    public DeckSimpleDto addFavorite(@PathVariable final Long userId, @PathVariable final Long deckId) {
         LOGGER.info("PUT /api/v1/users/{}/favorites/{}", userId, deckId);
         return deckMapper.deckToDeckSimpleDto(favoriteService.addFavorite(userId, deckId));
     }
@@ -114,7 +116,7 @@ public class UserEndpoint {
     @Secured("ROLE_USER")
     @GetMapping(value = "/{userId}/favorites")
     @ApiOperation(value = "Get favorites of user", authorizations = {@Authorization("user")})
-    public Page<DeckSimpleDto> getFavorites(@PathVariable Long userId, @SortDefault("name") Pageable pageable) {
+    public Page<DeckSimpleDto> getFavorites(@PathVariable final Long userId, @SortDefault("name") final Pageable pageable) {
         LOGGER.info("GET /api/v1/users/{}/favorites {}", userId, pageable);
         return favoriteService.getFavorites(userId, pageable)
             .map(deckMapper::deckToDeckSimpleDto);
@@ -124,7 +126,7 @@ public class UserEndpoint {
     @GetMapping(value = "/{userId}/favorites/{deckId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Check if a deck is a favorite of the user", authorizations = {@Authorization("user")})
-    public void hasFavorite(@PathVariable Long userId, @PathVariable Long deckId) {
+    public void hasFavorite(@PathVariable final Long userId, @PathVariable final Long deckId) {
         LOGGER.info("GET /api/v1/users/{}/favorites/{}", userId, deckId);
         if (!favoriteService.hasFavorite(userId, deckId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("%s has no favorite %s", userId, deckId));
@@ -135,7 +137,7 @@ public class UserEndpoint {
     @DeleteMapping(value = "/{userId}/favorites/{deckId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Remove a deck from favorites of user", authorizations = {@Authorization("user")})
-    public void removeFavorite(@PathVariable Long userId, @PathVariable Long deckId) {
+    public void removeFavorite(@PathVariable final Long userId, @PathVariable final Long deckId) {
         LOGGER.info("GET /api/v1/users/{}/favorites/{}", userId, deckId);
         favoriteService.removeFavorite(userId, deckId);
     }
@@ -143,7 +145,7 @@ public class UserEndpoint {
     @Secured("ROLE_USER")
     @PatchMapping(value = "/{id}")
     @ApiOperation(value = "Change settings of logged in user", authorizations = {@Authorization("user")})
-    public UserDetailsDto updateUser(@PathVariable long id, @Valid @RequestBody UserUpdateDto userUpdateDto) {
+    public UserDetailsDto updateUser(@PathVariable final long id, @Valid @RequestBody final UserUpdateDto userUpdateDto) {
         LOGGER.info("PATCH /api/v1/users/{} {}", id, userUpdateDto);
         return userMapper.userToUserDetailsDto(userService.updateUser(id, userMapper.userUpdateDtoToUser(userUpdateDto)));
     }
@@ -152,7 +154,7 @@ public class UserEndpoint {
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete user", authorizations = {@Authorization("user")})
-    public void delete(@PathVariable long id, @RequestParam String reason) {
+    public void delete(@PathVariable final long id, @RequestParam final String reason) {
         LOGGER.info("DELETE /api/v1/users/{} Reason: {}", id, reason);
         userService.delete(id, reason);
     }
@@ -160,7 +162,7 @@ public class UserEndpoint {
     @Secured("ROLE_USER")
     @GetMapping(value = "/{userId}/export")
     @ApiOperation(value = "Export all data of a user", authorizations = {@Authorization(("user"))})
-    public UserExportDto exportUser(@PathVariable Long userId) {
+    public UserExportDto exportUser(@PathVariable final Long userId) {
         LOGGER.info("GET /api/v1/users/{}/export", userId);
         return userMapper.userToUserExportDto(userService.exportUserData(userId));
     }
