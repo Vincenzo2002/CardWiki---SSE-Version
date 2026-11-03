@@ -6,15 +6,15 @@ public class BadRequestException extends RuntimeException {
         super();
     }
 
-    public BadRequestException(String message) {
+    public BadRequestException(final String message) {
         super(message);
     }
 
-    public BadRequestException(String message, Throwable cause) {
+    public BadRequestException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public BadRequestException(Exception e) {
+    public BadRequestException(final Exception e) {
         super(e);
     }
 }

@@ -4,19 +4,19 @@ public class ConflictException extends RuntimeException {
     public ConflictException() {
     }
 
-    public ConflictException(String message) {
+    public ConflictException(final String message) {
         super(message);
     }
 
-    public ConflictException(String message, Throwable cause) {
+    public ConflictException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public ConflictException(Throwable cause) {
+    public ConflictException(final Throwable cause) {
         super(cause);
     }
 
-    public ConflictException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ConflictException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

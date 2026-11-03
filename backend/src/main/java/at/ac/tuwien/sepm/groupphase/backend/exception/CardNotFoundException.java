@@ -4,15 +4,15 @@ public class CardNotFoundException extends NotFoundException {
         public CardNotFoundException() {
         }
 
-        public CardNotFoundException(String message) {
+        public CardNotFoundException(final String message) {
             super(message);
         }
 
-        public CardNotFoundException(String message, Throwable cause) {
+        public CardNotFoundException(final String message, final Throwable cause) {
             super(message, cause);
         }
 
-        public CardNotFoundException(Exception e) {
+        public CardNotFoundException(final Exception e) {
             super(e);
         }
 }

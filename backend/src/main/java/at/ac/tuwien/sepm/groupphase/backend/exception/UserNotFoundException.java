@@ -6,15 +6,15 @@ public class UserNotFoundException extends NotFoundException {
     public UserNotFoundException() {
     }
 
-    public UserNotFoundException(String message) {
+    public UserNotFoundException(final String message) {
         super(message);
     }
 
-    public UserNotFoundException(String message, Throwable cause) {
+    public UserNotFoundException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public UserNotFoundException(Exception e) {
+    public UserNotFoundException(final Exception e) {
         super(e);
     }
 }

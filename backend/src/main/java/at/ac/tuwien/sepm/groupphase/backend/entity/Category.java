@@ -113,7 +113,7 @@ public class Category {
     public void setParent(Category parent) {
         if(Objects.equals(parent, this.parent)) return;
 
-        Category oldParent = this.parent;
+        final Category oldParent = this.parent;
         this.parent = parent;
 
         if (oldParent != null) oldParent.getChildren().remove(this);
@@ -153,10 +153,10 @@ public class Category {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof Category)) return false;
-        Category other = (Category) o;
+        final Category other = (Category) o;
         return Objects.equals(name, other.getName());
     }
 
