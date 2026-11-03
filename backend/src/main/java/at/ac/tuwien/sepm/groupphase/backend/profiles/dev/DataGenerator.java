@@ -2,13 +2,11 @@ package at.ac.tuwien.sepm.groupphase.backend.profiles.dev;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.profiles.datagenerator.Agent;
-import at.ac.tuwien.sepm.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CardRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.DeckRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -34,8 +32,6 @@ public class DataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int SIZE_OF_LARGE_TEST_DECK = 1000;
     private static final int SIZE_OF_SUPER_LARGE_TEST_DECK = 5000;
-    private static final int NUMBER_OF_REVISIONS = 5;
-    private static final int NUMBER_OF_CATEGORIES_TO_GENERATE = 3;
 
     private static final String[] USERNAMES = {DeveloperLogin.USER_NAME, "romeo", "julia", "victor", "mike", "juliett"};
 
@@ -46,16 +42,16 @@ public class DataGenerator {
     @PersistenceContext
     private EntityManager em;
 
-    @Autowired
-    private ApplicationContext appContext;
+    private final ApplicationContext appContext;
 
-    @Value("${exit:#{null}}")
-    private String exit;
+    private final String exit;
 
-    public DataGenerator(CardRepository cardRepository, DeckRepository deckRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
+    public DataGenerator(final CardRepository cardRepository, final DeckRepository deckRepository, final UserRepository userRepository, final ApplicationContext appContext, @Value("${exit:#{null}}") final String exit) {
         this.cardRepository = cardRepository;
         this.deckRepository = deckRepository;
         this.userRepository = userRepository;
+        this.appContext = appContext;
+        this.exit = exit;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -66,22 +62,22 @@ public class DataGenerator {
             return;
         }
 
-        List<Agent> agents = Arrays.stream(USERNAMES).map(username -> new Agent(em, true, Agent.defaultUser(username))).collect(Collectors.toList());
+        final List<Agent> agents = Arrays.stream(USERNAMES).map((final String username) -> new Agent(em, true, Agent.defaultUser(username))).collect(Collectors.toList());
 
-        User admin = Agent.defaultUser(DeveloperLogin.ADMIN_NAME);
+        final User admin = Agent.defaultUser(DeveloperLogin.ADMIN_NAME);
         admin.setAdmin(true);
         new Agent(em, true, admin);
 
-        Category science = agents.get(4).createCategory("Wissenschaften");
-        Category geography = agents.get(2).addSubcategory(science, "Geographie");
-        Category math = agents.get(3).addSubcategory(science, "Mathematik");
+        final Category science = agents.get(4).createCategory("Wissenschaften");
+        final Category geography = agents.get(2).addSubcategory(science, "Geographie");
+        final Category math = agents.get(3).addSubcategory(science, "Mathematik");
 
-        Deck capitals = agents.get(0).createDeck();
+        final Deck capitals = agents.get(0).createDeck();
         capitals.setName("Hauptstädte Europas");
         agents.get(0).addCategory(capitals, geography);
         importDeck(capitals, agents.get(0),"capitals.csv");
 
-        Deck latex = agents.get(1).createDeck();
+        final Deck latex = agents.get(1).createDeck();
         latex.setName("Mathematik Demo");
         agents.get(1).addCategory(latex, math);
         importDeck(latex, agents.get(1),"math.csv");
@@ -100,17 +96,15 @@ public class DataGenerator {
         }
     }
 
-    private void importDeck(Deck deck, Agent agent, String filename) {
+    private void importDeck(final Deck deck, final Agent agent, final String filename) {
 
-        long countCards = cardRepository.count();
-
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream(filename);
-        Scanner scanner = new Scanner(is);
+        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        final InputStream is = classloader.getResourceAsStream(filename);
+        final Scanner scanner = new Scanner(is);
 
         while (scanner.hasNextLine()){
-            String[] parts = scanner.nextLine().split(",", 2);
-            RevisionCreate create = new RevisionCreate();
+            final String[] parts = scanner.nextLine().split(",", 2);
+            final RevisionCreate create = new RevisionCreate();
             create.setMessage("import from CSV");
             create.setTextFront(parts[0]);
             create.setTextBack(parts[1]);
@@ -119,7 +113,7 @@ public class DataGenerator {
     }
 
     private void generateLargeTestDeck() {
-        User user = new User();
+        final User user = new User();
         user.setAuthId("real id");
         user.setDescription("test user3");
         user.setAdmin(false);
@@ -128,19 +122,19 @@ public class DataGenerator {
         user.setUsername("nununu");
         userRepository.saveAndFlush(user);
 
-        Deck deck = new Deck();
+        final Deck deck = new Deck();
         deck.setName("large test deck");
         deck.setCreatedBy(user);
         deckRepository.saveAndFlush(deck);
 
         LOGGER.info("Creating {}({} cards)", deck.getName(), SIZE_OF_LARGE_TEST_DECK);
-        for (int i = 0; i < SIZE_OF_LARGE_TEST_DECK; i++) {
+        for (int i = 0; i < SIZE_OF_LARGE_TEST_DECK; ++i) {
             generateCard(deck, user, i, "large");
         }
     }
 
     private void generateSuperLargeTestDeck() {
-        User user = new User();
+        final User user = new User();
         user.setAuthId("unreal id");
         user.setDescription("test user4");
         user.setAdmin(false);
@@ -149,22 +143,22 @@ public class DataGenerator {
         user.setUsername("nocamelcase");
         userRepository.saveAndFlush(user);
 
-        Deck deck = new Deck();
+        final Deck deck = new Deck();
         deck.setName("super large test deck");
         deck.setCreatedBy(user);
         deckRepository.saveAndFlush(deck);
 
         LOGGER.info("Creating {}({} cards)", deck.getName(), SIZE_OF_SUPER_LARGE_TEST_DECK);
-        for (int i = 0; i < SIZE_OF_SUPER_LARGE_TEST_DECK; i++) {
+        for (int i = 0; i < SIZE_OF_SUPER_LARGE_TEST_DECK; ++i) {
             generateCard(deck, user, i, "super large");
         }
     }
 
-    private void generateCard(Deck deck, User user, int index, String deckSize) {
-        Card card = new Card();
+    private void generateCard(final Deck deck, final User user, final int index, final String deckSize) {
+        final Card card = new Card();
         card.setDeck(deck);
         deck.getCards().add(card);
-        RevisionCreate revision = new RevisionCreate();
+        final RevisionCreate revision = new RevisionCreate();
 
         card.setLatestRevision(revision);
         revision.setCard(card);
@@ -175,11 +169,11 @@ public class DataGenerator {
         revision.setTextFront(deckSize + " test set card " + index + " front");
         revision.setTextBack(deckSize + " test set card " + index + " back");
 
-        card = cardRepository.save(card);
+        cardRepository.save(card);
     }
 
     private void generateJapaneseDeck() {
-        User user = new User();
+        final User user = new User();
         user.setAuthId("fake");
         user.setDescription("");
         user.setAdmin(false);
@@ -189,7 +183,7 @@ public class DataGenerator {
 
         userRepository.saveAndFlush(user);
 
-        Deck deck = new Deck();
+        final Deck deck = new Deck();
         deck.setName("第3課");
         deck.setCreatedBy(user);
         deckRepository.saveAndFlush(deck);
@@ -197,17 +191,19 @@ public class DataGenerator {
         final String[] fronts = {"飛行機", "電車", "家", "地下鉄", "休み", "銀行"};
         final String[] backs = {"plane", "train", "home", "subway", "vacation", "Bank"};
 
-        for (int i = 0; i < Math.min(fronts.length, backs.length); i++) {
+        final int numberOfCards = Math.min(fronts.length, backs.length);
+
+        for (int i = 0; i < numberOfCards; ++i) {
             insertNewCard(deck, user, fronts[i], backs[i]);
         }
 
     }
 
-    private Card insertNewCard(Deck deck, User user, String front, String back) {
-        Card card = new Card();
+    private Card insertNewCard(final Deck deck, final User user, final String front, final String back) {
+        final Card card = new Card();
         card.setDeck(deck);
         deck.getCards().add(card);
-        RevisionCreate revision = new RevisionCreate();
+        final RevisionCreate revision = new RevisionCreate();
 
         card.setLatestRevision(revision);
         revision.setCard(card);
