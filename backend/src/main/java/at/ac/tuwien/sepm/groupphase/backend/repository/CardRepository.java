@@ -26,7 +26,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
      * @return list of cards of the deck
      */
     @EntityGraph(attributePaths = {"latestRevision"})
-    List<Card> findCardsByDeck_Id(Long deckId);
+    List<Card> findCardsByDeck_Id(final Long deckId);
 
     /**
      * Find cards of a specific deck, excludes currently empty ones
@@ -36,7 +36,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
      */
     @EntityGraph(attributePaths = {"latestRevision"})
     @Query(value="select c from Card c inner join RevisionEdit r on r=c.latestRevision where c.deck.id=:deckId")
-    Stream<Card> findCardsWithContentByDeck_Id(@Param("deckId") Long deckId);
+    Stream<Card> findCardsWithContentByDeck_Id(@Param("deckId") final Long deckId);
 
     /**
      * Find latest revisions of a specific deck, excluding deleted ones
@@ -45,7 +45,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
      * @return latest revisions of the deck, excluding deleted ones
      */
     @Query(value="select r from Card c inner join RevisionEdit r on r=c.latestRevision where c.deck.id=:deckId")
-    Stream<RevisionEdit> findLatestEditRevisionsByDeck_Id(@Param("deckId") Long deckId);
+    Stream<RevisionEdit> findLatestEditRevisionsByDeck_Id(@Param("deckId") final Long deckId);
 
     /**
      * Find latest revisions of a specific deck, excluding deleted ones
@@ -54,7 +54,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
      * @return latest revisions of the deck, excluding deleted ones
      */
     @Query(value="select r from Card c inner join RevisionEdit r on r=c.latestRevision where c.deck.id=:deckId")
-    Page<RevisionEdit> findLatestEditRevisionsByDeck_Id(@Param("deckId") Long deckId, Pageable pageable);
+    Page<RevisionEdit> findLatestEditRevisionsByDeck_Id(@Param("deckId") final Long deckId, final Pageable pageable);
 
     /**
      * Find card using id
@@ -63,7 +63,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
      * @return card
      */
     @EntityGraph(attributePaths = {"deck", "latestRevision"})
-    Optional<Card> findById(@Param("cardId") Long cardId);
+    Optional<Card> findById(@Param("cardId") final Long cardId);
 
 
     // Using native query due to performance issues with the jqpl version (> 500ms for 1000 cards with progress)
@@ -87,7 +87,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     @Query(nativeQuery = true,
         value = "SELECT *" + findNextCardsQuery + findNextCardsOrder,
         countQuery = "SELECT count(*)" + findNextCardsQuery)
-    Page<Card> findNextCards(@Param("deckId") Long deckId, @Param("userId") Long userId, @Param("reverse") boolean reverse, Pageable pageable);
+    Page<Card> findNextCards(@Param("deckId") final Long deckId, @Param("userId") final Long userId, @Param("reverse") final boolean reverse, final Pageable pageable);
 
     /**
      * Number of currently due cards.
@@ -95,7 +95,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
      */
     @Query(nativeQuery = true,
         value = "SELECT count(*)" + findNextCardsQuery)
-    long dueCardsCount(@Param("deckId") Long deckId, @Param("userId") Long userId, @Param("reverse") boolean reverse);
+    long dueCardsCount(@Param("deckId") final Long deckId, @Param("userId") final Long userId, @Param("reverse") final boolean reverse);
 
     /**
      * Filter front texts by existing front texts in deck
@@ -108,5 +108,5 @@ public interface CardRepository extends JpaRepository<Card, Long> {
         " inner join Card c on r = c.latestRevision" +
         " where c.deck.id = :deckId" +
         "   and r.textFront in :textFronts")
-    Set<String> filterExistingFrontTexts(@Param("deckId") Long deckId, @Param("textFronts") Collection<String> frontTexts);
+    Set<String> filterExistingFrontTexts(@Param("deckId") final Long deckId, @Param("textFronts") final Collection<String> frontTexts);
 }

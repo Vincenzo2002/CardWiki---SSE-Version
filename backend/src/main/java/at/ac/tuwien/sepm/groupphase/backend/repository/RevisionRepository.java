@@ -1,20 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Revision;
-import at.ac.tuwien.sepm.groupphase.backend.entity.RevisionEdit;
-import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Repository
 public interface RevisionRepository extends JpaRepository<Revision, Long> {
@@ -25,7 +19,7 @@ public interface RevisionRepository extends JpaRepository<Revision, Long> {
      */
     @Override
     @EntityGraph(attributePaths = {"card", "card.deck", "createdBy"})
-    Page<Revision> findAll(Pageable pageable);
+    Page<Revision> findAll(final Pageable pageable);
 
     /**
      * Find all revisions created by user
@@ -35,7 +29,7 @@ public interface RevisionRepository extends JpaRepository<Revision, Long> {
      * @return ordered page of all revisions created by user
      */
     @EntityGraph(attributePaths = {"card", "card.deck", "createdBy"})
-    Page<Revision> findByCreatedBy_Id(long userId, Pageable pageable);
+    Page<Revision> findByCreatedBy_Id(final long userId, final Pageable pageable);
 
     /**
      * Find all revisions created by user and preload for exporting data
@@ -44,7 +38,7 @@ public interface RevisionRepository extends JpaRepository<Revision, Long> {
      * @return all revisions created by user
      */
     @EntityGraph(attributePaths = {"card", "card.deck", "createdBy"})
-    Set<Revision> findExportByCreatedBy_Id(long userId);
+    Set<Revision> findExportByCreatedBy_Id(final long userId);
 
     /**
      * Find all revisions of a card
@@ -54,7 +48,7 @@ public interface RevisionRepository extends JpaRepository<Revision, Long> {
      * @return ordered list of all revisions of the card
      */
     @EntityGraph(attributePaths = {"createdBy"})
-    Page<Revision> findByCard_Id(long id, Pageable pageable);
+    Page<Revision> findByCard_Id(final long id, final Pageable pageable);
 
     /**
      * Find all revisions for a deck
@@ -64,7 +58,7 @@ public interface RevisionRepository extends JpaRepository<Revision, Long> {
      * @return ordered list of all revisions of the deck
      */
     @EntityGraph(attributePaths = {"createdBy"})
-    Page<Revision> findByCard_Deck_Id(long id, Pageable pageable);
+    Page<Revision> findByCard_Deck_Id(final long id, final Pageable pageable);
 
     /**
      * Find revisions by ids
@@ -73,5 +67,5 @@ public interface RevisionRepository extends JpaRepository<Revision, Long> {
      * @return requested revisions
      */
     @EntityGraph(attributePaths = {"createdBy"})
-    List<Revision> findByIdIn(List<Long> ids);
+    List<Revision> findByIdIn(final List<Long> ids);
 }

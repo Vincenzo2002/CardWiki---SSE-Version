@@ -19,7 +19,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return optional comment with prefetched createdBy
      */
     @EntityGraph(attributePaths = {"createdBy"})
-    Optional<Comment> findById(Long commentId);
+    Optional<Comment> findById(final Long commentId);
 
     /**
      * Find page of comments for a deck
@@ -29,7 +29,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return page of comments from this deck
      */
     @EntityGraph(attributePaths = {"createdBy"})
-    Page<Comment> findByDeckId(Long deckId, Pageable pageable);
+    Page<Comment> findByDeckId(final Long deckId, final Pageable pageable);
 
     /**
      * Find all comments created by user for exporting data
@@ -38,5 +38,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return all comments by user
      */
     @EntityGraph(attributePaths = {"deck"})
-    Set<Comment> findExportByCreatedBy_Id(Long userId);
+    Set<Comment> findExportByCreatedBy_Id(final Long userId);
 }
