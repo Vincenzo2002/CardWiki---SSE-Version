@@ -1,35 +1,47 @@
 # GreenIT Report — About
 
-## Pagina analizzata
+## Analysed page
+
 - **URL:** `http://localhost:4200/about`
-- **Ambiente:** build di produzione Angular, frontend servito localmente con `npx serve`; backend Spring Boot attivo.
-- **Esito finale:** tutte le best practices GreenIT risultano verdi.
+- **Environment:** Angular production build, frontend served locally with `npx serve`; Spring Boot backend running.
+- **Final result:** all GreenIT best-practice checks are green.
 
-## Risultati finali
-| Indicatore | Risultato |
-|---|---:|
-| EcoIndex | 95,00 |
-| Classe EcoIndex | A |
-| Consumo d'acqua stimato | 1,65 cl |
-| Emissioni GHG stimate | 1,10 gCO₂e |
-| Dimensione DOM | 75 |
-| Richieste HTTP mostrate da GreenIT | 0 |
-| Page Size mostrata da GreenIT | 0 KB |
+## Final results
 
-> Nota: GreenIT mostra 0 richieste e 0 KB nello screenshot finale. Questi valori vengono riportati come visualizzati dallo strumento e non sono interpretati come prova dell'assenza di trasferimenti di rete.
+| Indicator                      |     Result |
+| ------------------------------ | ---------: |
+| EcoIndex                       |      95.00 |
+| EcoIndex grade                 |          A |
+| Estimated water consumption    |    1.65 cl |
+| Estimated GHG emissions        | 1.10 gCO₂e |
+| DOM size                       |         75 |
+| HTTP requests shown by GreenIT |          0 |
+| Page size shown by GreenIT     |       0 KB |
 
-## Interventi comuni applicati
-- Spostamento degli stili dei componenti interessati nel foglio globale `styles.scss`, rimuovendo i fogli CSS specifici e i relativi `styleUrls`.
-- Aggiunta di un foglio di stile dedicato alla stampa (`assets/print.css`), collegato da `index.html` con `media="print"` e minificato.
-- Configurazione locale degli header `Cache-Control` tramite `serve.json`: `index.html` usa `no-cache`, gli asset JS/CSS con hash usano `public, max-age=31536000, immutable` e gli asset in `assets/` usano `public, max-age=86400`.
-- Verifica degli header con `curl` e tramite Chrome DevTools.
+> Note: GreenIT shows 0 requests and 0 KB in the final screenshot. These values
+> are reported as displayed by the tool and are not interpreted as evidence of
+> an absence of network transfers.
+
+## Common changes applied
+
+- Moved the styles of the affected components into the global `styles.scss` file, removing the component-specific CSS files and their `styleUrls` references.
+- Added a dedicated print stylesheet (`assets/print.css`), linked from `index.html` with `media="print"` and minified.
+- Configured local `Cache-Control` headers through `serve.json`: `index.html` uses `no-cache`, hashed JS/CSS assets use `public, max-age=31536000, immutable`, and assets under `assets/` use `public, max-age=86400`.
+- Checked the headers with `curl` and Chrome DevTools.
 
 ## Best practices
-Tutti i controlli mostrati nello screenshot finale risultano verdi, inclusi Cache-Control, compressione, CSS/JS esterni e minificati, assenza di errori HTTP, print stylesheet e uso di HTTP/2 secondo il report GreenIT.
 
-## Baseline e confronto
-- **EcoIndex baseline:** 90,05.
-- **EcoIndex finale:** 95,00.
-- **Variazione:** +4,95 punti.
+All checks shown in the final screenshot are green, including Cache-Control,
+compression, external and minified CSS/JS, absence of HTTP errors, a print
+stylesheet and HTTP/2 usage, as reported by GreenIT.
 
-La baseline iniziale aveva 16 richieste e DOM 95. La misurazione finale mostra DOM 75. I valori finali di richieste e dimensione pagina sono riportati come visualizzati da GreenIT (0 e 0 KB), pertanto non sono direttamente confrontabili con la baseline.
+## Baseline and comparison
+
+- **Baseline EcoIndex:** 90.05.
+- **Final EcoIndex:** 95.00.
+- **Change:** +4.95 points.
+
+The initial baseline had 16 requests and a DOM size of 95. The final measurement
+shows a DOM size of 75. Final request counts and page size are reported as
+displayed by GreenIT (0 and 0 KB), so they are not directly comparable with the
+baseline.

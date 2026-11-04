@@ -1,36 +1,48 @@
 # GreenIT Report — Formatting Cards
 
-## Pagina analizzata
+## Analysed page
+
 - **URL:** `http://localhost:4200/help/markdown-syntax#markdown`
-- **Ambiente:** build di produzione Angular, frontend servito localmente con `npx serve`; backend Spring Boot attivo.
-- **Esito finale:** tutte le best practices GreenIT risultano verdi.
+- **Environment:** Angular production build, frontend served locally with `npx serve`; Spring Boot backend running.
+- **Final result:** all GreenIT best-practice checks are green.
 
-## Risultati finali
-| Indicatore | Risultato |
-|---|---:|
-| EcoIndex | 86,21 |
-| Classe EcoIndex | A |
-| Consumo d'acqua stimato | 1,91 cl |
-| Emissioni GHG stimate | 1,28 gCO₂e |
-| Dimensione DOM | 329 |
-| Richieste HTTP mostrate da GreenIT | 0 |
-| Page Size mostrata da GreenIT | 0 KB |
+## Final results
 
-> Nota: GreenIT mostra 0 richieste e 0 KB nello screenshot finale. Questi valori vengono riportati come visualizzati dallo strumento e non sono interpretati come prova dell'assenza di trasferimenti di rete.
+| Indicator                      |     Result |
+| ------------------------------ | ---------: |
+| EcoIndex                       |      86.21 |
+| EcoIndex grade                 |          A |
+| Estimated water consumption    |    1.91 cl |
+| Estimated GHG emissions        | 1.28 gCO₂e |
+| DOM size                       |        329 |
+| HTTP requests shown by GreenIT |          0 |
+| Page size shown by GreenIT     |       0 KB |
 
-## Interventi specifici e comuni
-- Gli stili di `toasts-container` e `markdown-syntax` sono stati spostati nel foglio globale `styles.scss`.
-- Sono stati rimossi i rispettivi `styleUrls` dai componenti e i fogli CSS specifici non più utilizzati.
-- Aggiunta di un foglio di stile dedicato alla stampa (`assets/print.css`), collegato da `index.html` con `media="print"` e minificato.
-- Configurazione locale degli header `Cache-Control` tramite `serve.json`: `index.html` usa `no-cache`, gli asset JS/CSS con hash usano `public, max-age=31536000, immutable` e gli asset in `assets/` usano `public, max-age=86400`.
-- Verifica degli header con `curl` e tramite Chrome DevTools.
+> Note: GreenIT shows 0 requests and 0 KB in the final screenshot. These values
+> are reported as displayed by the tool and are not interpreted as evidence of
+> an absence of network transfers.
+
+## Page-specific and common changes
+
+- Moved the styles of `toasts-container` and `markdown-syntax` into the global `styles.scss` file.
+- Removed their `styleUrls` references from the components and the component-specific CSS files that were no longer used.
+- Added a dedicated print stylesheet (`assets/print.css`), linked from `index.html` with `media="print"` and minified.
+- Configured local `Cache-Control` headers through `serve.json`: `index.html` uses `no-cache`, hashed JS/CSS assets use `public, max-age=31536000, immutable`, and assets under `assets/` use `public, max-age=86400`.
+- Checked the headers with `curl` and Chrome DevTools.
 
 ## Best practices
-Tutti i controlli mostrati nello screenshot finale risultano verdi, inclusi Cache-Control, compressione, CSS/JS esterni e minificati, assenza di errori HTTP, print stylesheet e uso di HTTP/2 secondo il report GreenIT.
 
-## Baseline e confronto
-- **Baseline iniziale più attendibile:** EcoIndex 85,83 (la prima misurazione, 82,79, aveva 3 errori HTTP).
-- **EcoIndex finale:** 86,21.
-- **Variazione:** +0,38 punti.
+All checks shown in the final screenshot are green, including Cache-Control,
+compression, external and minified CSS/JS, absence of HTTP errors, a print
+stylesheet and HTTP/2 usage, as reported by GreenIT.
 
-La baseline più attendibile registrava 7 richieste e DOM 333; una successiva misurazione baseline riportava 10 richieste, 330 elementi DOM e 440 KB. Le misurazioni finali mostrano DOM 329. Richieste e Page Size finali sono mostrati come 0 da GreenIT e non sono direttamente confrontabili con i valori baseline.
+## Baseline and comparison
+
+- **More reliable initial baseline:** EcoIndex 85.83 (the first measurement, 82.79, had 3 HTTP errors).
+- **Final EcoIndex:** 86.21.
+- **Change:** +0.38 points.
+
+The more reliable baseline recorded 7 requests and a DOM size of 333; a later
+baseline measurement reported 10 requests, 330 DOM elements and 440 KB. Final
+measurements show a DOM size of 329. GreenIT displays final request counts and
+page size as 0, so they are not directly comparable with the baseline values.

@@ -1,6 +1,7 @@
 # CardWiki GreenIT reports
 
-Questa cartella contiene sei report per pagina e il riepilogo before/after:
+This folder contains six page reports and the before/after summary:
+
 - about.md
 - categories.md
 - decks.md
@@ -9,4 +10,6 @@ Questa cartella contiene sei report per pagina e il riepilogo before/after:
 - super-large-test-deck.md
 - before-after-report.md
 
-I report riportano i valori mostrati negli screenshot GreenIT. Le misurazioni che presentano 0 richieste e 0 KB sono esplicitamente indicate come valori visualizzati dallo strumento, senza interpretarli come assenza di traffico.
+The reports reproduce the values shown in the GreenIT screenshots. Measurements
+showing 0 requests and 0 KB are explicitly identified as values displayed by the
+tool, without interpreting them as an absence of traffic.
