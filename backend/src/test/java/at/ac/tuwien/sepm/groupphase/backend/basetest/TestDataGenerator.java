@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -184,8 +185,8 @@ public abstract class TestDataGenerator {
     Long REVISION_EDIT_ID = 3L;
     Long CATEGORY_ID = 4L;
     Long CATEGORY_2_ID = 5L;
-    LocalDateTime CREATED_AT = LocalDateTime.now();
-    LocalDateTime UPDATED_AT = LocalDateTime.now();
+    LocalDateTime CREATED_AT = LocalDateTime.now(ZoneId.systemDefault());
+    LocalDateTime UPDATED_AT = LocalDateTime.now(ZoneId.systemDefault());
 
     @Deprecated
     public User getUnconnectedSampleUser() {

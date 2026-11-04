@@ -30,14 +30,14 @@ public class ImageMapperBenchmark {
         mapper = Mappers.getMapper(ImageMapper.class);
 
         // Configure the URL prefix without starting Spring.
-        Field servedPath = ImageMapper.class.getDeclaredField("imageServedPath");
+        final Field servedPath = ImageMapper.class.getDeclaredField("imageServedPath");
         servedPath.setAccessible(true);
         servedPath.set(mapper, "/images");
 
         images = new ArrayList<>(size);
 
-        for (int i = 0; i < size; i++) {
-            Image image = new Image();
+        for (int i = 0; i < size; ++i) {
+            final Image image = new Image();
             image.setFilename(String.format("%064x.png", i));
             images.add(image);
         }
@@ -45,9 +45,9 @@ public class ImageMapperBenchmark {
 
     @Benchmark
     public List<ImageDto> mapImages() {
-        List<ImageDto> result = new ArrayList<>(size);
+        final List<ImageDto> result = new ArrayList<>(size);
 
-        for (Image image : images) {
+        for (final Image image : images) {
             result.add(mapper.imageToImageDto(image));
         }
 

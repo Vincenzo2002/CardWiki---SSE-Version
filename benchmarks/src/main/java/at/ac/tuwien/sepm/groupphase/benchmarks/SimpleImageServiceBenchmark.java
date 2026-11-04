@@ -34,11 +34,11 @@ public class SimpleImageServiceBenchmark {
 
     private static MethodHandle findBytesToHex() {
         try {
-            MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(
+            final MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(
                 SimpleImageService.class, MethodHandles.lookup());
             return lookup.findVirtual(SimpleImageService.class, "bytesToHex",
                 MethodType.methodType(String.class, byte[].class));
-        } catch (ReflectiveOperationException exception) {
+        } catch (final ReflectiveOperationException exception) {
             throw new ExceptionInInitializerError(exception);
         }
     }

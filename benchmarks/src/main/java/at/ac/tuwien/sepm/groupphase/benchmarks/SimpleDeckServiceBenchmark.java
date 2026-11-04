@@ -38,25 +38,25 @@ public class SimpleDeckServiceBenchmark {
     public void setup() {
         ((Logger) LoggerFactory.getLogger(SimpleDeckService.class)).setLevel(Level.WARN);
 
-        User sourceAuthor = new User(2L);
-        User currentUser = new User(1L);
+        final User sourceAuthor = new User(2L);
+        final User currentUser = new User(1L);
         sourceDeck = new Deck();
         sourceDeck.setId(42L);
         sourceDeck.setName("Source deck");
         sourceDeck.setCreatedBy(sourceAuthor);
 
-        Image frontImage = new Image();
+        final Image frontImage = new Image();
         frontImage.setFilename("front.png");
-        Image backImage = new Image();
+        final Image backImage = new Image();
         backImage.setFilename("back.png");
 
-        List<RevisionEdit> sourceRevisions = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            Card card = new Card();
+        final List<RevisionEdit> sourceRevisions = new ArrayList<>(size);
+        for (int i = 0; i < size; ++i) {
+            final Card card = new Card();
             card.setId((long) i + 1);
             card.setDeck(sourceDeck);
 
-            RevisionEdit revision = new RevisionEdit();
+            final RevisionEdit revision = new RevisionEdit();
             revision.setId((long) i + 10000);
             revision.setCard(card);
             revision.setCreatedBy(sourceAuthor);
@@ -69,11 +69,11 @@ public class SimpleDeckServiceBenchmark {
             sourceDeck.getCards().add(card);
             sourceRevisions.add(revision);
         }
-        Optional<Deck> sourceLookup = Optional.of(sourceDeck);
+        final Optional<Deck> sourceLookup = Optional.of(sourceDeck);
 
         // Only the calls used by copy are supported. No database, generated
         // IDs, persistence callbacks, or invocation history are simulated.
-        DeckRepository decks = (DeckRepository) Proxy.newProxyInstance(
+        final DeckRepository decks = (DeckRepository) Proxy.newProxyInstance(
             DeckRepository.class.getClassLoader(),
             new Class<?>[]{DeckRepository.class},
             (proxy, method, args) -> {
@@ -87,7 +87,7 @@ public class SimpleDeckServiceBenchmark {
                 }
             });
 
-        CardRepository cards = (CardRepository) Proxy.newProxyInstance(
+        final CardRepository cards = (CardRepository) Proxy.newProxyInstance(
             CardRepository.class.getClassLoader(),
             new Class<?>[]{CardRepository.class},
             (proxy, method, args) -> {
@@ -104,7 +104,7 @@ public class SimpleDeckServiceBenchmark {
                 }
             });
 
-        UserService users = (UserService) Proxy.newProxyInstance(
+        final UserService users = (UserService) Proxy.newProxyInstance(
             UserService.class.getClassLoader(),
             new Class<?>[]{UserService.class},
             (proxy, method, args) -> {
@@ -122,7 +122,7 @@ public class SimpleDeckServiceBenchmark {
     public Deck copyDeck() {
         // A new destination prevents cards from accumulating across invocations.
         // Destination creation is included in the measured operation.
-        Deck destination = new Deck();
+        final Deck destination = new Deck();
         destination.setName("Copied deck");
         return service.copy(sourceDeck.getId(), destination);
     }

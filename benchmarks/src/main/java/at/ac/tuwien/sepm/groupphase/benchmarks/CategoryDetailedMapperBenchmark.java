@@ -17,6 +17,7 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Thread)
@@ -36,7 +37,7 @@ public class CategoryDetailedMapperBenchmark {
     @Setup
     public void setup() {
         mapper = CategoryMapper.INSTANCE;
-        LocalDateTime timestamp = LocalDateTime.of(2020, 1, 1, 0, 0);
+        final LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 1, 0, 0);
 
         category = new Category(2L, "Main category");
         category.setCreatedBy(new User(1L));
@@ -45,8 +46,8 @@ public class CategoryDetailedMapperBenchmark {
         category.setUpdatedAt(timestamp);
 
         // Keep decks empty and all other mapped fields fixed across input sizes.
-        for (int i = 0; i < childrenCount; i++) {
-            Category child = new Category((long) i + 3, "Child category " + i);
+        for (int i = 0; i < childrenCount; ++i) {
+            final Category child = new Category((long) i + 3, "Child category " + i);
             child.setParent(category);
         }
     }
