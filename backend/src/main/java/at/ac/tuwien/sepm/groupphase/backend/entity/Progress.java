@@ -128,10 +128,10 @@ public class Progress {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Id id = (Id) o;
+            final Id id = (Id) o;
             return user.equals(id.user) &&
                 card.equals(id.card) &&
                 reverse == id.reverse;

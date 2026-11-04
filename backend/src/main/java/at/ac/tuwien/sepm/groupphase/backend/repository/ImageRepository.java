@@ -17,7 +17,7 @@ public interface ImageRepository extends JpaRepository<Image, String> {
      * @param filename of the image
      * @return image with passed filename
      */
-    Optional<Image> findByFilename(String filename);
+    Optional<Image> findByFilename(final String filename);
 
     /**
      * Find all images created by user for exporting data
@@ -25,5 +25,5 @@ public interface ImageRepository extends JpaRepository<Image, String> {
      * @param userId id of the user
      * @return all categories by user
      */
-    Set<Image> findExportByCreatedBy_Id(Long userId);
+    Set<Image> findExportByCreatedBy_Id(final Long userId);
 }

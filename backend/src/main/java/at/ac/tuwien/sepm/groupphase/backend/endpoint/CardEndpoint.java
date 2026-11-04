@@ -36,7 +36,7 @@ public class CardEndpoint {
     private final RevisionMapper revisionMapper;
 
     @Autowired
-    public CardEndpoint(CardService cardService, RevisionMapper revisionMapper) {
+    public CardEndpoint(final CardService cardService, final RevisionMapper revisionMapper) {
         this.cardService = cardService;
         this.revisionMapper = revisionMapper;
     }
@@ -45,16 +45,16 @@ public class CardEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/decks/{deckId}/cards")
     @ApiOperation(value = "Create a new card", authorizations = {@Authorization("user")})
-    public CardSimpleDto create(@Valid  @RequestBody RevisionInputDto revisionInputDto, @PathVariable Long deckId) {
+    public CardSimpleDto create(@Valid  @RequestBody final RevisionInputDto revisionInputDto, @PathVariable final Long deckId) {
         LOGGER.info("POST /api/v1/decks/{}/cards body: {}", deckId, revisionInputDto);
-        RevisionCreate revision = revisionMapper.revisionEditDtoToRevisionCreate(revisionInputDto);
+        final RevisionCreate revision = revisionMapper.revisionEditDtoToRevisionCreate(revisionInputDto);
         return revisionMapper.revisionEditToCardSimpleDto((RevisionEdit) cardService.addCardToDeck(deckId, revision).getLatestRevision());
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/decks/{deckId}/cards")
     @ApiOperation(value = "Get all cards for a specific deck")
-    public Page<CardContentDto> getCardsByDeckId(@PathVariable Long deckId, @SortDefault("createdAt") Pageable pageable) {
+    public Page<CardContentDto> getCardsByDeckId(@PathVariable final Long deckId, @SortDefault("createdAt") final Pageable pageable) {
         LOGGER.info("GET /api/v1/decks/{}/cards {}", deckId, pageable);
         return cardService.findLatestEditRevisionsByDeckId(deckId, pageable)
             .map(revisionMapper::revisionEditToCardContentDto);
@@ -62,7 +62,7 @@ public class CardEndpoint {
 
     @GetMapping(value = "/cards/{cardId}")
     @ApiOperation(value = "Get information about a specific card in deck")
-    public CardUpdateDto findOne(@PathVariable Long cardId) {
+    public CardUpdateDto findOne(@PathVariable final Long cardId) {
         LOGGER.info("GET /api/v1/cards/{}", cardId);
         return revisionMapper.revisionEditToCardUpdateDto((RevisionEdit) cardService.findOneOrThrow(cardId).getLatestRevision());
     }
@@ -71,9 +71,9 @@ public class CardEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping(value = "/cards/{cardId}")
     @ApiOperation(value = "Edit a specific card in a deck", authorizations = {@Authorization("user")})
-    public CardSimpleDto edit(@Valid  @RequestBody RevisionInputDto revisionInputDto, @PathVariable Long cardId) {
+    public CardSimpleDto edit(@Valid  @RequestBody final RevisionInputDto revisionInputDto, @PathVariable final Long cardId) {
         LOGGER.info("PATCH /api/v1/cards/{} body: {}", cardId, revisionInputDto);
-        RevisionEdit revision = revisionMapper.revisionEditDtoToRevisionEdit(revisionInputDto);
+        final RevisionEdit revision = revisionMapper.revisionEditDtoToRevisionEdit(revisionInputDto);
         return revisionMapper.revisionEditToCardSimpleDto((RevisionEdit) cardService.editCardInDeck(cardId, revision).getLatestRevision());
     }
 
@@ -81,7 +81,7 @@ public class CardEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/cards/{cardId}")
     @ApiOperation(value = "Removes card from deck", authorizations = {@Authorization(value = "user")})
-    public void addDeleteRevisionToCard(@Valid @RequestBody(required = false) ReasonDto message, @PathVariable Long cardId) {
+    public void addDeleteRevisionToCard(@Valid @RequestBody(required = false) final ReasonDto message, @PathVariable final Long cardId) {
         LOGGER.info("POST /api/v1/cards/{} Body: {}", cardId, message);
         cardService.addDeleteRevisionToCard(cardId, message == null ? null : message.getMessage());
     }
@@ -89,21 +89,22 @@ public class CardEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/cards/{cardId}")
     @ApiOperation(value = "Deletes a card", authorizations = {@Authorization("admin")})
-    public void delete(@PathVariable Long cardId) {
+    public void delete(@PathVariable final Long cardId) {
         LOGGER.info("DELETE card {}", cardId);
         cardService.delete(cardId);
 	}
 
     @GetMapping(value = "/cards/{id}/revisions")
     @ApiOperation(value = "Get revisions of the card")
-    public Page<RevisionDtoWithContent> getRevisionsOfCard(@PathVariable long id, @SortDefault(value = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<RevisionDtoWithContent> getRevisionsOfCard(@PathVariable final long id, @SortDefault(value = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
         cardService.findOneOrThrow(id);
-        return cardService.getRevisionsOfCard(id, pageable).map(revision -> revisionMapper.revisionToRevisionDetailedDto(revision));
+        return cardService.getRevisionsOfCard(id, pageable)
+            .map(revisionMapper::revisionToRevisionDetailedDto);
     }
 
     @GetMapping(value = "/revisions/byid")
     @ApiOperation(value = "Get multiple revisions by id")
-    public Map<Long, RevisionDtoWithContent> getRevisionsByIds(@RequestParam(name = "id") Long[] ids) {
+    public Map<Long, RevisionDtoWithContent> getRevisionsByIds(@RequestParam(name = "id") final Long[] ids) {
         return cardService.getRevisionsByIds(ids).stream()
             .filter(Objects::nonNull)
             .collect(Collectors.toMap(Revision::getId, revisionMapper::revisionToRevisionDetailedDto));
@@ -111,7 +112,7 @@ public class CardEndpoint {
 
     @GetMapping("/revisions")
     @ApiOperation(value = "Get recent revisions")
-    public Page<RevisionDtoWithDeck> getLatestRevisions(@SortDefault(value = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
+    public Page<RevisionDtoWithDeck> getLatestRevisions(@SortDefault(value = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable){
         return cardService.getRecentRevisions(pageable).map(revisionMapper::revision_to_revisionDtoWithDeck);
     }
 }

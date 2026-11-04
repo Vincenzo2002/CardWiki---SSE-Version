@@ -32,7 +32,7 @@ public class ImageEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @ApiOperation(value = "Save a new image", authorizations = {@Authorization("user")})
-    public ImageDto upload(@RequestParam MultipartFile file) {
+    public ImageDto upload(@RequestParam final MultipartFile file) {
         LOGGER.info("POST api/v1/images filename: {}", file.getOriginalFilename());
         return imageMapper.imageToImageDto(imageService.create(file));
     }

@@ -25,7 +25,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
      * @return ordered list of all decks with names containing {@code name}
      */
     @EntityGraph(attributePaths = {"createdBy", "categories"})
-    Page<Deck> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Deck> findByNameContainingIgnoreCase(final String name, final Pageable pageable);
 
     /**
      * Find a specific deck by id
@@ -33,7 +33,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
      * @return deck found
      */
     @EntityGraph(attributePaths = {"categories"})
-    Optional<Deck> findById(Long deckId);
+    Optional<Deck> findById(final Long deckId);
 
     /**
      * Find page of decks created by user
@@ -43,7 +43,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
      * @return page of decks created by user
      */
     @EntityGraph(attributePaths = {"createdBy"})
-    Page<Deck> findByCreatedBy_Id(long id, Pageable pageable);
+    Page<Deck> findByCreatedBy_Id(final long id, final Pageable pageable);
 
     /**
      * Find all decks created by user for exporting data
@@ -51,7 +51,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
      * @param userId of the user to query
      * @return all decks created by user
      */
-    Set<Deck> findExportByCreatedBy_Id(long userId);
+    Set<Deck> findExportByCreatedBy_Id(final long userId);
 
     /**
      * Find favorites of user
@@ -60,7 +60,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
      * @param pageable pagination parameters for the query
      * @return page of favorites by user
      */
-    Page<Deck> findByFavoredById(Long userId, Pageable pageable);
+    Page<Deck> findByFavoredById(final Long userId, final Pageable pageable);
 
     /**
      * Find all favorites of user for exporting data
@@ -68,7 +68,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
      * @param userId id of the user
      * @return all favorites by user
      */
-    Set<Deck> findExportByFavoredBy_Id(Long userId);
+    Set<Deck> findExportByFavoredBy_Id(final Long userId);
 
     /**
      * Check if a deck is a favorite of a user
@@ -77,7 +77,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
      * @param userId id of the user
      * @return false if deck is not a favorite of the user, or if deck/user does not exist
      */
-    boolean existsByIdAndFavoredById(Long deckId, Long userId);
+    boolean existsByIdAndFavoredById(final Long deckId, final Long userId);
 
     /**
      * Count how many cards a given deck contains that have the given status for the given user
@@ -91,7 +91,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
         " INNER JOIN RevisionEdit r ON r=c.latestRevision" + // Exclude deleted cards
         " INNER JOIN Progress p ON c = p.id.card" +
         " WHERE p.id.user = :user AND p.id.card.deck = :deck AND p.id.reverse = :reverse AND p.status = :status")
-    int countProgressStatuses(@Param("user") User user, @Param("deck") Deck deck, @Param("reverse") boolean reverse, @Param("status") Progress.Status status);
+    int countProgressStatuses(@Param("user") final User user, @Param("deck") final Deck deck, @Param("reverse") final boolean reverse, @Param("status") final Progress.Status status);
 
     /**
      * Count cards in deck
@@ -99,7 +99,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
      * @return how many cards are in the deck
      */
     @Query("SELECT count(c) FROM Card c inner join RevisionEdit r on r=c.latestRevision WHERE c.deck = :deck")
-    int countCards(@Param("deck") Deck deck);
+    int countCards(@Param("deck") final Deck deck);
 
     /**
      * Return all decks learned by a user.
@@ -108,5 +108,5 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
      * @return decks learned by user
      */
     @Query("SELECT d FROM Deck d WHERE d.id IN (SELECT DISTINCT c.deck.id FROM Card c INNER JOIN RevisionEdit r ON r = c.latestRevision INNER JOIN Progress p ON r.card = p.id.card WHERE p.id.user = :user)")
-    Page<Deck> findByUserProgress(@Param("user") User user, Pageable pageable);
+    Page<Deck> findByUserProgress(@Param("user") final User user, final Pageable pageable);
 }

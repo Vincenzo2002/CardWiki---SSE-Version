@@ -31,10 +31,12 @@ public class RevisionEdit extends Revision {
     @JoinColumn(name = "image_back_id", nullable = true, updatable = false)
     private Image imageBack;
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

@@ -4,7 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.profiles.datagenerator.Agent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Card;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Deck;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Progress;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CardRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ProgressRepository;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 

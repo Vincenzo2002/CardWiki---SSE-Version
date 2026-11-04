@@ -18,19 +18,19 @@ abstract public class RevisionMapper {
 
     @Mapping(source = "revision.card.id", target = "cardId")
     @Mapping(source = "revision.card.deck", target = "deck")
-    public abstract RevisionDtoWithDeck revision_to_revisionDtoWithDeck(Revision revision);
+    public abstract RevisionDtoWithDeck revision_to_revisionDtoWithDeck(final Revision revision);
 
     @Mapping(source = "revision.createdBy", target = "createdBy")
     @Mapping(source = "revision.card.id", target = "cardId")
-    abstract RevisionDtoWithContent _revision_to_revisionDtoWithContent(Revision revision);
+    abstract RevisionDtoWithContent _revision_to_revisionDtoWithContent(final Revision revision);
 
     @Mapping(source = "revision.createdBy", target = "createdBy")
     @Mapping(source = "revision.card.id", target = "cardId")
     @Mapping(source = "revision.imageFront.filename", target = "imageFront.url", qualifiedByName = "prefixImagesServedPath")
     @Mapping(source = "revision.imageBack.filename", target = "imageBack.url", qualifiedByName = "prefixImagesServedPath")
-    abstract RevisionDtoWithContent _revisionEdit_to_revisionDtoWithContent(RevisionEdit revision);
+    abstract RevisionDtoWithContent _revisionEdit_to_revisionDtoWithContent(final RevisionEdit revision);
 
-    public RevisionDtoWithContent revisionToRevisionDetailedDto(Revision revision){
+    public RevisionDtoWithContent revisionToRevisionDetailedDto(final Revision revision){
         if (revision instanceof RevisionEdit) {
             return _revisionEdit_to_revisionDtoWithContent((RevisionEdit) revision);
         } else
@@ -40,26 +40,26 @@ abstract public class RevisionMapper {
     @Mapping(source = "edit.card.id", target = "id")
     @Mapping(source = "edit.imageFront.filename", target = "imageFrontUrl", qualifiedByName = "prefixImagesServedPath")
     @Mapping(source = "edit.imageBack.filename", target = "imageBackUrl", qualifiedByName = "prefixImagesServedPath")
-    public abstract CardContentDto revisionEditToCardContentDto(RevisionEdit edit);
+    public abstract CardContentDto revisionEditToCardContentDto(final RevisionEdit edit);
 
     @Mapping(source = "edit.imageFrontFilename", target = "imageFront", qualifiedByName = "filenameToImage")
     @Mapping(source = "edit.imageBackFilename", target = "imageBack", qualifiedByName = "filenameToImage")
-    public abstract RevisionEdit revisionEditDtoToRevisionEdit(RevisionInputDto edit);
+    public abstract RevisionEdit revisionEditDtoToRevisionEdit(final RevisionInputDto edit);
 
     @Mapping(source = "edit.imageFrontFilename", target = "imageFront", qualifiedByName = "filenameToImage")
     @Mapping(source = "edit.imageBackFilename", target = "imageBack", qualifiedByName = "filenameToImage")
-    public abstract RevisionCreate revisionEditDtoToRevisionCreate(RevisionInputDto edit);
+    public abstract RevisionCreate revisionEditDtoToRevisionCreate(final RevisionInputDto edit);
 
     @Mapping(source = "edit.card.id", target = "id")
     @Mapping(source = "edit.imageFront.filename", target = "imageFrontUrl", qualifiedByName = "prefixImagesServedPath")
     @Mapping(source = "edit.imageBack.filename", target = "imageBackUrl", qualifiedByName = "prefixImagesServedPath")
-    public abstract CardSimpleDto revisionEditToCardSimpleDto(RevisionEdit edit);
+    public abstract CardSimpleDto revisionEditToCardSimpleDto(final RevisionEdit edit);
 
     @Mapping(source = "edit.imageFront.filename", target = "imageFront.filename")
     @Mapping(source = "edit.imageBack.filename", target = "imageBack.filename")
     @Mapping(source = "edit.imageFront.filename", target = "imageFront.url", qualifiedByName = "prefixImagesServedPath")
     @Mapping(source = "edit.imageBack.filename", target = "imageBack.url", qualifiedByName = "prefixImagesServedPath")
-    public abstract CardUpdateDto revisionEditToCardUpdateDto(RevisionEdit edit);
+    public abstract CardUpdateDto revisionEditToCardUpdateDto(final RevisionEdit edit);
 
     @Value("${cawi.image-served-path}")
     String imageServedPath;
@@ -68,23 +68,23 @@ abstract public class RevisionMapper {
         new ConcurrentHashMap<>();
 
     @Named("filenameToImage")
-    public static Image filenameToImage(String filename) {
+    public static Image filenameToImage(final String filename) {
         if (filename == null)
             return null;
-        Image image = new Image();
+        final Image image = new Image();
         image.setFilename(filename);
         return image;
     }
 
     @Named("prefixImageServedPath")
-    public String prefixImageServedPath(String filename) {
+    public String prefixImageServedPath(final String filename) {
         if (filename == null) {
             return null;
         }
 
         if (File.separatorChar == '/' && imageServedPath != null
             && isSimpleFilename(filename)) {
-            String prefix = urlPrefixes.computeIfAbsent(
+            final String prefix = urlPrefixes.computeIfAbsent(
                 imageServedPath, RevisionMapper::buildUrlPrefix);
             return prefix + filename;
         }
@@ -94,7 +94,7 @@ abstract public class RevisionMapper {
             .replace('\\', '/');
     }
 
-    private static String buildUrlPrefix(String configuredPath) {
+    private static String buildUrlPrefix(final String configuredPath) {
         String prefix = Paths.get(configuredPath).toString();
 
         if (!prefix.isEmpty() && !prefix.endsWith("/")) {
@@ -104,13 +104,15 @@ abstract public class RevisionMapper {
         return prefix.replace('\\', '/');
     }
 
-    private static boolean isSimpleFilename(String filename) {
+    private static boolean isSimpleFilename(final String filename) {
         if (filename == null || filename.isEmpty()) {
             return false;
         }
 
-        for (int i = 0; i < filename.length(); i++) {
-            char character = filename.charAt(i);
+        final int length = filename.length();
+
+        for (int i = 0; i < length; ++i) {
+            final char character = filename.charAt(i);
 
             if (character == '/' || character == '\\'
                 || character == '\0' || character > 127) {

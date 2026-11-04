@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.exception;
 
 public class InsufficientAuthorizationException extends RuntimeException {
-    public InsufficientAuthorizationException(String msg) {
+    public InsufficientAuthorizationException(final String msg) {
         super(msg);
     }
 }

@@ -38,13 +38,13 @@ public class SimpleFavoriteService implements FavoriteService {
 
     @Override
     @Transactional
-    public Deck addFavorite(Long userId, Long deckId) {
+    public Deck addFavorite(final Long userId, final Long deckId) {
         LOGGER.debug("Add deck {} as favorite of {}", deckId, userId);
-        User user = userService.loadCurrentUserOrThrow();
+        final User user = userService.loadCurrentUserOrThrow();
         if (!user.getId().equals(userId))
             throw new InsufficientAuthorizationException("Cannot add favorites for other users");
 
-        Deck deck = deckService.findOneOrThrow(deckId);
+        final Deck deck = deckService.findOneOrThrow(deckId);
         if (!user.getFavorites().add(deck))
             throw new ConflictException("Deck already saved as favorite");
         if (!deck.getFavoredBy().add(user))
@@ -57,9 +57,9 @@ public class SimpleFavoriteService implements FavoriteService {
 
     @Override
     @Transactional
-    public Page<Deck> getFavorites(Long userId, Pageable pageable) {
+    public Page<Deck> getFavorites(final Long userId, final Pageable pageable) {
         LOGGER.debug("Get favorites for {} with paging {}", userId, pageable);
-        User user = userService.loadCurrentUserOrThrow();
+        final User user = userService.loadCurrentUserOrThrow();
         if (!user.getId().equals(userId))
             throw new InsufficientAuthorizationException("Cannot get favorites from other users");
 
@@ -68,9 +68,9 @@ public class SimpleFavoriteService implements FavoriteService {
 
     @Override
     @Transactional
-    public boolean hasFavorite(Long userId, Long deckId) {
+    public boolean hasFavorite(final Long userId, final Long deckId) {
         LOGGER.debug("Check if {} has a favorite {}", userId, deckId);
-        User user = userService.loadCurrentUserOrThrow();
+        final User user = userService.loadCurrentUserOrThrow();
         if (!user.getId().equals(userId))
             throw new InsufficientAuthorizationException("Cannot get favorites from other users");
 
@@ -82,13 +82,13 @@ public class SimpleFavoriteService implements FavoriteService {
 
     @Override
     @Transactional
-    public void removeFavorite(Long userId, Long deckId) {
+    public void removeFavorite(final Long userId, final Long deckId) {
         LOGGER.debug("Remove deck {} from favorites of {}", deckId, userId);
-        User user = userService.loadCurrentUserOrThrow();
+        final User user = userService.loadCurrentUserOrThrow();
         if (!user.getId().equals(userId))
             throw new InsufficientAuthorizationException("Cannot remove favorites for other users");
 
-        Deck deck = deckService.findOneOrThrow(deckId);
+        final Deck deck = deckService.findOneOrThrow(deckId);
         if (!user.getFavorites().remove(deck))
             throw new DeckNotFoundException(String.format("Deck with id %s is no favorite", deckId));
         deck.getFavoredBy().remove(user);

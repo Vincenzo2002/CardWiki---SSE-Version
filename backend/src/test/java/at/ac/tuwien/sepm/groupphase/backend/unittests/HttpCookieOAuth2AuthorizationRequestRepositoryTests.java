@@ -4,16 +4,12 @@ import at.ac.tuwien.sepm.groupphase.backend.config.security.HttpCookieOAuth2Auth
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 
 import javax.servlet.http.Cookie;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -133,7 +129,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepositoryTests {
             null, request, response);
 
         assertThat(response.getCookies().length).isEqualTo(1);
-        assertThat(response.getCookies()[0].getMaxAge()).isEqualTo(0);
+        assertThat(response.getCookies()[0].getMaxAge()).isZero();
     }
 
     @Test
@@ -144,7 +140,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepositoryTests {
         this.authorizationRequestRepository.removeAuthorizationRequest(request, response);
 
         assertThat(response.getCookies().length).isEqualTo(1);
-        assertThat(response.getCookies()[0].getMaxAge()).isEqualTo(0);
+        assertThat(response.getCookies()[0].getMaxAge()).isZero();
     }
 
     @Test

@@ -33,16 +33,16 @@ public class RevisionMapperBenchmark {
     @Setup
     public void setup() throws ReflectiveOperationException {
         mapper = Mappers.getMapper(RevisionMapper.class);
-        Field servedPath = RevisionMapper.class.getDeclaredField("imageServedPath");
+        final Field servedPath = RevisionMapper.class.getDeclaredField("imageServedPath");
         servedPath.setAccessible(true);
         servedPath.set(mapper, "/images");
 
         revisions = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            Card card = new Card();
+        for (int i = 0; i < size; ++i) {
+            final Card card = new Card();
             card.setId((long) i + 1);
 
-            RevisionEdit revision = new RevisionEdit();
+            final RevisionEdit revision = new RevisionEdit();
             revision.setId((long) i + 10000);
             revision.setCard(card);
             revision.setTextFront("Front text");
@@ -58,16 +58,16 @@ public class RevisionMapperBenchmark {
         }
     }
 
-    private static Image createImage(int number) {
-        Image image = new Image();
+    private static Image createImage(final int number) {
+        final Image image = new Image();
         image.setFilename(String.format("%064x.png", number));
         return image;
     }
 
     @Benchmark
     public List<CardSimpleDto> mapRevisions() {
-        List<CardSimpleDto> result = new ArrayList<>(size);
-        for (RevisionEdit revision : revisions) {
+        final List<CardSimpleDto> result = new ArrayList<>(size);
+        for (final RevisionEdit revision : revisions) {
             result.add(mapper.revisionEditToCardSimpleDto(revision));
         }
         return result;

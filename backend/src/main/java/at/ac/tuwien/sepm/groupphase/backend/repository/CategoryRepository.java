@@ -23,7 +23,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
      * @return category found
      */
     @EntityGraph(attributePaths ={"decks", "createdBy"})
-    Optional<Category> findCategoryById(Long id);
+    Optional<Category> findCategoryById(final Long id);
 
     /**
      * Find categories containing {@code name} (case insensitive)
@@ -32,7 +32,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
      * @param pageable the paging parameters
      * @return page of categories with names containing {@code name}
      */
-    Page<Category> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Category> findByNameContainingIgnoreCase(final String name, final Pageable pageable);
 
     /**
      * finds all children of a given parent
@@ -41,7 +41,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
      * @return children of category with id parentId
      */
     @Query("SELECT c FROM Category c WHERE c.parent.id=:parentId ORDER BY LOWER(c.name) ASC")
-    List<Category> findChildren(@Param("parentId") Long parentId);
+    List<Category> findChildren(@Param("parentId") final Long parentId);
 
     /**
      * Find all categories created by user for exporting data
@@ -49,7 +49,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
      * @param userId id of the user
      * @return all categories by user
      */
-    Set<Category> findExportByCreatedBy_Id(Long userId);
+    Set<Category> findExportByCreatedBy_Id(final Long userId);
 
     /**
      * checks if there is a circular relation between two categories
@@ -70,5 +70,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "SELECT id FROM link WHERE link.id=:id" +
         ") THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END"
     )
-    boolean ancestorExistsWithId(@Param("id") Long id, @Param("parentId") Long parentId);
+    boolean ancestorExistsWithId(@Param("id") final Long id, @Param("parentId") final Long parentId);
 }

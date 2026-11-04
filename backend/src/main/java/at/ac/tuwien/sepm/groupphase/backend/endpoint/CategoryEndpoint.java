@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 
 
 @RestController
@@ -39,7 +38,7 @@ public class CategoryEndpoint {
 
     @GetMapping
     @ApiOperation(value = "Find categories by name")
-    public Page<CategorySimpleDto> search(@RequestParam String name, @SortDefault("name") Pageable pageable) {
+    public Page<CategorySimpleDto> search(@RequestParam final String name, @SortDefault("name") final Pageable pageable) {
         LOGGER.info("GET /api/v1/categories?name={} {}", name, pageable);
         return categoryService.searchByName(name, pageable)
             .map(categoryMapper::categoryToCategorySimpleDto);
@@ -49,7 +48,7 @@ public class CategoryEndpoint {
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create new Category", authorizations = {@Authorization("user")})
-    public CategoryDetailedDto createCategory(@RequestBody @Valid CategoryInputDto categoryInputDto) {
+    public CategoryDetailedDto createCategory(@RequestBody @Valid final CategoryInputDto categoryInputDto) {
         LOGGER.info("POST /api/v1/categories");
         return categoryMapper.categoryToCategoryDetailedDto(
             categoryService.createCategory(
@@ -58,7 +57,7 @@ public class CategoryEndpoint {
 
     @GetMapping(value = "/{id}")
     @ApiOperation(value = "Get detailed information about a specific category")
-    public CategoryDetailedDto getCategory(@PathVariable Long id) {
+    public CategoryDetailedDto getCategory(@PathVariable final Long id) {
         LOGGER.info("GET /api/v1/categories/{}", id);
         return categoryMapper.categoryToCategoryDetailedDto(categoryService.findOneOrThrow(id));
     }
@@ -66,8 +65,8 @@ public class CategoryEndpoint {
     @Secured("ROLE_USER")
     @PutMapping(value = "/{id}")
     @ApiOperation(value = "Update category with specific id", authorizations = {@Authorization("user")})
-    public CategoryDetailedDto updateCategory(@PathVariable Long id,
-                                              @RequestBody @Valid CategoryInputDto categoryInputDto) {
+    public CategoryDetailedDto updateCategory(@PathVariable final Long id,
+                                              @RequestBody @Valid final CategoryInputDto categoryInputDto) {
         LOGGER.info("PUT /api/v1/categories/{}", id);
         return categoryMapper.categoryToCategoryDetailedDto(
             categoryService.updateCategory(
@@ -79,7 +78,7 @@ public class CategoryEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/{id}")
     @ApiOperation(value = "Permanently delete a category", authorizations = {@Authorization("admin")})
-    public void deleteCategory(@PathVariable Long id) {
+    public void deleteCategory(@PathVariable final Long id) {
         LOGGER.info("DELETE /api/v1/categories/{}", id);
         categoryService.deleteCategory(id);
     }

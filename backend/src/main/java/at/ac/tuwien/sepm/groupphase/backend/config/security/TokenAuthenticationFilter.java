@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.config.security;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -38,24 +39,24 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private static final String PREFIX = "Bearer ";
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = request.getHeader("Authorization");
+    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
+        final String token = request.getHeader("Authorization");
         if (token != null && token.startsWith(PREFIX)){
-            JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(securityProps.getSecret()).build();
+            final JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(securityProps.getSecret()).build();
             Claims claims;
             try {
                 claims = jwtParser.parseClaimsJws(token.substring(PREFIX.length())).getBody();
-            } catch (JwtException e){
+            } catch (final JwtException e){
                 LOGGER.info("Invalid authorization attempt: {}", e.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Invalid authorization token");
                 return;
             }
 
-            Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS");
+            final Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS");
 
             if (claims != null){
-                userService.findUserByAuthId(claims.getSubject()).ifPresent(user -> {
+                userService.findUserByAuthId(claims.getSubject()).ifPresent((final User user) -> {
                     if (user.isEnabled()){
                         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 

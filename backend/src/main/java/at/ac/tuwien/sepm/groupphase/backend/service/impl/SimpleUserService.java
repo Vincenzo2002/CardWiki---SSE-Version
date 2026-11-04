@@ -56,21 +56,21 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public Page<Deck> getDecks(Long id, Pageable pageable) {
+    public Page<Deck> getDecks(final Long id, final Pageable pageable) {
         LOGGER.debug("Load {} decks with offset {} from user {}", pageable.getPageSize(), pageable.getOffset(), id);
         return deckRepository.findByCreatedBy_Id(id, pageable);
     }
 
     @Override
-    public Page<Revision> getRevisions(Long id, Pageable pageable) {
+    public Page<Revision> getRevisions(final Long id, final Pageable pageable) {
         LOGGER.debug("Load {} revisions with offset {} from user {}", pageable.getPageSize(), pageable.getOffset(), id);
         return revisionRepository.findByCreatedBy_Id(id, pageable);
     }
 
     @Override
     @Transactional
-    public User editSettings(Long id, User user) {
-        User currentUser = loadCurrentUserOrThrow();
+    public User editSettings(final Long id, final User user) {
+        final User currentUser = loadCurrentUserOrThrow();
         if (!id.equals(currentUser.getId()))
             throw new InsufficientAuthorizationException("Cannot edit settings for other users");
 
@@ -80,21 +80,21 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public User findUserByIdOrThrow(Long id) {
+    public User findUserByIdOrThrow(final Long id) {
         LOGGER.debug("Load user by id {}", id);
         return userRepository.findById(id)
             .orElseThrow(() -> new UserNotFoundException("Could not find user with id " + id));
     }
 
     @Override
-    public User findUserByUsernameOrThrow(String username) {
+    public User findUserByUsernameOrThrow(final String username) {
         LOGGER.debug("Load user by username {}", username);
         return userRepository.findByUsername(username)
             .orElseThrow(() -> new UserNotFoundException("Could not find user with username " + username));
     }
 
     @Override
-    public Optional<User> findUserByAuthId(String authId) {
+    public Optional<User> findUserByAuthId(final String authId) {
         LOGGER.debug("Load user by AuthId {}",  authId);
         return userRepository.findByAuthId(authId);
     }
@@ -102,19 +102,19 @@ public class SimpleUserService implements UserService {
     @Override
     public User loadCurrentUserOrThrow() {
         LOGGER.debug("Load current user");
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || auth.getName() == null)
             throw new AuthenticationRequiredException("Cannot load active user because not authentication is given");
         return findUserByAuthId(auth.getName()).orElseThrow(() -> new AuthenticationRequiredException("No user with this authentication exists"));
     }
 
     @Override
-    public User createUser(User user) {
+    public User createUser(final User user) {
         try {
             return userRepository.save(user);
-        } catch (DataIntegrityViolationException e) {
+        } catch (final DataIntegrityViolationException e) {
             if (e.getCause().getClass() == ConstraintViolationException.class) {
-                ConstraintViolationException cve = (ConstraintViolationException) e.getCause();
+                final ConstraintViolationException cve = (ConstraintViolationException) e.getCause();
                 // TODO: change contains to equals after hibernate version contains
                 //  https://github.com/hibernate/hibernate-orm/pull/3417
                 if (cve.getConstraintName().contains(User.CONSTRAINT_USERNAME_UNIQUE))
@@ -127,7 +127,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public Page<User> searchByUsername(String username, Pageable pageable) {
+    public Page<User> searchByUsername(final String username, final Pageable pageable) {
         LOGGER.debug("Search users for username {} {}", username, pageable);
         Objects.requireNonNull(username, "name argument must not be null");
         return userRepository.findByUsernameContainingIgnoreCaseAndDeletedFalse(username, pageable);
@@ -135,21 +135,21 @@ public class SimpleUserService implements UserService {
 
     @Transactional
     @Override
-    public User updateUser(Long id, User user) {
+    public User updateUser(final Long id, final User user) {
         LOGGER.debug("Update user with id {}: {}", id, user);
-        User currentUser = loadCurrentUserOrThrow();
+        final User currentUser = loadCurrentUserOrThrow();
 
-        if (!currentUser.getId().equals(id) && !currentUser.isAdmin()) {
+        if (!currentUser.getId().equals(id) && !Boolean.TRUE.equals(currentUser.isAdmin())) {
             throw new AccessDeniedException("You are not allowed to edit users other than your own.");
         }
 
-        if (!currentUser.isAdmin() && (user.isAdmin() != null || user.isEnabled() != null)) {
+        if (!Boolean.TRUE.equals(currentUser.isAdmin()) && (user.isAdmin() != null || user.isEnabled() != null)) {
             throw new InsufficientAuthorizationException("This operation needs admin rights.");
         }
 
-        User updatedUser = currentUser.getId().equals(id) ? currentUser : findUserByIdOrThrow(id);
+        final User updatedUser = currentUser.getId().equals(id) ? currentUser : findUserByIdOrThrow(id);
 
-        if (currentUser.isAdmin() && !currentUser.getId().equals(id) && updatedUser.isAdmin()) {
+        if (Boolean.TRUE.equals(currentUser.isAdmin()) && !currentUser.getId().equals(id) && Boolean.TRUE.equals(updatedUser.isAdmin())) {
             throw new AccessDeniedException("You are not allowed to update other admins.");
         }
 
@@ -157,13 +157,13 @@ public class SimpleUserService implements UserService {
             updatedUser.setDescription(user.getDescription());
         }
 
-        if (currentUser.isAdmin() && user.isAdmin() != null) {
+        if (Boolean.TRUE.equals(currentUser.isAdmin()) && user.isAdmin() != null) {
             updatedUser.setAdmin(user.isAdmin());
         }
 
-        if (currentUser.isAdmin() && user.isEnabled() != null) {
-            if (user.isEnabled()) {
-                if (!updatedUser.isDeleted())
+        if (Boolean.TRUE.equals(currentUser.isAdmin()) && user.isEnabled() != null) {
+            if (Boolean.TRUE.equals(user.isEnabled())) {
+                if (!Boolean.TRUE.equals(updatedUser.isDeleted()))
                     updatedUser.setReason(null);
             } else {
                 if (user.getReason() == null)
@@ -178,11 +178,11 @@ public class SimpleUserService implements UserService {
 
     @Transactional
     @Override
-    public void delete(Long id, String reason) {
+    public void delete(final Long id, final String reason) {
         LOGGER.debug("Delete user with id {} Reason: {}", id, reason);
-        User user = findUserByIdOrThrow(id);
+        final User user = findUserByIdOrThrow(id);
 
-        if (user.isAdmin()) {
+        if (Boolean.TRUE.equals(user.isAdmin())) {
             throw new AccessDeniedException("Admins cannot be deleted.");
         }
 
@@ -198,12 +198,12 @@ public class SimpleUserService implements UserService {
 
     @Transactional
     @Override
-    public User exportUserData(Long userId) {
-        User currentUser = loadCurrentUserOrThrow();
-        if (!currentUser.getId().equals(userId) && !currentUser.isAdmin())
+    public User exportUserData(final Long userId) {
+        final User currentUser = loadCurrentUserOrThrow();
+        if (!currentUser.getId().equals(userId) && !Boolean.TRUE.equals(currentUser.isAdmin()))
             throw new AccessDeniedException("Cannot export user data for other users");
 
-        User user = findUserByIdOrThrow(userId);
+        final User user = findUserByIdOrThrow(userId);
 
         // Fetching one by one to prevent huge cartesian product on join when using EntityGraph directly on user
         user.setRevisions(revisionRepository.findExportByCreatedBy_Id(userId));

@@ -37,7 +37,7 @@ public class CategoryMapperBenchmark {
     public void setup() {
         mapper = CategoryMapper.INSTANCE;
         categories = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; ++i) {
             categories.add(new Category((long) i + 1, "Category " + i));
         }
     }

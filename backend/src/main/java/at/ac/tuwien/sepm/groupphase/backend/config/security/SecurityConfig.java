@@ -4,9 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -22,11 +19,11 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.invoke.MethodHandles;
 import java.util.*;
 
 @Configuration
@@ -34,26 +31,28 @@ import java.util.*;
 @EnableGlobalMethodSecurity(securedEnabled=true)
 @Order(2)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private SecurityProps securityProps;
+    private final SecurityProps securityProps;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public SecurityConfig(final SecurityProps securityProps, final UserService userService) {
+        this.securityProps = securityProps;
+        this.userService = userService;
+    }
 
     @Override
-    public void configure(HttpSecurity httpSecurity) throws Exception {
+    public void configure(final HttpSecurity httpSecurity) throws Exception {
         staticConfigure(httpSecurity, userService, securityProps);
     }
 
-    public static void addTokenCookie(String authId, SecurityProps securityProps, HttpServletRequest request, HttpServletResponse response){
-        String token = Jwts.builder()
+    public static void addTokenCookie(final String authId, final SecurityProps securityProps, final HttpServletRequest request, final HttpServletResponse response){
+        final String token = Jwts.builder()
             .setSubject(authId)
             .setExpiration(new Date(System.currentTimeMillis() + securityProps.getExpirationTime()))
             .signWith(Keys.hmacShaKeyFor(securityProps.getSecret()), SignatureAlgorithm.HS512)
             .compact();
-        Cookie tokenCookie = new Cookie("token", token);
+        final Cookie tokenCookie = new Cookie("token", token);
         tokenCookie.setPath("/");
         tokenCookie.setSecure(request.getServletContext().getSessionCookieConfig().isSecure());
         response.addCookie(tokenCookie);
@@ -63,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * Meant to be called from WebSecurityConfigurerAdapter.configure()
      * This method is static so that it can also be easily used from the SecurityTestConfig.
      */
-    public static void staticConfigure(HttpSecurity httpSecurity, UserService userService, SecurityProps securityProps) throws Exception {
+    public static void staticConfigure(final HttpSecurity httpSecurity, final UserService userService, final SecurityProps securityProps) throws Exception {
         // stateless sessions scale better, are better for user privacy,
         // make sessions persist restarts and make the backend easier to test.
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -90,14 +89,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // on success we pass a JWT token to the frontend
         httpSecurity.oauth2Login()
-            .successHandler((request, response, authentication) -> {
+            .successHandler((final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) -> {
                 if (request.getServletContext().getSessionCookieConfig().isSecure() && !request.isSecure()){
                     // TODO: format error as JSON
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "HTTPS is required");
                     return;
                 }
 
-                OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+                final OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
                 // We pass the token with a cookie so that it is not stored in the browser history.
                 // we prefix the clientRegistrationId to prevent dangerous name collisions
@@ -113,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public static CorsConfigurationSource allowAllCors() {
-        return request -> {
+        return (final HttpServletRequest request) -> {
             final CorsConfiguration config = new CorsConfiguration();
             config.setAllowedMethods(Arrays.asList("*"));
             config.addAllowedHeader("*");
@@ -127,7 +126,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 @Order(1)
 class H2SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(final HttpSecurity http) throws Exception {
         http.antMatcher("/h2-console/**");
         http.csrf().disable();
         http.headers().frameOptions().sameOrigin();
@@ -138,7 +137,7 @@ class H2SecurityConfig extends WebSecurityConfigurerAdapter {
 @Order(0)
 class SwaggerUISecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(final HttpSecurity http) throws Exception {
         http.antMatcher("/swagger-ui.html")
             .headers().addHeaderWriter(new StaticHeadersWriter("content-security-policy", "script-src 'self'; object-src 'none';"));
     }

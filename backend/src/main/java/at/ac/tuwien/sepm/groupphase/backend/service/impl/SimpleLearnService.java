@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SimpleLearnService implements LearnService {
@@ -41,10 +41,10 @@ public class SimpleLearnService implements LearnService {
     }
 
     @Override
-    public List<Card> findNextCards(Long deckId, boolean reverse, Pageable pageable) {
+    public List<Card> findNextCards(final Long deckId, final boolean reverse, final Pageable pageable) {
         LOGGER.debug("Get next card for deck with id {} reverse={}", deckId, reverse);
 
-        User user = userService.loadCurrentUserOrThrow();
+        final User user = userService.loadCurrentUserOrThrow();
 
         if (!deckRepository.existsById(deckId)){
             throw new BadRequestException("deckId does not exist");
@@ -59,15 +59,15 @@ public class SimpleLearnService implements LearnService {
     public static final double EASY_BONUS = 1.3;
 
     @Override
-    public void saveAttempt(AttemptInputDto attempt) {
+    public void saveAttempt(final AttemptInputDto attempt) {
         LOGGER.debug("Save new attempt {}", attempt);
-        User user = userService.loadCurrentUserOrThrow();
-        Card card = new Card();
+        final User user = userService.loadCurrentUserOrThrow();
+        final Card card = new Card();
         card.setId(attempt.getCardId());
 
-        Progress.Id id = new Progress.Id(user, card, attempt.isReverse());
+        final Progress.Id id = new Progress.Id(user, card, attempt.isReverse());
 
-        Progress progress = progressRepository.findById(id).orElseGet(() -> new Progress(id));
+        final Progress progress = progressRepository.findById(id).orElseGet(() -> new Progress(id));
 
         // This spaced-repetition algorithm is based on Anki's algorithm, which is based on SuperMemo 2.
 
@@ -76,28 +76,28 @@ public class SimpleLearnService implements LearnService {
                 case EASY:
                     progress.setInterval(EASY_INTERVAL);
                     progress.setStatus(Progress.Status.REVIEWING);
-                    progress.setDue(LocalDateTime.now().plusDays(progress.getInterval()));
+                    progress.setDue(LocalDateTime.now(ZoneId.systemDefault()).plusDays(progress.getInterval()));
                     break;
 
                 case GOOD:
                     if (progress.getInterval() >= LEARNING_STEPS[LEARNING_STEPS.length - 1]) {
                         progress.setInterval(GRADUATING_INTERVAL);
                         progress.setStatus(Progress.Status.REVIEWING);
-                        progress.setDue(LocalDateTime.now().plusDays(progress.getInterval()));
+                        progress.setDue(LocalDateTime.now(ZoneId.systemDefault()).plusDays(progress.getInterval()));
                     } else {
-                        for (int min : LEARNING_STEPS){
+                        for (final int min : LEARNING_STEPS){
                             if (min > progress.getInterval()){
                                 progress.setInterval(min);
                                 break;
                             }
                         }
-                        progress.setDue(LocalDateTime.now().plusMinutes(progress.getInterval()));
+                        progress.setDue(LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(progress.getInterval()));
                     }
                     break;
 
                 case AGAIN:
                     progress.setInterval(LEARNING_STEPS[0]);
-                    progress.setDue(LocalDateTime.now().plusMinutes(progress.getInterval()));
+                    progress.setDue(LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(progress.getInterval()));
                     break;
             }
         } else {
@@ -117,14 +117,14 @@ public class SimpleLearnService implements LearnService {
                     break;
             }
 
-            progress.setDue(LocalDateTime.now().plusDays(progress.getInterval()));
+            progress.setDue(LocalDateTime.now(ZoneId.systemDefault()).plusDays(progress.getInterval()));
         }
 
         try {
             progressRepository.saveAndFlush(progress);
-        } catch (DataIntegrityViolationException e){
+        } catch (final DataIntegrityViolationException e){
             if (e.getCause().getClass() == ConstraintViolationException.class){
-                ConstraintViolationException cve = (ConstraintViolationException) e.getCause();
+                final ConstraintViolationException cve = (ConstraintViolationException) e.getCause();
                 // TODO: change contains to equals after hibernate version contains
                 //  https://github.com/hibernate/hibernate-orm/pull/3417
                 if (cve.getConstraintName().contains(Progress.FKNAME_CARD))

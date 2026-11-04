@@ -13,26 +13,26 @@ import java.util.Set;
 
 @Mapper
 public interface CategoryMapper {
-    CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
+    final CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
     @Named("simpleCategory")
-    CategorySimpleDto categoryToCategorySimpleDto(Category category);
+    CategorySimpleDto categoryToCategorySimpleDto(final Category category);
 
     @IterableMapping(qualifiedByName = "simpleCategory")
-    List<CategorySimpleDto> categoryToCategorySimpleDto(List<Category> categories);
+    List<CategorySimpleDto> categoryToCategorySimpleDto(final List<Category> categories);
 
-    Category categorySimpleDtoToCategory(CategorySimpleDto categorySimpleDto);
+    Category categorySimpleDtoToCategory(final CategorySimpleDto categorySimpleDto);
 
     @Mapping(source = "category.createdBy.id", target = "createdBy")
     @Mapping(source = "children", target = "children", qualifiedByName = "childrenToSimpleChildren")
     @Mapping(source = "parent", target = "parent", qualifiedByName="parentToSimpleParent")
-    CategoryDetailedDto categoryToCategoryDetailedDto(Category category);
+    CategoryDetailedDto categoryToCategoryDetailedDto(final Category category);
 
     @Named("childrenToSimpleChildren")
-    static List<CategorySimpleDto> childrenToSimpleChildren(Set<Category> children) {
-        List<CategorySimpleDto> result = new ArrayList<>(children.size());
+    static List<CategorySimpleDto> childrenToSimpleChildren(final Set<Category> children) {
+        final List<CategorySimpleDto> result = new ArrayList<>(children.size());
 
-        for (Category child : children) {
+        for (final Category child : children) {
             result.add(INSTANCE.categoryToCategorySimpleDto(child));
         }
 
@@ -40,9 +40,9 @@ public interface CategoryMapper {
     }
 
     @Named("parentToSimpleParent")
-    static CategorySimpleDto parentToSimpleParent(Category parent) {
+    static CategorySimpleDto parentToSimpleParent(final Category parent) {
         return INSTANCE.categoryToCategorySimpleDto(parent);
     }
 
-     Category categoryInputDtoToCategory(CategoryInputDto categoryInputDto);
+     Category categoryInputDtoToCategory(final CategoryInputDto categoryInputDto);
 }

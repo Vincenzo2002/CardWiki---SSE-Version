@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -37,20 +38,20 @@ public class SimpleImageService implements ImageService {
     private final UserService userService;
 
     @Autowired
-    public SimpleImageService(@Value("${cawi.image-saved-path}") String imageSavedPath, ImageRepository imageRepository, UserService userService) {
+    public SimpleImageService(@Value("${cawi.image-saved-path}") final String imageSavedPath, ImageRepository imageRepository, UserService userService) {
         this.imageSavedPath = Paths.get(imageSavedPath);
         this.imageRepository = imageRepository;
         this.userService = userService;
     }
 
     @Override
-    public Image create(MultipartFile file) {
+    public Image create(final MultipartFile file) {
         LOGGER.debug("Create a new image");
         byte[] bytes;
         try {
             bytes = file.getBytes();
-        } catch (IOException ex) {
-            throw new RuntimeException("Could not store image. Error: " + ex.getMessage());
+        } catch (final IOException ex) {
+            throw new UncheckedIOException("Could not store image.", ex);
         }
 
         if (bytes.length == 0) {
@@ -58,17 +59,17 @@ public class SimpleImageService implements ImageService {
         }
 
         // Create filename
-        String contentType = getContentTypeFromBytes(bytes);
+        final String contentType = getContentTypeFromBytes(bytes);
         byte[] hash;
         try {
             hash = MessageDigest.getInstance("SHA-256").digest(bytes);
-        } catch (NoSuchAlgorithmException ex) {
-            throw new RuntimeException("Could not store image. Error: " + ex.getMessage());
+        } catch (final NoSuchAlgorithmException ex) {
+            throw new IllegalStateException("SHA-256 is not available.", ex);
         }
-        String filename = bytesToHex(hash) + "." + contentType;
+        final String filename = bytesToHex(hash) + "." + contentType;
 
         // Check if image already exists
-        Image existingImage = imageRepository.findByFilename(filename).orElse(null);
+        final Image existingImage = imageRepository.findByFilename(filename).orElse(null);
         if (existingImage != null) {
             return existingImage;
         }
@@ -76,13 +77,13 @@ public class SimpleImageService implements ImageService {
         // Save file to filesystem
         try {
            Files.write(imageSavedPath.resolve(filename), bytes);
-        } catch (IOException ex) {
-            throw new RuntimeException("Could not store image.", ex);
+        } catch (final IOException ex) {
+            throw new UncheckedIOException("Could not store image.", ex);
         }
 
         // Create image entity
-        User user = userService.loadCurrentUserOrThrow();
-        Image image = new Image();
+        final User user = userService.loadCurrentUserOrThrow();
+        final Image image = new Image();
         image.setCreatedBy(user);
         image.setFilename(filename);
 
@@ -91,18 +92,18 @@ public class SimpleImageService implements ImageService {
 
     @Transactional
     @Override
-    public Image findOneOrThrow(String filename) {
+    public Image findOneOrThrow(final String filename) {
         LOGGER.debug("Find image with filename {}", filename);
-        Optional<Image> image = imageRepository.findByFilename(filename);
+        final Optional<Image> image = imageRepository.findByFilename(filename);
         return image.orElseThrow(() -> new ImageNotFoundException("Could not find image with filename " + filename));
     }
 
-    private String getContentTypeFromBytes(byte[] bytes) {
+    private String getContentTypeFromBytes(final byte[] bytes) {
         String contentType;
         try {
             contentType = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(bytes));
-        } catch (IOException ex) {
-            throw new RuntimeException("Could not store image.", ex);
+        } catch (final IOException ex) {
+            throw new UncheckedIOException("Could not store image.", ex);
         }
         if (contentType == null) {
             throw new BadRequestException("Content type could not be determined");
@@ -114,10 +115,10 @@ public class SimpleImageService implements ImageService {
         return contentType;
     }
 
-    private String bytesToHex(byte[] hash) {
-        char[] hex = new char[hash.length * 2];
-        for (int i = 0; i < hash.length; i++) {
-            int value = hash[i] & 0xff;
+    private String bytesToHex(final byte[] hash) {
+        final char[] hex = new char[hash.length * 2];
+        for (int i = 0; i < hash.length; ++i) {
+            final int value = hash[i] & 0xff;
             hex[i * 2] = HEX_DIGITS[value >>> 4];
             hex[i * 2 + 1] = HEX_DIGITS[value & 0x0f];
         }

@@ -10,13 +10,13 @@ import java.util.Set;
 @Repository
 public interface ProgressRepository extends JpaRepository<Progress,Progress.Id> {
 
-    void deleteById_UserId(Long userId);
+    void deleteById_UserId(final Long userId);
 
-    void deleteById_CardId(Long cardId);
+    void deleteById_CardId(final Long cardId);
 
-    void deleteById_UserIdAndId_Card_Deck_IdAndId_Reverse(Long userId, Long deckId, boolean reverse);
+    void deleteById_UserIdAndId_Card_Deck_IdAndId_Reverse(final Long userId, final Long deckId, final boolean reverse);
 
-    boolean existsById_CardId(Long cardId);
+    boolean existsById_CardId(final Long cardId);
 
     /**
      * Find all progress entries of user for exporting data
@@ -25,5 +25,5 @@ public interface ProgressRepository extends JpaRepository<Progress,Progress.Id> 
      * @return all progress entries by user
      */
     @EntityGraph(attributePaths = {"id.card.latestRevision.card.deck"})
-    Set<Progress> findExportById_UserId(Long userId);
+    Set<Progress> findExportById_UserId(final Long userId);
 }

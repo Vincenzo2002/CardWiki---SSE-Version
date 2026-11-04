@@ -6,15 +6,15 @@ public class DeckNotFoundException extends NotFoundException {
     public DeckNotFoundException() {
     }
 
-    public DeckNotFoundException(String message) {
+    public DeckNotFoundException(final String message) {
         super(message);
     }
 
-    public DeckNotFoundException(String message, Throwable cause) {
+    public DeckNotFoundException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public DeckNotFoundException(Exception e) {
+    public DeckNotFoundException(final Exception e) {
         super(e);
     }
 }

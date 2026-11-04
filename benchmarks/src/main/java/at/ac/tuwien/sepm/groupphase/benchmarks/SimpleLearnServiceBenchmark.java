@@ -41,8 +41,8 @@ public class SimpleLearnServiceBenchmark {
         // Measure service logic without console output from each invocation.
         ((Logger) SimpleLearnService.LOGGER).setLevel(Level.WARN);
 
-        User user = new User(1L);
-        Card card = new Card();
+        final User user = new User(1L);
+        final Card card = new Card();
         card.setId(7L);
 
         attempt = new AttemptInputDto();
@@ -57,11 +57,11 @@ public class SimpleLearnServiceBenchmark {
             initialInterval = initialStatus == Progress.Status.LEARNING ? 10 : 4;
             existingProgress = new Progress(new Progress.Id(user, card, false));
         }
-        Optional<Progress> lookupResult = Optional.ofNullable(existingProgress);
+        final Optional<Progress> lookupResult = Optional.ofNullable(existingProgress);
 
         // Lightweight stubs replace external dependencies. They never store
         // invocation history or accumulate progress entries during measurement.
-        ProgressRepository repository = (ProgressRepository) Proxy.newProxyInstance(
+        final ProgressRepository repository = (ProgressRepository) Proxy.newProxyInstance(
             ProgressRepository.class.getClassLoader(),
             new Class<?>[]{ProgressRepository.class},
             (proxy, method, args) -> {
@@ -76,7 +76,7 @@ public class SimpleLearnServiceBenchmark {
                 }
             });
 
-        UserService users = (UserService) Proxy.newProxyInstance(
+        final UserService users = (UserService) Proxy.newProxyInstance(
             UserService.class.getClassLoader(),
             new Class<?>[]{UserService.class},
             (proxy, method, args) -> {
