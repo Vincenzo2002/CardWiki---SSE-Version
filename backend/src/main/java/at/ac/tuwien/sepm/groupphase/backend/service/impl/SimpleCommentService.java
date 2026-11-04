@@ -34,10 +34,10 @@ public class SimpleCommentService implements CommentService {
 
     @Override
     @Transactional
-    public Comment addCommentToDeck(Long deckId, Comment comment) {
+    public Comment addCommentToDeck(final Long deckId, final Comment comment) {
         LOGGER.debug("add comment to deck {}: {}", deckId, comment);
-        User user = userService.loadCurrentUserOrThrow();
-        Deck deck = deckService.findOneOrThrow(deckId);
+        final User user = userService.loadCurrentUserOrThrow();
+        final Deck deck = deckService.findOneOrThrow(deckId);
 
         comment.setCreatedBy(user);
         comment.setDeck(deck);
@@ -47,7 +47,7 @@ public class SimpleCommentService implements CommentService {
 
     @Override
     @Transactional
-    public Comment findOneOrThrow(Long commentId) {
+    public Comment findOneOrThrow(final Long commentId) {
         LOGGER.debug("find comment with id {}", commentId);
         return commentRepository.findById(commentId)
             .orElseThrow(() -> new CommentNotFoundException(String.format("Could not find comment with id %s", commentId)));
@@ -55,7 +55,7 @@ public class SimpleCommentService implements CommentService {
 
     @Override
     @Transactional
-    public Page<Comment> findCommentsByDeckId(Long deckId, Pageable pageable) {
+    public Page<Comment> findCommentsByDeckId(final Long deckId, final Pageable pageable) {
         LOGGER.debug("find comments by deckId {}: {}", deckId, pageable);
         deckService.findOneOrThrow(deckId);
         return commentRepository.findByDeckId(deckId, pageable);
@@ -63,10 +63,10 @@ public class SimpleCommentService implements CommentService {
 
     @Override
     @Transactional
-    public Comment editComment(Long commentId, Comment comment) {
+    public Comment editComment(final Long commentId, final Comment comment) {
         LOGGER.debug("edit comment with id {}: {}", commentId, comment);
-        User user = userService.loadCurrentUserOrThrow();
-        Comment originalComment = findOneOrThrow(commentId);
+        final User user = userService.loadCurrentUserOrThrow();
+        final Comment originalComment = findOneOrThrow(commentId);
 
         if (originalComment.getCreatedBy() != user)
             throw new InsufficientAuthorizationException("Cannot edit comment of other user");
@@ -78,12 +78,12 @@ public class SimpleCommentService implements CommentService {
 
     @Override
     @Transactional
-    public void deleteComment(Long commentId) {
+    public void deleteComment(final Long commentId) {
         LOGGER.debug("delete comment with id {}", commentId);
-        User user = userService.loadCurrentUserOrThrow();
-        Comment comment = findOneOrThrow(commentId);
+        final User user = userService.loadCurrentUserOrThrow();
+        final Comment comment = findOneOrThrow(commentId);
 
-        if (comment.getCreatedBy() != user && !user.isAdmin())
+        if (comment.getCreatedBy() != user && !Boolean.TRUE.equals(user.isAdmin()))
             throw new InsufficientAuthorizationException("Cannot delete comment of other user");
 
         commentRepository.deleteById(commentId);

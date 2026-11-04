@@ -15,12 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import java.util.*;
@@ -55,14 +52,14 @@ public class SimpleCardService implements CardService {
 
     @Override
     @Transactional
-    public Card addCardToDeck(Long deckId, RevisionCreate revisionCreate) {
+    public Card addCardToDeck(final Long deckId, final RevisionCreate revisionCreate) {
         LOGGER.debug("Add Card to Deck: {} {}", revisionCreate, deckId);
-        User user = userService.loadCurrentUserOrThrow();
-        Deck deck = deckService.findOneOrThrow(deckId);
+        final User user = userService.loadCurrentUserOrThrow();
+        final Deck deck = deckService.findOneOrThrow(deckId);
         validateRevisionEdit(revisionCreate);
 
         // Save Card with initial revision
-        Card card = new Card();
+        final Card card = new Card();
         card.setDeck(deck);
 
         revisionCreate.setMessage(revisionCreate.getMessage() != null ? revisionCreate.getMessage() : "Created");
@@ -71,7 +68,7 @@ public class SimpleCardService implements CardService {
                 imageService.findOneOrThrow(revisionCreate.getImageFront().getFilename());
             if (revisionCreate.getImageBack() != null)
                 imageService.findOneOrThrow(revisionCreate.getImageBack().getFilename());
-        } catch (ImageNotFoundException ex) {
+        } catch (final ImageNotFoundException ex) {
             throw new BadRequestException(ex.getMessage());
         }
         card.setLatestRevision(revisionCreate);
@@ -83,7 +80,7 @@ public class SimpleCardService implements CardService {
 
     @Override
     @Transactional
-    public Page<RevisionEdit> findLatestEditRevisionsByDeckId(Long deckId, Pageable pageable) {
+    public Page<RevisionEdit> findLatestEditRevisionsByDeckId(final Long deckId, final Pageable pageable) {
         LOGGER.debug("Find latest edit revisions id {} {}", deckId, pageable);
         deckService.findOneOrThrow(deckId);
         return cardRepository.findLatestEditRevisionsByDeck_Id(deckId, pageable);
@@ -91,12 +88,12 @@ public class SimpleCardService implements CardService {
 
     @Override
     @Transactional
-    public void addDeleteRevisionToCard(Long cardId, String revisionMessage) {
+    public void addDeleteRevisionToCard(final Long cardId, final String revisionMessage) {
         LOGGER.debug("Add delete-revision to card with id {}", cardId);
-        Card card = findOneOrThrow(cardId);
-        User user = userService.loadCurrentUserOrThrow();
+        final Card card = findOneOrThrow(cardId);
+        final User user = userService.loadCurrentUserOrThrow();
 
-        RevisionDelete revision = new RevisionDelete();
+        final RevisionDelete revision = new RevisionDelete();
         revision.setCard(card);
         revision.setMessage(revisionMessage == null ? "Deleted" : revisionMessage);
         card.setLatestRevision(revision);
@@ -106,32 +103,32 @@ public class SimpleCardService implements CardService {
     }
 
     @Transactional
-    public Card findOneOrThrow(Long cardId) {
+    public Card findOneOrThrow(final Long cardId) {
         LOGGER.debug("Find card with id {}", cardId);
-        Optional<Card> card = cardRepository.findById(cardId);
+        final Optional<Card> card = cardRepository.findById(cardId);
         return card.orElseThrow(() -> new CardNotFoundException(("Could not find card with id " + cardId)));
     }
 
     @Override
     @Transactional
-    public void delete(Long cardId) {
+    public void delete(final Long cardId) {
         LOGGER.debug("Delete card with id {}", cardId);
         if (progressRepository.existsById_CardId(cardId)) {
             progressRepository.deleteById_CardId(cardId);
         }
         try {
             cardRepository.deleteById(cardId);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             throw new CardNotFoundException("Could not find card with id " + cardId);
         }
     }
 
     @Override
     @Transactional
-    public Card editCardInDeck(Long cardId, RevisionEdit revisionEdit) {
+    public Card editCardInDeck(final Long cardId, final RevisionEdit revisionEdit) {
         LOGGER.debug("Edit Card {}: {}", cardId, revisionEdit);
-        User user = userService.loadCurrentUserOrThrow();
-        Card card = findOneOrThrow(cardId);
+        final User user = userService.loadCurrentUserOrThrow();
+        final Card card = findOneOrThrow(cardId);
         validateRevisionEdit(revisionEdit);
 
         revisionEdit.setMessage(revisionEdit.getMessage() != null ? revisionEdit.getMessage() : "Edited");
@@ -140,7 +137,7 @@ public class SimpleCardService implements CardService {
                 imageService.findOneOrThrow(revisionEdit.getImageFront().getFilename());
             if (revisionEdit.getImageBack() != null)
                 imageService.findOneOrThrow(revisionEdit.getImageBack().getFilename());
-        } catch (ImageNotFoundException ex) {
+        } catch (final ImageNotFoundException ex) {
             throw new BadRequestException(ex.getMessage());
         }
         card.setLatestRevision(revisionEdit);
@@ -150,7 +147,7 @@ public class SimpleCardService implements CardService {
         return cardRepository.saveAndFlush(card);
     }
 
-    public void validateRevisionEdit(RevisionEdit revisionEdit) {
+    public void validateRevisionEdit(final RevisionEdit revisionEdit) {
         if (revisionEdit.getTextFront() == null && revisionEdit.getImageFront() == null) {
             throw new BadRequestException("Front side cannot be empty");
         }
@@ -161,7 +158,7 @@ public class SimpleCardService implements CardService {
 
     @Override
     @Transactional
-    public Page<Revision> getRevisionsOfCard(Long id, Pageable pageable) {
+    public Page<Revision> getRevisionsOfCard(final Long id, final Pageable pageable) {
         LOGGER.debug("Load {} revisions with offset {} from card {}", pageable.getPageSize(), pageable.getOffset(), id);
         return revisionRepository.findByCard_Id(id, pageable);
     }
@@ -169,14 +166,14 @@ public class SimpleCardService implements CardService {
     private static final int MAX_REVISIONS_COUNT = 10;
 
     @Override
-    public List<Revision> getRevisionsByIds(Long[] ids) {
+    public List<Revision> getRevisionsByIds(final Long[] ids) {
         if (ids.length > MAX_REVISIONS_COUNT)
             throw new BadRequestException(String.format("You may not query more than %d revisions at once.", MAX_REVISIONS_COUNT));
         return revisionRepository.findByIdIn(Arrays.stream(ids).collect(Collectors.toList()));
     }
 
     @Override
-    public Page<Revision> getRecentRevisions(Pageable pageable) {
+    public Page<Revision> getRecentRevisions(final Pageable pageable) {
         return revisionRepository.findAll(pageable);
     }
 }

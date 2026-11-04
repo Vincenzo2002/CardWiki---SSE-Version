@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Category;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Deck;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.exception.BadRequestException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.CategoryNotFoundException;
@@ -46,20 +45,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<Category> searchByName(String name, Pageable pageable) {
+    public Page<Category> searchByName(final String name, final Pageable pageable) {
         LOGGER.debug("Find categories by name: {} {}", name, pageable);
         return categoryRepository.findByNameContainingIgnoreCase(name, pageable);
     }
 
     @Override
     @Transactional
-    public Category findOneOrThrow(Long id) {
+    public Category findOneOrThrow(final Long id) {
         LOGGER.debug("Find category with id {}.", id);
-        Category category = categoryRepository.findCategoryById(id).orElseThrow(
+        final Category category = categoryRepository.findCategoryById(id).orElseThrow(
             () -> new CategoryNotFoundException("Category not found."));
 
         if (category.getParent() != null) {
-            Category parent = categoryRepository.findCategoryById(category.getParent().getId()).orElseThrow(
+            final Category parent = categoryRepository.findCategoryById(category.getParent().getId()).orElseThrow(
                 () -> new CategoryNotFoundException("Invalid parent reference."));
             category.setParent(parent);
         }
@@ -72,26 +71,26 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public Category createCategory(Category category) {
+    public Category createCategory(final Category category) {
         LOGGER.debug("Create category {}", category);
-        User user = userService.loadCurrentUserOrThrow();
+        final User user = userService.loadCurrentUserOrThrow();
         category.setCreatedBy(user);
         category.setName(category.getName().trim().replaceAll(" +", " "));
         try {
             return categoryRepository.saveAndFlush(category);
-        } catch (DataIntegrityViolationException e) {
+        } catch (final DataIntegrityViolationException e) {
             throw new BadRequestException(handleDataIntegrityViolationException(e));
         }
     }
 
     @Override
     @Transactional
-    public Category updateCategory(Long id, Category categoryUpdate) {
+    public Category updateCategory(final Long id, final Category categoryUpdate) {
         LOGGER.debug("Update category with id {}", id);
         Category category = findOneOrThrow(id);
 
         Category parent = null;
-        Category newParent = categoryUpdate.getParent();
+        final Category newParent = categoryUpdate.getParent();
         if (newParent != null) {
             if (newParent.getId().equals(id)) {
                 throw new BadRequestException("Category cannot be its own parent.");
@@ -106,7 +105,7 @@ public class CategoryServiceImpl implements CategoryService {
         category.setName(categoryUpdate.getName().trim().replaceAll(" +", " "));
         try {
             category = categoryRepository.saveAndFlush(category);
-        } catch (DataIntegrityViolationException e) {
+        } catch (final DataIntegrityViolationException e) {
             throw new BadRequestException(handleDataIntegrityViolationException(e));
         }
         Hibernate.initialize(category.getParent());
@@ -114,18 +113,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategory(Long id) {
+    public void deleteCategory(final Long id) {
         LOGGER.debug("Delete category with id {}", id);
         try {
             categoryRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             throw new CategoryNotFoundException("Category not found.");
         }
     }
 
-    private String handleDataIntegrityViolationException (DataIntegrityViolationException e) {
+    private String handleDataIntegrityViolationException (final DataIntegrityViolationException e) {
         if (e.getCause() instanceof ConstraintViolationException) {
-            String cause = ((ConstraintViolationException) e.getCause()).getConstraintName().toLowerCase();
+            final String cause = ((ConstraintViolationException) e.getCause()).getConstraintName().toLowerCase();
             if (cause.contains("name_unique")) {
                 return "A category with that name already exists.";
             } else {
