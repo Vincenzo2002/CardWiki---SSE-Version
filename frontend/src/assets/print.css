@@ -1,0 +1,26 @@
+@page {
+  margin: 2cm;
+}
+body {
+  background: #fff !important;
+  color: #000 !important;
+}
+a {
+  color: #000 !important;
+  text-decoration: underline;
+}
+img {
+  max-width: 100% !important;
+}
+.btn,
+.navbar,
+.sidebar,
+button,
+nav {
+  display: none !important;
+}
+.card,
+blockquote,
+pre {
+  break-inside: avoid;
+}
