@@ -74,3 +74,19 @@ body {
     @extend .text-body;
   }
 }
+
+/* Toast component */
+app-toasts-container {
+  .toast {
+    min-width: 20em;
+  }
+
+  .toast p {
+    white-space: pre-line;
+  }
+}
+
+/* Markdown syntax component */
+app-markdown-syntax pre {
+  white-space: pre-wrap;
+}

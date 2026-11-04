@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-toasts-container',
   templateUrl: './toasts-container.component.html',
-  styleUrls: ['./toasts-container.component.css'],
 })
 export class ToastsContainerComponent {
   @HostBinding('class.ngb-toasts') classNgbToasts = 'true';

@@ -4,7 +4,6 @@ import { TitleService } from 'src/app/services/title.service';
 @Component({
   selector: 'app-markdown-syntax',
   templateUrl: './markdown-syntax.component.html',
-  styleUrls: ['./markdown-syntax.component.css'],
 })
 export class MarkdownSyntaxComponent implements OnInit {
   public examples: { [key: string]: string } = {
