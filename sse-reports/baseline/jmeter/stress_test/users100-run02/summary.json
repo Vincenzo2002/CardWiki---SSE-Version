@@ -1,0 +1,157 @@
+{
+  "overall_including_ramps_and_warmup": {
+    "samples": 35501,
+    "errors": 0,
+    "error_percent": 0.0,
+    "mean_ms": 5.233430044224106,
+    "p95_ms": 16.0,
+    "observed_seconds": 299.122,
+    "throughput_rps": 118.68401521787096
+  },
+  "phases": {
+    "before": {
+      "configured": {
+        "users": 5,
+        "ramp_up": 5,
+        "duration": 60
+      },
+      "peak_recorded_threads": 5,
+      "distinct_thread_names": 5,
+      "concurrency_confirmed": true,
+      "all_samples": {
+        "samples": 564,
+        "errors": 0,
+        "error_percent": 0.0,
+        "mean_ms": 5.390070921985815,
+        "p95_ms": 13.0,
+        "observed_seconds": 59.115,
+        "throughput_rps": 9.540725704136007
+      },
+      "steady_at_target_threads": {
+        "samples": 435,
+        "errors": 0,
+        "error_percent": 0.0,
+        "mean_ms": 5.622988505747126,
+        "p95_ms": 13.0,
+        "observed_seconds": 43.966,
+        "throughput_rps": 9.894009006959923
+      },
+      "steady_by_endpoint": {
+        "Open Deck": {
+          "samples": 216,
+          "errors": 0,
+          "error_percent": 0.0,
+          "mean_ms": 4.962962962962963,
+          "p95_ms": 13.0,
+          "observed_seconds": 43.965,
+          "throughput_rps": 4.912998976458546
+        },
+        "Search Deck": {
+          "samples": 219,
+          "errors": 0,
+          "error_percent": 0.0,
+          "mean_ms": 6.273972602739726,
+          "p95_ms": 13.0,
+          "observed_seconds": 43.955,
+          "throughput_rps": 4.9823683312478675
+        }
+      }
+    },
+    "stress": {
+      "configured": {
+        "users": 100,
+        "ramp_up": 10,
+        "duration": 180
+      },
+      "peak_recorded_threads": 100,
+      "distinct_thread_names": 100,
+      "concurrency_confirmed": true,
+      "all_samples": {
+        "samples": 34367,
+        "errors": 0,
+        "error_percent": 0.0,
+        "mean_ms": 5.246079087496726,
+        "p95_ms": 16.0,
+        "observed_seconds": 179.529,
+        "throughput_rps": 191.42868283118605
+      },
+      "steady_at_target_threads": {
+        "samples": 31242,
+        "errors": 0,
+        "error_percent": 0.0,
+        "mean_ms": 5.449491069713846,
+        "p95_ms": 17.0,
+        "observed_seconds": 159.007,
+        "throughput_rps": 196.48191589049537
+      },
+      "steady_by_endpoint": {
+        "Open Deck": {
+          "samples": 15621,
+          "errors": 0,
+          "error_percent": 0.0,
+          "mean_ms": 4.533128480891108,
+          "p95_ms": 14.0,
+          "observed_seconds": 159.007,
+          "throughput_rps": 98.24095794524769
+        },
+        "Search Deck": {
+          "samples": 15621,
+          "errors": 0,
+          "error_percent": 0.0,
+          "mean_ms": 6.365853658536586,
+          "p95_ms": 19.0,
+          "observed_seconds": 159.006,
+          "throughput_rps": 98.24157578959284
+        }
+      }
+    },
+    "recovery": {
+      "configured": {
+        "users": 5,
+        "ramp_up": 5,
+        "duration": 60
+      },
+      "peak_recorded_threads": 5,
+      "distinct_thread_names": 5,
+      "concurrency_confirmed": true,
+      "all_samples": {
+        "samples": 570,
+        "errors": 0,
+        "error_percent": 0.0,
+        "mean_ms": 4.315789473684211,
+        "p95_ms": 8.0,
+        "observed_seconds": 59.443,
+        "throughput_rps": 9.58901805090591
+      },
+      "steady_at_target_threads": {
+        "samples": 437,
+        "errors": 0,
+        "error_percent": 0.0,
+        "mean_ms": 4.661327231121281,
+        "p95_ms": 8.0,
+        "observed_seconds": 44.247,
+        "throughput_rps": 9.876375799489232
+      },
+      "steady_by_endpoint": {
+        "Open Deck": {
+          "samples": 217,
+          "errors": 0,
+          "error_percent": 0.0,
+          "mean_ms": 3.6359447004608296,
+          "p95_ms": 6.0,
+          "observed_seconds": 43.739,
+          "throughput_rps": 4.961247399346122
+        },
+        "Search Deck": {
+          "samples": 220,
+          "errors": 0,
+          "error_percent": 0.0,
+          "mean_ms": 5.672727272727273,
+          "p95_ms": 10.0,
+          "observed_seconds": 43.744,
+          "throughput_rps": 5.029261155815655
+        }
+      }
+    }
+  }
+}

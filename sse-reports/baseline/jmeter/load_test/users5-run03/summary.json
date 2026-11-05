@@ -1,0 +1,61 @@
+{
+  "overall_including_ramps_and_warmup": {
+    "samples": 2899,
+    "errors": 0,
+    "error_percent": 0.0,
+    "mean_ms": 5.14522249051397,
+    "p95_ms": 10.0,
+    "observed_seconds": 299.103,
+    "throughput_rps": 9.692313350250583
+  },
+  "phases": {
+    "load": {
+      "configured": {
+        "users": 5,
+        "ramp_up": 10,
+        "duration": 300
+      },
+      "peak_recorded_threads": 5,
+      "distinct_thread_names": 5,
+      "concurrency_confirmed": true,
+      "all_samples": {
+        "samples": 2899,
+        "errors": 0,
+        "error_percent": 0.0,
+        "mean_ms": 5.14522249051397,
+        "p95_ms": 10.0,
+        "observed_seconds": 299.103,
+        "throughput_rps": 9.692313350250583
+      },
+      "steady_at_target_threads": {
+        "samples": 2737,
+        "errors": 0,
+        "error_percent": 0.0,
+        "mean_ms": 5.1143587869930585,
+        "p95_ms": 10.0,
+        "observed_seconds": 278.856,
+        "throughput_rps": 9.81510170123648
+      },
+      "steady_by_endpoint": {
+        "Open Deck": {
+          "samples": 1367,
+          "errors": 0,
+          "error_percent": 0.0,
+          "mean_ms": 3.984637893196781,
+          "p95_ms": 7.0,
+          "observed_seconds": 278.641,
+          "throughput_rps": 4.905954256552338
+        },
+        "Search Deck": {
+          "samples": 1370,
+          "errors": 0,
+          "error_percent": 0.0,
+          "mean_ms": 6.241605839416058,
+          "p95_ms": 11.0,
+          "observed_seconds": 278.856,
+          "throughput_rps": 4.912929971024472
+        }
+      }
+    }
+  }
+}

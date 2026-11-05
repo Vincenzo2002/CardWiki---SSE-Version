@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="CardWiki API performance" enabled="true">
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="Variables">
+        <collectionProp name="Arguments.arguments" />
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="Search and open a deck" enabled="true" />
+      <hashTree>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Pause before each request" enabled="true">
+          <stringProp name="ConstantTimer.delay">${__P(think_ms,500)}</stringProp>
+        </ConstantTimer>
+        <hashTree />
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Search Deck" enabled="true">
+          <stringProp name="HTTPSampler.path">/api/v1/decks</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Query">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="name" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.name">name</stringProp>
+                <stringProp name="Argument.value">${__P(search,Haupt)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+              </elementProp>
+              <elementProp name="limit" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.name">limit</stringProp>
+                <stringProp name="Argument.value">10</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+              </elementProp>
+              <elementProp name="offset" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.name">offset</stringProp>
+                <stringProp name="Argument.value">0</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree />
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Open Deck" enabled="true">
+          <stringProp name="HTTPSampler.path">/api/v1/decks/${__P(deck_id,1)}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Query">
+            <collectionProp name="Arguments.arguments" />
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree />
+        <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Validate status and JSON fixture" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters" />
+          <stringProp name="filename" />
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper
+
+try {
+    if (prev.getResponseCode() != '200' || !prev.getContentType().contains('application/json')) {
+        throw new IllegalArgumentException('Expected HTTP 200 and application/json')
+    }
+    def data = new JsonSlurper().parseText(prev.getResponseDataAsString())
+    if (prev.getSampleLabel() == 'Search Deck') {
+        if (!(data instanceof Map) || !(data.content instanceof List) || data.content.isEmpty()
+            || !data.content.every { it instanceof Map &amp;&amp; it.id instanceof Number &amp;&amp; it.name instanceof String }) {
+            throw new IllegalArgumentException('Expected a nonempty page of decks')
+        }
+    } else if (!(data instanceof Map) || data.id?.toString() != props.getProperty('deck_id', '1')
+               || !(data.name instanceof String)) {
+        throw new IllegalArgumentException('Expected the configured deck ID and name')
+    }
+} catch (Exception error) {
+    AssertionResult.setFailure(true)
+    AssertionResult.setFailureMessage('Invalid CardWiki response: ' + error.getMessage())
+}
+</stringProp>
+        </JSR223Assertion>
+        <hashTree />
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
