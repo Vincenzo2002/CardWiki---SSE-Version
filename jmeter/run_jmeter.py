@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
+from io import StringIO
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -51,6 +52,8 @@ def parse_args():
     parser.add_argument("--protocol", choices=("http", "https"), default="http")
     parser.add_argument("--search", default="Haupt")
     parser.add_argument("--deck-id", type=positive, default=1)
+    parser.add_argument("--data-file", type=Path,
+                        help="UTF-8 CSV with search,deck_id headers; otherwise use --search and --deck-id")
     parser.add_argument("--users", type=positive, help="users in the main phase")
     parser.add_argument("--ramp-up", type=nonnegative, help="main phase ramp-up in seconds")
     parser.add_argument("--duration", type=positive, help="main phase total seconds, INCLUDING ramp-up")
@@ -100,25 +103,63 @@ def phases_for(args):
     return {"before": dict(base), args.scenario: main, "recovery": dict(base)}
 
 
-def preflight(args):
+def load_inputs(args):
+    if args.data_file is None:
+        rows = [{"search": args.search, "deck_id": str(args.deck_id)}]
+        source = None
+    else:
+        source = args.data_file.resolve()
+        with source.open(encoding="utf-8-sig", newline="") as stream:
+            reader = csv.DictReader(stream, strict=True)
+            if reader.fieldnames != ["search", "deck_id"]:
+                raise ValueError("CSV headers must be exactly search,deck_id")
+            rows = []
+            for row in reader:
+                if set(row) != {"search", "deck_id"} or any(value is None for value in row.values()):
+                    raise ValueError(f"CSV line {reader.line_num}: expected exactly two fields")
+                search, deck_id = row["search"], row["deck_id"]
+                if not search.strip() or any(char in search for char in "\r\n\x00"):
+                    raise ValueError(f"CSV line {reader.line_num}: search must be nonempty and single-line")
+                if not re.fullmatch(r"[1-9][0-9]*", deck_id):
+                    raise ValueError(f"CSV line {reader.line_num}: deck_id must be a positive integer")
+                rows.append({"search": search, "deck_id": deck_id})
+        if not rows:
+            raise ValueError("CSV must contain at least one search/deck pair")
+    # Serialize once: the preflight and JMeter use the same in-memory inputs,
+    # even if the source file is edited while the preflight is running.
+    snapshot = StringIO(newline="")
+    writer = csv.DictWriter(snapshot, fieldnames=["search", "deck_id"], lineterminator="\n")
+    writer.writeheader()
+    writer.writerows(rows)
+    return rows, snapshot.getvalue().encode("utf-8"), source
+
+
+def preflight(args, rows):
     origin = f"{args.protocol}://{args.host}:{args.port}"
-    endpoints = ("/api/v1/decks?" + urlencode({"name": args.search, "limit": 10, "offset": 0}),
-                 f"/api/v1/decks/{args.deck_id}")
-    for index, endpoint in enumerate(endpoints):
+
+    def fetch(endpoint):
         request = Request(origin + endpoint, headers={"Accept": "application/json"})
         with urlopen(request, timeout=10) as response:
-            if response.status != 200 or "application/json" not in response.headers.get("Content-Type", ""):
+            if (response.status != 200 or response.geturl() != origin + endpoint
+                    or "application/json" not in response.headers.get("Content-Type", "")):
                 raise ValueError(f"preflight requires HTTP 200 and JSON: {endpoint}")
-            data = json.load(response)
-        if index == 0:
-            valid = (isinstance(data, dict) and isinstance(data.get("content"), list)
-                     and bool(data["content"]) and all(isinstance(deck, dict)
-                     and isinstance(deck.get("id"), int) and isinstance(deck.get("name"), str)
-                     for deck in data["content"]))
-        else:
-            valid = isinstance(data, dict) and data.get("id") == args.deck_id and isinstance(data.get("name"), str)
-        if not valid:
-            raise ValueError(f"preflight response does not match the required fixture: {endpoint}")
+            return json.load(response)
+
+    for search, deck_id in dict.fromkeys((row["search"], row["deck_id"]) for row in rows):
+        endpoint = "/api/v1/decks?" + urlencode({"name": search, "limit": 10, "offset": 0})
+        data = fetch(endpoint)
+        if not (isinstance(data, dict) and isinstance(data.get("content"), list)
+                and data["content"] and all(isinstance(deck, dict)
+                and type(deck.get("id")) is int and isinstance(deck.get("name"), str)
+                for deck in data["content"])):
+            raise ValueError(f"preflight requires a nonempty page of decks: {endpoint}")
+        if args.data_file is not None and not any(deck["id"] == int(deck_id) for deck in data["content"]):
+            raise ValueError(f"CSV deck {deck_id} is not in the first search page: {search!r}; update the CSV")
+        endpoint = f"/api/v1/decks/{deck_id}"
+        data = fetch(endpoint)
+        if not (isinstance(data, dict) and type(data.get("id")) is int
+                and data["id"] == int(deck_id) and isinstance(data.get("name"), str)):
+            raise ValueError(f"preflight requires the configured deck ID and name: {endpoint}")
 
 
 def metrics(rows):
@@ -165,15 +206,20 @@ def main():
     destination = args.output_root.resolve() / args.version / "jmeter" / (args.scenario + "_test") / args.run_id
     if destination.exists():
         raise ValueError(f"output already exists; choose a new run_id: {destination}")
-    preflight(args)
+    rows, input_bytes, input_source = load_inputs(args)
+    preflight(args, rows)
     phases = phases_for(args)
     destination.mkdir(parents=True, exist_ok=False)
     plans = destination / "plans"
     plans.mkdir()
     for name in (args.scenario + "_test.jmx", "workload.jmx"):
         shutil.copy2(HERE / name, plans / name)
+    input_path = plans / "input.csv"
+    input_path.write_bytes(input_bytes)
     properties = {"host": args.host, "port": args.port, "protocol": args.protocol,
                   "search": args.search, "deck_id": args.deck_id, "users": args.users,
+                  "data_file": str(input_path), "data_mode": "csv" if input_source else "fixed",
+                  "sample_variables": "search,deck_id",
                   "ramp_up": args.ramp_up, "duration": args.duration, "base_users": args.base_users,
                   "base_ramp_up": args.base_ramp_up, "base_duration": args.base_duration,
                   "think_ms": args.think_ms, "includecontroller.prefix": str(plans) + os.sep,
@@ -193,16 +239,25 @@ def main():
                 "application_commit_note": "User-declared; the running backend does not expose its commit.",
                 "harness_checkout_commit": capture("git", "-C", str(ROOT), "rev-parse", "HEAD"),
                 "harness_worktree_status": capture("git", "-C", str(ROOT), "status", "--short"),
-                "plan_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in plans.iterdir()},
+                "plan_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in plans.glob("*.jmx")},
                 "runner_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 "dataset": args.dataset, "scenario": args.scenario, "version": args.version,
+                "input_data": {"mode": properties["data_mode"],
+                               "source": str(input_source) if input_source else None,
+                               "snapshot": "plans/input.csv",
+                               "sha256": hashlib.sha256(input_bytes).hexdigest(),
+                               "rows": len(rows),
+                               "distinct_pairs": len({(row["search"], row["deck_id"]) for row in rows}),
+                               "distinct_deck_ids": len({row["deck_id"] for row in rows}),
+                               "sharing_mode": "current_thread_group", "recycle_on_eof": True},
                 "phases": phases, "steady_exclusion_after_ramp_seconds": args.warmup,
                 "os": platform.platform(), "architecture": platform.machine(), "cpu_count": os.cpu_count(),
                 "cpu_model": capture("sysctl", "-n", "machdep.cpu.brand_string") if sys.platform == "darwin" else platform.processor(),
                 "memory": capture("sysctl", "-n", "hw.memsize") if sys.platform == "darwin" else "record manually",
                 "java_version": capture("java", "-version"), "jmeter_version": capture(args.jmeter, "-v"),
                 "command_argv": command, "properties": properties,
-                "notes": "Preflight requests precede measurement; JSON assertions are included in the workload. "
+                "notes": "Input pairs are checked before measurement; the CSV snapshot is reused cyclically per phase. "
+                         "CSV mode requires each deck in its search page. JSON assertions are included in the workload. "
                          "HTTP timers pause before each sampler. Steady metrics exclude each ramp and warmup. "
                          "No response-time SLA or saturation threshold is assumed."}
     metadata_path = destination / "metadata.json"

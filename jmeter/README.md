@@ -1,181 +1,121 @@
-# CardWiki API performance tests
+# CardWiki JMeter tests
 
-These plans replace the short, fixed-loop experiments in PR #18 with timed
-workloads. They exercise the same read-only API operations:
+These tests simulate users searching for and opening decks. Use JDK 11,
+Maven, Python 3 and JMeter 5.6.3 or a compatible newer version.
 
-- `GET /api/v1/decks?name=Haupt&limit=10&offset=0` (Search Deck).
-- `GET /api/v1/decks/1` (Open Deck).
+## Start the backend
 
-`workload.jmx` is a shared Test Fragment, included by all four plans. Each
-virtual user repeats both requests until its Thread Group's duration ends.
-There are no additional JMeter plugins. Python 3 and JMeter 5.6.3 or a
-compatible newer version are required; the runner supports macOS and Linux.
-
-## Profiles
-
-| Plan | Main phase defaults | Other phases |
-| --- | --- | --- |
-| `load_test.jmx` | 20 users, 10 s ramp-up, 300 s total | None |
-| `stress_test.jmx` | 50 users, 10 s ramp-up, 180 s total | Before and recovery: 5 users, 5 s ramp-up, 60 s each |
-| `spike_test.jmx` | 50 users, 1 s ramp-up, 30 s total | Before and recovery: 5 users, 5 s ramp-up, 60 s each |
-| `soak_test.jmx` | 20 users, 30 s ramp-up, 3,600 s total | None |
-
-Durations **include ramp-up**. Before, main and recovery groups run sequentially;
-in-flight requests can delay the transition by up to the response timeout.
-The next group starts new virtual users. These read-only tests do not preserve
-authenticated sessions across phases.
-
-The default think time is **500 ms before each request**, approximately one
-second per two-request loop plus response times. Keep it identical when
-comparing application versions. Defaults are starting points for calibration,
-not known traffic requirements or proof of overload. Performance testing is
-the umbrella category; a fifth `performance_test.jmx` is not necessary.
-
-## Prepare the backend and fixture
-
-Start the intended backend version yourself using the
-[backend instructions](../backend/README.md#how-to-run-it), with JDK 11 and a
-known dataset. Do not delete an existing database to make the test work.
-Ensure the selected search has results and the selected deck exists; change
-`--search` and `--deck-id` if needed. Only the backend on port 8080 is needed.
-
-Record the **full commit of the running application**, not automatically the
-commit of the test checkout. The runner stores it as user-declared because
-the backend does not expose a version endpoint. For example, in the checkout
-used to start the backend:
+From the repository root, open a terminal and run:
 
 ```sh
-git rev-parse HEAD
+cd backend
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-Run the commands below from the repository root. Replace the sample SHA and
-dataset description with your actual values:
+Wait until the backend is running on `http://localhost:8080`. The frontend
+is not needed. See the [backend setup](../backend/README.md) for JDK setup.
+
+In a second terminal, from the repository root:
 
 ```sh
-APP_COMMIT=0123456789abcdef0123456789abcdef01234567
-DATASET='dev dataset, unchanged; Haupt search and deck 1 verified'
+APP_COMMIT=$(git rev-parse HEAD)
+DATASET="Database dev; input from jmeter/data/varied.csv"
+```
 
-# Short installation/fixture check; not a performance measurement.
-bash jmeter/run_jmeter.sh load baseline smoke01 \
+Use the SHA of the backend actually running. The command above is correct
+if both terminals use the same checkout and the branch/code has not changed
+after startup. Update the dataset description to match your database.
+
+## Input data
+
+[`data/varied.csv`](data/varied.csv) contains 15 search/deck pairs across
+five decks. The runner reads a new pair each loop and restarts the CSV when
+it reaches the end. Before starting JMeter, it checks that the searches and
+IDs match the running database. If they do not, update the CSV using the
+[fixture notes](data/README.md).
+
+Without `--data-file`, tests use the original fixed search `Haupt` and deck `1`.
+
+## Run the tests
+
+First, check the setup with a short 15-second run. Its results are saved in
+`/tmp/cardwiki-checks`, separately from project measurements:
+
+```sh
+bash jmeter/run_jmeter.sh load baseline varied-smoke01 \
   --app-commit "$APP_COMMIT" --dataset "$DATASET" \
-  --purpose validation --users 2 --ramp-up 1 --duration 15 --warmup 0
-
-# Measured load: repeat with 5, 10 and 20 users and a new run ID each time.
-bash jmeter/run_jmeter.sh load baseline users5-run01 \
-  --app-commit "$APP_COMMIT" --dataset "$DATASET" --users 5
-bash jmeter/run_jmeter.sh load baseline users10-run01 \
-  --app-commit "$APP_COMMIT" --dataset "$DATASET" --users 10
-bash jmeter/run_jmeter.sh load baseline users20-run01 \
-  --app-commit "$APP_COMMIT" --dataset "$DATASET" --users 20
+  --data-file jmeter/data/varied.csv \
+  --purpose validation --output-root /tmp/cardwiki-checks \
+  --users 2 --ramp-up 1 --duration 15 --warmup 0
 ```
 
-The CLI validates positive user counts, phase durations, the input fixture and
-unique output paths. It sends two preflight requests before measurement.
-Every measured response must be HTTP 200 and JSON: search must return a
-nonempty page of deck objects, and open must return the configured deck ID
-and a name. Redirects are not treated as successful API responses.
-
-Only run a `baseline` measurement against the unoptimized application.
-Follow the [existing Git workflow](../README.md#branches-and-improvements)
-when bringing the same tests to an optimized version. For that version use
-`sse-improvements` as the second argument, with identical workload settings.
-
-## Stress, spike and soak
-
-After confirming the load test's actual concurrency, choose and document a
-normal load. Adjust `--base-users` to that value for stress and spike.
+Then run the following commands **one at a time**, inspecting results and
+letting the backend recover between tests. Each request has a 500 ms pause;
+the stated durations include ramp-up and exclude report-generation time.
 
 ```sh
-# One stress level with before/after observations.
-bash jmeter/run_jmeter.sh stress baseline users50-run01 \
-  --app-commit "$APP_COMMIT" --dataset "$DATASET" --base-users 5 --users 50
+# Load: 50 users, about 5 minutes
+bash jmeter/run_jmeter.sh load baseline run02-varied-u050 \
+  --app-commit "$APP_COMMIT" --dataset "$DATASET" \
+  --data-file jmeter/data/varied.csv --users 50
 
-# Abrupt rise to 50 users, then return to 5 users.
-bash jmeter/run_jmeter.sh spike baseline peak50-run01 \
-  --app-commit "$APP_COMMIT" --dataset "$DATASET" --base-users 5 --users 50
+# Load: 200 users, about 5 minutes
+bash jmeter/run_jmeter.sh load baseline run02-varied-u200 \
+  --app-commit "$APP_COMMIT" --dataset "$DATASET" \
+  --data-file jmeter/data/varied.csv --users 200
 
-# Sustained load for one hour. Choose a load already shown to be sustainable.
-bash jmeter/run_jmeter.sh soak baseline users20-run01 \
-  --app-commit "$APP_COMMIT" --dataset "$DATASET" --users 20
+# Load: 500 users, about 5 minutes
+bash jmeter/run_jmeter.sh load baseline run02-varied-u500 \
+  --app-commit "$APP_COMMIT" --dataset "$DATASET" \
+  --data-file jmeter/data/varied.csv --users 500
+
+# Stress: 20 -> 2,000 -> 20 users, about 5 minutes
+bash jmeter/run_jmeter.sh stress baseline run02-varied-u2000 \
+  --app-commit "$APP_COMMIT" --dataset "$DATASET" \
+  --data-file jmeter/data/varied.csv --base-users 20 --users 2000
+
+# Spike: 20 -> 200 -> 20 users, about 2.5 minutes
+bash jmeter/run_jmeter.sh spike baseline run02-varied-u200 \
+  --app-commit "$APP_COMMIT" --dataset "$DATASET" \
+  --data-file jmeter/data/varied.csv --base-users 20 --users 200
+
+# Spike: 20 -> 500 -> 20 users, about 2.5 minutes
+bash jmeter/run_jmeter.sh spike baseline run02-varied-u500 \
+  --app-commit "$APP_COMMIT" --dataset "$DATASET" \
+  --data-file jmeter/data/varied.csv --base-users 20 --users 500
+
+# Soak: 100 users, about 1 hour
+bash jmeter/run_jmeter.sh soak baseline run02-varied-u100 \
+  --app-commit "$APP_COMMIT" --dataset "$DATASET" \
+  --data-file jmeter/data/varied.csv --users 100
 ```
 
-For stress testing, increase the main-phase users across separate runs, for
-example 20, 50, 100 and 200, adapting the sequence to observed behavior. Inspect
-each result and recovery before increasing again. Fifty configured users
-alone do not demonstrate saturation. Define the error/latency or resource
-criterion used to identify the limit, and distinguish backend saturation
-from a saturated load generator. Use the same settings for the before/after
-comparison, rather than recalibrating each implementation independently.
+Keep the computer awake during the soak test. On macOS, prefix its command
+with `caffeinate -i`. To repeat any test, choose a new run ID, such as
+`run03-varied-u050`: existing output directories are never overwritten.
+Keep the historical `run01` directories unchanged.
 
-For spike testing, compare before, peak and recovery time series, including
-the transition; steady-state aggregates alone do not describe a spike.
-For soak testing, inspect trends over time. A short validation run cannot
-establish endurance or absence of leaks. Monitor backend CPU, memory, GC and
-database connections alongside JMeter; JMeter alone does not measure them.
-Ideally use a separate load-generator machine. If both processes share a
-machine, record that limitation and keep the setup consistent.
+## Results
 
-## Outputs and interpretation
-
-Each run gets a new directory, and existing runs are never overwritten:
+Each test saves its files under:
 
 ```text
-sse-reports/<baseline|sse-improvements>/jmeter/<scenario>_test/<run-id>/
-  plans/                 exact JMX snapshots used by this execution
-  metadata.json          declared app commit, plan hashes, command, environment
-  results.jtl            original samples, thread counts and assertion failures
-  jmeter.log             JMeter execution log
-  console.log
-  summary.json           per-phase and per-endpoint metrics
-  report/                generated HTML dashboard (open index.html)
-  report-generation.log
-  report-console.log
+sse-reports/baseline/jmeter/<scenario>_test/<run-id>/
 ```
 
-`summary.json` separates complete-phase results from steady samples. Steady
-samples start after ramp-up plus `--warmup` seconds (default 10), measured
-conservatively from the first recorded sample in each phase, and must record
-the target `grpThreads`. The runner checks this independently for every
-phase. It exits with status 2 if target concurrency and steady samples cannot
-be confirmed. Inspect the active-thread time series to confirm the target is
-maintained, not merely reached briefly.
+- `summary.json`: response times, p95, requests per second, errors and concurrency.
+- `report/index.html`: dashboard with charts and detailed results.
+- `results.jtl`: individual request samples.
+- `metadata.json` and `plans/`: configuration, environment and input copies.
 
-The p95 uses the nearest-rank method. Throughput is samples divided by the
-observed interval from the first sample start to the last sample end in the
-selected subset. An overall average mixes ramps, peaks and recovery; compare
-matching phases and endpoints. Errors include failed content assertions.
-JMeter process completion is **not** an SLA pass: stress runs can complete
-successfully while recording application errors. Nonzero JMeter execution
-or report-generation failures return status 1 and retain available artifacts.
+Open the HTML dashboard in a browser. Check errors and active users as well
+as response times: completing the test does not automatically mean its
+performance is acceptable. The p95 is the response time within which at
+least 95% of measured requests finish.
 
-Repeat short measured scenarios three times using `run01`, `run02`, and
-`run03`; record repetitions for the longer soak test too. Let the system
-recover consistently between runs. Compare the same dataset, request mix,
-think time, application logging settings, hardware and JVM settings. Preserve
-original outputs; do not infer lower energy consumption from shorter latency.
-Use an explicit energy measurement for an energy claim.
+For optimized-version measurements, start the optimized backend, update
+`APP_COMMIT` and replace `baseline` with `sse-improvements` in the commands.
+Keep the same database, CSV, workload settings and hardware. This argument
+only selects where results are saved; it does not switch the running backend.
 
-The runner automatically uses CLI mode, CSV samples and no GUI listeners.
-Connection and response timeouts are 5 and 10 seconds. Use `--help` for all
-settings. To validate the tooling without storing synthetic artifacts as
-project measurements, set `--purpose validation --output-root /tmp/cardwiki-checks`.
-Keep synthetic validation artifacts separate from actual CardWiki results.
-
-## Completing PR #18
-
-1. Keep the current fixed-loop plans and nine results as historical preliminary
-   measurements. Their configured users do not prove simultaneous concurrency;
-   do not rename them into load/stress/spike/soak results.
-2. Bring this `jmeter/` directory into the PR branch. The existing PR artifacts
-   are not present in the local JMH checkout where this suite was prepared.
-   If reorganizing them under `preliminary/`, update their README links too.
-3. Run the corrected profiles against the actual baseline application and
-   record fresh artifacts under the structure above. Add a `summary.md` with
-   concurrency evidence, per-scenario findings, saturation/recovery criteria
-   and limits. Never invent results for an unexecuted profile.
-4. Reuse these plans for improvements. The short original runs cannot serve
-   as a directly comparable baseline for the new timed workloads.
-
-References: [JMeter Thread Groups and timers](https://jmeter.apache.org/usermanual/test_plan.html),
-[JMeter best practices](https://jmeter.apache.org/usermanual/best-practices.html),
-and the [reference repository's test organization](https://github.com/redyz13/SSE-backend/tree/main/jmeter).
+For other options, use `bash jmeter/run_jmeter.sh --help`.
