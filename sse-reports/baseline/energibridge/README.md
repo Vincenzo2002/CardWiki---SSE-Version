@@ -175,6 +175,33 @@ Observations:
 - `stress` processes about 58 % more requests than `load` for only 17 % more energy, so the energy per request is lower under higher load (better amortisation of the idle baseline).
 - In the process logs, `java` (backend and JMeter) is the largest CPU consumer during runs. The remaining CPU time comes from usual Windows services (`svchost`, `dwm`, `MsMpEng`...).
 
+## Scenario 1 vs scenario 2
+
+Both scenarios measure the **same baseline code**. This comparison is not an
+optimization result. It shows how the baseline's energy consumption scales with
+the workload. The scenarios differ in user counts, input data and date (see the
+tables above), so differences cannot be attributed to a single factor.
+
+| Metric (median per run) | `load` S1 → S2 | Change | `stress` S1 → S2 | Change |
+|---|---|---|---|---|
+| Users (main phase) | 20 → 200 | ×10 | 50 → 2,000 | ×40 |
+| Successful requests | 11,500 → 115,188 | ×10.0 | 18,138 → 268,822 | ×14.8 |
+| Total CPU energy (J) | 657.0 → 1,597.3 | ×2.4 | 767.5 → 3,662.2 | ×4.8 |
+| Mean power (W) | 2.16 → 5.24 | ×2.4 | 2.52 → 11.66 | ×4.6 |
+| Mean CPU usage | ≈ 7 % → 27 % | | ≈ 8 % → 63 % | |
+| Idle share of total energy | 72 % → 31 % | | 65 % → 16 % | |
+| Total energy per request (mJ) | 57.04 → 13.87 | −76 % | 42.32 → 13.74 | −68 % |
+| Incremental energy per request (mJ) | 15.82 → 9.64 | −39 % | 14.71 → 11.56 | −21 % |
+| CV of total energy | 3.4 % → 1.1 % | | 3.0 % → 1.4 % | |
+
+Observations:
+
+- **Energy grows much less than the work done.** Ten times more requests in `load` cost only 2.4 times more energy, and 14.8 times more requests in `stress` cost 4.8 times more. Energy per request therefore falls by 68–76 %.
+- **Most of that gain is the idle baseline being shared by more requests.** In scenario 1, idle power accounts for 65–72 % of each run's energy. In scenario 2, it accounts for only 16–31 %.
+- **The workload's own energy per request also falls**, by 39 % in `load` and 21 % in `stress`. A plausible explanation, not verified here, is that a busier JVM and CPU process each request more efficiently (fewer wake-ups from idle states, warmer caches).
+- **Saturation stops this trend.** In scenario 2, `stress` costs more incremental energy per request than `load` (11.56 vs 9.64 mJ). With 2,000 users the CPU reaches its power limit (≈ 18 W), response times rise to ≈ 850 ms, and the backend and JMeter compete for the CPU.
+- **Scenario 2 is also statistically tighter** (CV 1.1–1.4 % instead of 3.0–3.4 %). The workload's signal is much larger than background noise, and the calm gate keeps background activity out of the runs. This makes scenario 2 better suited to detect small differences between the baseline and the improved version.
+
 ## Comparing with the improved version
 
 Use the same machine, scenario, CSV, database, number of runs and script
