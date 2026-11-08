@@ -1,14 +1,14 @@
 
 Name            CPU_s
 ----            -----
-servicehost      38,8
-svchost          18,4
-PSExpressCore     8,6
-System            6,8
-dwm               3,4
-WindowsTerminal   1,7
-GlideXService     1,4
-MoUsoCoreWorker   1,3
+servicehost      38.8
+svchost          18.4
+PSExpressCore     8.6
+System            6.8
+dwm               3.4
+WindowsTerminal   1.7
+GlideXService     1.4
+MoUsoCoreWorker   1.3
 
 
 

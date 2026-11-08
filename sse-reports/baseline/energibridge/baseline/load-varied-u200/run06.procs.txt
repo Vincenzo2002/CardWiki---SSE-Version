@@ -2,13 +2,13 @@
 Name            CPU_s
 ----            -----
 java              374
-dwm              29,5
-servicehost      27,1
-WindowsTerminal  22,1
+dwm              29.5
+servicehost      27.1
+WindowsTerminal  22.1
 svchost            18
-System           10,4
-OpenConsole       9,3
-PSExpressCore     7,9
+System           10.4
+OpenConsole       9.3
+PSExpressCore     7.9
 
 
 

@@ -17,7 +17,9 @@ param(
   [string]$Jmeter = "C:\Users\Asus\Downloads\apache-jmeter-5.6.3\apache-jmeter-5.6.3\bin\jmeter.bat"
 )
 $ErrorActionPreference = "Stop"
-$api = "http://localhost:8080/api/v1"
+# Logs use English number formatting regardless of the Windows locale
+[Threading.Thread]::CurrentThread.CurrentCulture = [Globalization.CultureInfo]::InvariantCulture
+$api ="http://localhost:8080/api/v1"
 $admin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $admin) { throw "Run this script from an administrator PowerShell (EnergiBridge needs it for the RAPL driver)" }
 if ((Get-Service rapl).Status -ne "Running") { throw "Driver 'rapl' is not running" }
@@ -65,13 +67,24 @@ if ($varied) {
   $dataLine = "input: fixed search=Haupt deck_id=1"
 }
 
+function Get-PowerScheme {
+  # powercfg prints a localized line; keep the GUID and use the English name of the built-in plans
+  $line = powercfg /getactivescheme | Out-String
+  $guid = [regex]::Match($line, "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}").Value
+  $names = @{ "381b4222-f694-41f0-9685-ff5bb260df2e" = "Balanced";
+              "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c" = "High performance";
+              "a1841308-3541-4fab-bc81-f71556f20b4a" = "Power saver" }
+  $name = if ($names.ContainsKey($guid)) { $names[$guid] } else { [regex]::Match($line, "\(([^)]*)\)\s*$").Groups[1].Value }
+  "$guid ($name)"
+}
+
 @(
   "date: $(Get-Date -Format o)",
   "checkout commit: $(git rev-parse HEAD)",
   "branch: $(git branch --show-current)",
   "cpu: $((Get-CimInstance Win32_Processor).Name)",
   "os: $((Get-CimInstance Win32_OperatingSystem).Caption) $((Get-CimInstance Win32_OperatingSystem).Version)",
-  "power scheme: $(powercfg /getactivescheme)",
+  "power scheme: $(Get-PowerScheme)",
   "energibridge: $(& $Eb --version)",
   "energibridge sampling interval: $Interval ms (default 200 ms crashed under load)",
   "calm gate: each measurement starts only after a 30 s cool-down with mean CPU power <= $IdleMaxWatts W (max $CalmTries tries), logged in cooldown.txt",

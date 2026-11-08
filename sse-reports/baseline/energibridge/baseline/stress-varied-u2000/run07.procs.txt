@@ -1,13 +1,13 @@
 
 Name             CPU_s
 ----             -----
-java            1093,7
-dwm               29,2
-servicehost       28,3
-WindowsTerminal   28,2
-OpenConsole       21,9
-svchost           20,6
-System            16,5
+java            1093.7
+dwm               29.2
+servicehost       28.3
+WindowsTerminal   28.2
+OpenConsole       21.9
+svchost           20.6
+System            16.5
 MsMpEng             10
 
 
