@@ -6,15 +6,26 @@ under the team's JMeter workloads (`load` and `stress`), taken with
 reference for the Blue Angel criterion: an update must not increase energy
 consumption by more than 10 % compared to this baseline.
 
+Two scenarios were measured. Both remain valid; the improved version must be
+compared against the scenario measured with the same configuration.
+
+| Scenario | Input | `load` | `stress` | Folders |
+|---|---|---|---|---|
+| 1 – fixed input | search `Haupt`, deck `1` | 20 users | 5 → 50 → 5 users | `baseline/load/`, `baseline/stress/` |
+| 2 – varied input, higher load | 15 search/deck pairs from [`jmeter/data/varied.csv`](../../../jmeter/data/varied.csv) | 200 users | 20 → 2,000 → 20 users | `baseline/load-varied-u200/`, `baseline/stress-varied-u2000/` |
+
+Scenario 2 aligns the energy measurements with the updated JMeter tests (PR #27)
+and is the one the team uses to compare the baseline and optimized versions.
+
 ## Analysed version
 
 | Item | Value |
 |---|---|
-| Branch measured | `feature/energibridge-baseline` (created from `baseline`, no code changes) |
-| Commit | `7f3462b10b868990cb518d2448826aff041101b9` |
+| Branch measured | `feature/energibridge-baseline` (created from `baseline`, no application code changes) |
+| Commit | Scenario 1: `7f3462b10b868990cb518d2448826aff041101b9`. Scenario 2: `8c2524db839080a28e09847b3d63a123dc6518ef`, which only adds reports and test tooling (`backend/` and `frontend/` identical to `7f3462b`) |
 | Application code | Identical to commit `4cd6c67` used in the team's JMeter reports |
 | Backend profile | `dev` (persistent H2 file database, not regenerated between series) |
-| Measurement date | 2026-11-03 (stress 10:25, load 13:43, CET) |
+| Measurement date | Scenario 1: 2026-11-03 (stress 10:25, load 13:43 CET). Scenario 2: 2026-11-08 (load 16:22, stress 17:36 CET) |
 
 ## Measurement environment
 
@@ -27,42 +38,72 @@ consumption by more than 10 % compared to this baseline.
 | Java | OpenJDK 11.0.32.1 |
 | JMeter | 5.6.3, non-GUI mode, running on the same machine |
 
-Conditions during both series:
+Conditions during every series:
 
 - All other applications closed (only the backend, JMeter and the terminal running the script).
-- OneDrive synchronisation and Windows Update paused; sleep disabled.
-- The same backend process served both series (no restart between `stress` and `load`).
+- OneDrive synchronisation and Windows Update paused; sleep and screen-off disabled, adaptive brightness off.
+- Within each scenario, the same backend process served both series (no restart between `load` and `stress`).
+- Scenario 2: laptop on mains power with the battery fully charged.
 
 The exact values recorded by the script are in each series' `environment.txt`.
 
 ## Procedure
 
-Each series is driven by [`energibridge_run.ps1`](energibridge_run.ps1)
-(`-Label baseline -Plan stress|load -Runs 10`):
+Each series is driven by [`energibridge_run.ps1`](energibridge_run.ps1), run
+from the repository root in an **administrator** PowerShell (EnergiBridge needs it
+for the RAPL driver):
+
+```powershell
+# Scenario 2 (default): varied CSV input, load 200 users, stress 20 -> 2000 -> 20 users
+.\sse-reports\baseline\energibridge\energibridge_run.ps1 -Plan load
+.\sse-reports\baseline\energibridge\energibridge_run.ps1 -Plan stress
+# Scenario 1: original fixed input and user counts, with the original quality filter
+.\sse-reports\baseline\energibridge\energibridge_run.ps1 -Plan load -Data "" -MaxBinWatts 5.5
+```
+
+Add `-Label improved` for the optimized version (output under
+`sse-reports/sse-improvements/energibridge/improved/`) and `-Smoke -Runs 1` for a
+short setup check (output in a `*_smoke` folder, not committed).
 
 1. Check that the EnergiBridge driver service (`rapl`) is running and the backend answers on `http://localhost:8080`.
-2. One unmeasured JMeter warm-up run (JIT, caches, DB pages).
-3. `idle_start`: system idle measurement lasting as long as one run (310 s).
-4. 10 measured runs. Each run is preceded by a 30 s cool-down, and EnergiBridge wraps the whole JMeter process (`energibridge -i 1000 --summary -o runNN.csv -- jmeter ...`).
-5. `idle_end`: second idle measurement, to detect drift.
+2. Scenario 2: check that every CSV search returns its deck on the first result page and that the deck can be opened (same check as `jmeter/run_jmeter.py`). The CSV is copied to the series folder as `input.csv` and its SHA-256 is recorded in `environment.txt`.
+3. One unmeasured JMeter warm-up run (JIT, caches, DB pages).
+4. `idle_start`: system idle measurement lasting as long as one run (310 s).
+5. 10 measured runs. EnergiBridge wraps the whole JMeter process (`energibridge -i 1000 --summary -o runNN.csv -- jmeter ...`).
+6. `idle_end`: second idle measurement, to detect drift.
 
-Workloads (JMeter plans from `jmeter/` on `master`, common properties `think_ms=500 search=Haupt deck_id=1`):
+Workloads (JMeter plans from `jmeter/`, `think_ms=500`):
 
-| Plan | Properties | Workload duration |
-|---|---|---|
-| `load` | 20 users, ramp-up 10 s, 300 s | 300 s |
-| `stress` | 5 users for 60 s → 50 users for 180 s → 5 users for 60 s (ramp-ups 5 s / 10 s) | 300 s |
+| Scenario | Plan | Properties | Workload duration |
+|---|---|---|---|
+| 1 | `load` | 20 users, ramp-up 10 s, 300 s; `search=Haupt deck_id=1` | 300 s |
+| 1 | `stress` | 5 users for 60 s → 50 users for 180 s → 5 users for 60 s (ramp-ups 5 s / 10 s); `search=Haupt deck_id=1` | 300 s |
+| 2 | `load` | 200 users, ramp-up 10 s, 300 s; `data_mode=csv` | 300 s |
+| 2 | `stress` | 20 users for 60 s → 2,000 users for 180 s → 20 users for 60 s (ramp-ups 5 s / 10 s); `data_mode=csv` | 300 s |
 
-**Quality control.** After every measurement the script computes the average
-CPU power in consecutive 30 s windows. If any window exceeds 5.5 W (a sign of
-background activity, as seen in discarded earlier attempts with 8–12 W bursts),
-the measurement is moved to `rejected/` and repeated, up to 3 attempts. The script
-also records the CPU time consumed by the 8 busiest processes during each
-measurement (`*.procs.txt`), so that background interference can be checked
-afterwards.
+In scenario 2, each JMeter thread reads the next CSV pair on every iteration
+(recycled at the end of the file), and the `.jtl` records the search and deck
+actually used by each sample.
 
-In both series, **all 10 runs and both idle measurements were accepted on the
-first attempt**; `rejected/` stayed empty and is therefore not in the repository.
+**Quality control.** Every measurement records the CPU time consumed by the 8
+busiest processes (`*.procs.txt`), so that background interference can be
+checked afterwards. The rest of the quality control differs between scenarios:
+
+- *Scenario 1 – in-run filter.* After each measurement the script computes the
+  average CPU power in consecutive 30 s windows. If any window exceeds 5.5 W (a
+  sign of background activity, as seen in discarded earlier attempts with 8–12 W
+  bursts), the measurement is moved to `rejected/` and repeated, up to 3 attempts.
+  All 10 runs and both idle measurements were accepted on the first attempt.
+- *Scenario 2 – calm gate.* With 200 and 2,000 users the CPU legitimately reaches
+  9–18 W, so a fixed in-run threshold would reject valid runs. Instead, the 30 s
+  cool-down before each measurement is itself measured, and the measurement only
+  starts when its mean power is ≤ 2.5 W (idle is ≈ 1.6 W). Otherwise the script
+  waits and measures another cool-down, up to 10 times (`cooldown.txt`). The peak
+  30 s power of every accepted measurement is logged in `quality.txt`. The gate
+  delayed `stress/run04` three times (2.7–4.1 W) before it started; every other
+  measurement started after the first cool-down.
+
+`rejected/` stayed empty in all series and is therefore not in the repository.
 
 ## Analysis
 
@@ -74,16 +115,45 @@ first attempt**; `rejected/` stayed empty and is therefore not in the repository
 - A run is invalid if the counter resets, the CSV is truncated, `--summary` is missing, or more than 0.1 % of requests fail.
 
 ```bash
-python analyze_energibridge.py baseline/stress --out baseline/stress/analysis.md
-python analyze_energibridge.py baseline/load --out baseline/load/analysis.md
+python analyze_energibridge.py baseline/load-varied-u200 --out baseline/load-varied-u200/analysis.md
+python analyze_energibridge.py baseline/stress-varied-u2000 --out baseline/stress-varied-u2000/analysis.md
+python analyze_energibridge.py baseline/stress-varied-u2000 --profile idle_start,idle_end   # power per 30 s
 ```
 
 > The `.jtl` files are stored compressed as `jtl.zip` in each series folder
-> (≈ 25 MB uncompressed per series). **Extract `jtl.zip` into the series folder
+> (uncompressed: ≈ 25 MB per scenario 1 series, 171 MB for `load-varied-u200`,
+> 422 MB for `stress-varied-u2000`). **Extract `jtl.zip` into the series folder
 > before re-running the analysis**, otherwise every run is reported as invalid
 > (`no .jtl file`).
 
-## Results
+## Results – scenario 2 (varied input, higher load)
+
+Medians over 10 of 10 valid runs, no failed requests. Full tables:
+[`baseline/load-varied-u200/analysis.md`](baseline/load-varied-u200/analysis.md),
+[`baseline/stress-varied-u2000/analysis.md`](baseline/stress-varied-u2000/analysis.md).
+
+| Metric | `load` (200 users) | `stress` (20 → 2,000 → 20 users) |
+|---|---|---|
+| Total CPU energy per run (J) | **1,597.3** (CV 1.1 %) | **3,662.2** (CV 1.4 %) |
+| Mean power (W) | 5.24 | 11.66 |
+| Peak 30 s power (W) | 9.0–9.8 | 17.9–18.0 |
+| Mean CPU usage | 27 % | 63 % |
+| Reference idle power (W) | 1.60 | 1.85 (see below) |
+| Idle drift (`idle_end` vs `idle_start`) | −4.1 % | −20.2 % |
+| Incremental energy (J) | 1,109.7 (CV 1.6 %) | 3,082.1 (CV 1.7 %) |
+| Successful requests per run | 115,188 (CV < 0.1 %) | 268,822 (CV 1.0 %) |
+| Total energy per request (mJ) | **13.87** | **13.74** |
+| Incremental energy per request (mJ) | 9.64 | 11.56 |
+
+Observations:
+
+- Both series are very stable (CV ≤ 1.4 % on total energy), so differences far below the 10 % Blue Angel margin can be detected.
+- **`load` is limited by think time, not by the CPU.** Mean response time is ≈ 5 ms and throughput stays at ≈ 383 requests/s, close to the maximum allowed by 200 users with a 500 ms pause. The number of requests is practically fixed, so an optimization should show up directly as lower energy per run.
+- **`stress` saturates the laptop.** During the 2,000-user phase, mean response time is ≈ 850 ms (max ≈ 3.6 s), with ≈ 1,450–1,500 requests/s. In every run, the peak 30 s power is 17.9–18.0 W, which appears to be the CPU's sustained power limit. Energy per run is therefore capped. An optimization would mainly show up as more requests per run and lower **energy per request**, so that is the metric to compare for `stress`.
+- **Idle drift in `stress`.** `idle_start` contains a burst of background activity between 30 s and 90 s (up to 4.5 W, with `MsMpEng` (Microsoft Defender) and `servicehost` as top CPU consumers in `idle_start.procs.txt`). The rest of the measurement is at ≈ 1.55 W, like `idle_end` (1.64 W). The burst only affects the reference idle power used for *incremental* energy: using `idle_end` alone would raise the incremental energy by ≈ 2 %. Total energy and energy per request are not affected.
+- In both series, `java` (backend and JMeter) accounts for almost all CPU time during runs.
+
+## Results – scenario 1 (fixed input)
 
 Medians over 10 of 10 valid runs. Full tables: [`baseline/stress/analysis.md`](baseline/stress/analysis.md), [`baseline/load/analysis.md`](baseline/load/analysis.md).
 
@@ -105,13 +175,16 @@ Observations:
 - `stress` processes about 58 % more requests than `load` for only 17 % more energy, so the energy per request is lower under higher load (better amortisation of the idle baseline).
 - In the process logs, `java` (backend and JMeter) is the largest CPU consumer during runs. The remaining CPU time comes from usual Windows services (`svchost`, `dwm`, `MsMpEng`...).
 
-**Values to use as reference for the improved version:** total energy per run
-and energy per request, per plan. Use the same machine, plans, number of runs and
-script (`-Label improved`, output in `sse-reports/sse-improvements/energibridge/`),
-then compare:
+## Comparing with the improved version
+
+Use the same machine, scenario, CSV, database, number of runs and script
+(`-Label improved`, output in `sse-reports/sse-improvements/energibridge/improved/`).
+Reference values: total energy per run for `load`, and energy per request for
+both plans, especially `stress`. Then compare:
 
 ```bash
-python analyze_energibridge.py baseline/stress --compare ../../sse-improvements/energibridge/improved/stress
+python analyze_energibridge.py baseline/load-varied-u200 --compare ../../sse-improvements/energibridge/improved/load-varied-u200
+python analyze_energibridge.py baseline/stress-varied-u2000 --compare ../../sse-improvements/energibridge/improved/stress-varied-u2000
 ```
 
 ## Files
@@ -122,21 +195,26 @@ energibridge/
 ├── energibridge_run.ps1        measurement script (Windows PowerShell)
 ├── analyze_energibridge.py     analysis script
 └── baseline/
-    ├── stress/  load/
+    ├── load/  stress/                              scenario 1
+    ├── load-varied-u200/  stress-varied-u2000/     scenario 2
     │   ├── environment.txt     machine, versions, plan parameters, commit
     │   ├── analysis.md         generated report
     │   ├── idle_start.* idle_end.*
     │   ├── runNN.csv           EnergiBridge samples (1 s)
     │   ├── runNN.summary.txt   EnergiBridge --summary output
     │   ├── runNN.procs.txt     CPU time of the 8 busiest processes
-    │   └── jtl.zip             JMeter results (runNN.jtl, warmup.jtl)
+    │   ├── jtl.zip             JMeter results (runNN.jtl, warmup.jtl)
+    │   ├── input.csv           scenario 2: copy of the CSV used
+    │   ├── cooldown.txt        scenario 2: calm gate measurements
+    │   └── quality.txt         scenario 2: peak 30 s power per measurement
 ```
 
 ## Limitations
 
 - **Platform.** EnergiBridge on Windows reads the CPU energy counters through the `LibreHardwareMonitor.sys` (WinRing0) kernel driver. Microsoft Defender flags it as `VulnerableDriver:WinNT/Winring0`, so it was only installed for the measurements and must be removed afterwards. The course material covers EnergiBridge on macOS and Linux only; the Windows setup is not part of it.
 - **CPU energy only.** Only the CPU package counter (`CPU_ENERGY`) is measured. Display, memory, disk, network and the rest of the platform are not included.
-- **Whole-system measurement.** EnergiBridge measures the whole machine, not the application. JMeter runs on the same machine, so its energy is included. Background activity is mitigated (closed apps, paused services, quality control) but not eliminated.
+- **Whole-system measurement.** EnergiBridge measures the whole machine, not the application. JMeter runs on the same machine, so its energy is included; with 2,000 JMeter threads, the load generator and the backend compete for the same CPU. Background activity is mitigated (closed apps, paused services, quality control) but not eliminated, as the `idle_start` burst of the scenario 2 `stress` series shows.
+- **Power limit under stress.** In scenario 2 `stress`, the CPU runs at its sustained power limit (≈ 18 W) during the 2,000-user phase, so energy per run cannot grow further and response times reflect saturation. Compare energy per request rather than energy per run for this plan.
 - **Sampling interval.** The default 200 ms interval made EnergiBridge crash under load, so 1000 ms is used. Totals come from the cumulative counter and are unaffected; only the time resolution is coarser.
 - **Persistent database.** The `dev` H2 database is a persistent file and grows slightly between runs. It was not reset between series, and the same must apply to the improved series for comparability.
 - **Single machine, single day.** The results are valid as a relative reference on this laptop. They are not absolute energy figures for a production deployment.

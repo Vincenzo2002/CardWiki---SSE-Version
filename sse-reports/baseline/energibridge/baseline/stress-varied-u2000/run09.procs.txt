@@ -1,0 +1,14 @@
+
+Name             CPU_s
+----             -----
+java            1083,2
+dwm               28,8
+WindowsTerminal   28,8
+servicehost       27,6
+svchost           25,4
+OpenConsole       20,3
+System            18,2
+MsMpEng           12,7
+
+
+

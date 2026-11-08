@@ -1,0 +1,15 @@
+date: 2026-11-08T16:22:58.7688187+01:00
+checkout commit: 8c2524db839080a28e09847b3d63a123dc6518ef
+branch: feature/energibridge-baseline
+cpu: AMD Ryzen 5 7520U with Radeon Graphics         
+os: Microsoft Windows 11 Home 10.0.26300
+power scheme: GUID de plan de energía: 381b4222-f694-41f0-9685-ff5bb260df2e  (Equilibrado)
+energibridge: energibridge 0.0.7
+energibridge sampling interval: 1000 ms (default 200 ms crashed under load)
+calm gate: each measurement starts only after a 30 s cool-down with mean CPU power <= 2.5 W (max 10 tries), logged in cooldown.txt
+in-run filter: 
+none; peak 30 s power is logged in quality.txt
+java: openjdk version "11.0.32.1" 2026-08-18
+plan: load_test.jmx -Jusers=200 -Jramp_up=10 -Jduration=300 -Jdata_file=C:\Users\Asus\Documents\GitHub\CardWiki---SSE-Version\sse-reports\baseline\energibridge\baseline\load-varied-u200\input.csv -Jdata_mode=csv -Jsample_variables=search,deck_id think_ms=500
+input: jmeter/data/varied.csv (15 pairs, sha256 9cd12d451b6d2d313c67ffebbb44f05d8cbf845859d445d0abd492f0c520fe49), copied to input.csv
+runs: 10, idle 310 s at start and end, smoke=False
