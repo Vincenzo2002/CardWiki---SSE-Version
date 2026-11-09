@@ -1,0 +1,14 @@
+
+Name          CPU_s
+----          -----
+servicehost    40.9
+svchost        17.5
+PSExpressCore     9
+System          5.5
+java            1.5
+mysqld          1.3
+GlideXService   1.2
+MsMpEng           1
+
+
+

@@ -1,0 +1,12 @@
+idle_start try 1: 1.71 W
+run01 try 1: 1.66 W
+run02 try 1: 1.70 W
+run03 try 1: 1.60 W
+run04 try 1: 1.66 W
+run05 try 1: 1.62 W
+run06 try 1: 1.69 W
+run07 try 1: 1.62 W
+run08 try 1: 2.18 W
+run09 try 1: 1.84 W
+run10 try 1: 1.66 W
+idle_end try 1: 1.61 W

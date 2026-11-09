@@ -1,0 +1,14 @@
+
+Name            CPU_s
+----            -----
+servicehost      37.2
+MsMpEng          28.8
+svchost          22.9
+System            8.8
+PSExpressCore     8.2
+dwm               2.9
+WindowsTerminal     2
+java              1.6
+
+
+
