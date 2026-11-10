@@ -60,7 +60,7 @@ public class UserEndpoint {
     @PostMapping
     @ApiOperation(value = "Register the authenticated user", authorizations = {@Authorization("user")})
     public UserDetailsDto register(final Authentication token, @Valid @RequestBody final UserInputDto userInputDto) {
-        LOGGER.info("POST /api/v1/users {} {}", token, userInputDto);
+        LOGGER.debug("POST /api/v1/users {} {}", token, userInputDto);
         if (token == null)
             throw new AccessDeniedException("Login using an Oauth2 provider first");
 
@@ -76,7 +76,7 @@ public class UserEndpoint {
     @GetMapping
     @ApiOperation(value = "Search for users")
     public Page<UserDetailsDto> search(@Valid @NotNull @RequestParam final String username, @SortDefault("username") final Pageable pageable) {
-        LOGGER.info("GET /api/v1/users?username={} {}", username, pageable);
+        LOGGER.debug("GET /api/v1/users?username={} {}", username, pageable);
         return userService.searchByUsername(username, pageable)
             .map(userMapper::userToUserDetailsDto);
     }
@@ -84,14 +84,14 @@ public class UserEndpoint {
     @GetMapping(value = "/byname/{username}")
     @ApiOperation(value = "Get user profile")
     public UserDetailsDto getProfile(@PathVariable final String username) {
-        LOGGER.info("GET /api/v1/users/byname/{}", username);
+        LOGGER.debug("GET /api/v1/users/byname/{}", username);
         return userMapper.userToUserDetailsDto(userService.findUserByUsernameOrThrow(username));
     }
 
     @GetMapping(value = "/{id}/decks")
     @ApiOperation(value = "Get decks created by user")
     public Page<DeckSimpleDto> getDecks(@PathVariable final long id, @SortDefault("name") final Pageable pageable) {
-        LOGGER.info("GET /api/v1/users/{}/decks {}", id, pageable);
+        LOGGER.debug("GET /api/v1/users/{}/decks {}", id, pageable);
         return userService.getDecks(id, pageable)
             .map(deckMapper::deckToDeckSimpleDto);
     }
@@ -100,7 +100,7 @@ public class UserEndpoint {
     @ApiOperation(value = "Get revisions created by user")
     @Transactional
     public Page<RevisionDtoWithDeck> getRevisions(@PathVariable final long id, @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
-        LOGGER.info("GET /api/v1/users/{}/revisions", id);
+        LOGGER.debug("GET /api/v1/users/{}/revisions", id);
         return userService.getRevisions(id, pageable).map((final Revision revision) -> revisionMapper.revision_to_revisionDtoWithDeck(revision));
     }
 
@@ -109,7 +109,7 @@ public class UserEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Add deck to user favorites", authorizations = {@Authorization("user")})
     public DeckSimpleDto addFavorite(@PathVariable final Long userId, @PathVariable final Long deckId) {
-        LOGGER.info("PUT /api/v1/users/{}/favorites/{}", userId, deckId);
+        LOGGER.debug("PUT /api/v1/users/{}/favorites/{}", userId, deckId);
         return deckMapper.deckToDeckSimpleDto(favoriteService.addFavorite(userId, deckId));
     }
 
@@ -117,7 +117,7 @@ public class UserEndpoint {
     @GetMapping(value = "/{userId}/favorites")
     @ApiOperation(value = "Get favorites of user", authorizations = {@Authorization("user")})
     public Page<DeckSimpleDto> getFavorites(@PathVariable final Long userId, @SortDefault("name") final Pageable pageable) {
-        LOGGER.info("GET /api/v1/users/{}/favorites {}", userId, pageable);
+        LOGGER.debug("GET /api/v1/users/{}/favorites {}", userId, pageable);
         return favoriteService.getFavorites(userId, pageable)
             .map(deckMapper::deckToDeckSimpleDto);
     }
@@ -127,7 +127,7 @@ public class UserEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Check if a deck is a favorite of the user", authorizations = {@Authorization("user")})
     public void hasFavorite(@PathVariable final Long userId, @PathVariable final Long deckId) {
-        LOGGER.info("GET /api/v1/users/{}/favorites/{}", userId, deckId);
+        LOGGER.debug("GET /api/v1/users/{}/favorites/{}", userId, deckId);
         if (!favoriteService.hasFavorite(userId, deckId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("%s has no favorite %s", userId, deckId));
         }
@@ -138,7 +138,7 @@ public class UserEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Remove a deck from favorites of user", authorizations = {@Authorization("user")})
     public void removeFavorite(@PathVariable final Long userId, @PathVariable final Long deckId) {
-        LOGGER.info("GET /api/v1/users/{}/favorites/{}", userId, deckId);
+        LOGGER.debug("GET /api/v1/users/{}/favorites/{}", userId, deckId);
         favoriteService.removeFavorite(userId, deckId);
     }
 
@@ -146,7 +146,7 @@ public class UserEndpoint {
     @PatchMapping(value = "/{id}")
     @ApiOperation(value = "Change settings of logged in user", authorizations = {@Authorization("user")})
     public UserDetailsDto updateUser(@PathVariable final long id, @Valid @RequestBody final UserUpdateDto userUpdateDto) {
-        LOGGER.info("PATCH /api/v1/users/{} {}", id, userUpdateDto);
+        LOGGER.debug("PATCH /api/v1/users/{} {}", id, userUpdateDto);
         return userMapper.userToUserDetailsDto(userService.updateUser(id, userMapper.userUpdateDtoToUser(userUpdateDto)));
     }
 
@@ -155,7 +155,7 @@ public class UserEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete user", authorizations = {@Authorization("user")})
     public void delete(@PathVariable final long id, @RequestParam final String reason) {
-        LOGGER.info("DELETE /api/v1/users/{} Reason: {}", id, reason);
+        LOGGER.debug("DELETE /api/v1/users/{} Reason: {}", id, reason);
         userService.delete(id, reason);
     }
 
@@ -163,7 +163,7 @@ public class UserEndpoint {
     @GetMapping(value = "/{userId}/export")
     @ApiOperation(value = "Export all data of a user", authorizations = {@Authorization(("user"))})
     public UserExportDto exportUser(@PathVariable final Long userId) {
-        LOGGER.info("GET /api/v1/users/{}/export", userId);
+        LOGGER.debug("GET /api/v1/users/{}/export", userId);
         return userMapper.userToUserExportDto(userService.exportUserData(userId));
     }
 }

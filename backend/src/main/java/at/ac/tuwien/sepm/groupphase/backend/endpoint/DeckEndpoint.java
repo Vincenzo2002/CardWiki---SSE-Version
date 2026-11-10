@@ -47,7 +47,7 @@ public class DeckEndpoint {
     @PostMapping
     @ApiOperation(value = "Create a new card deck", authorizations = @Authorization("user"))
     public DeckDto create(@Valid @RequestBody final DeckInputDto deckInputDto) {
-        LOGGER.info("POST /api/v1/decks body: {}", deckInputDto);
+        LOGGER.debug("POST /api/v1/decks body: {}", deckInputDto);
         return deckMapper.deckToDeckDto(
             deckService.create(
                 deckMapper.deckInputDtoToDeck(deckInputDto)
@@ -59,7 +59,7 @@ public class DeckEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Search for card decks")
     public Page<DeckDto> search(@RequestParam final String name, @SortDefault("name") final Pageable pageable) {
-        LOGGER.info("GET /api/v1/decks?name={} {}", name, pageable);
+        LOGGER.debug("GET /api/v1/decks?name={} {}", name, pageable);
         return deckService.searchByName(name, pageable)
             .map(deckMapper::deckToDeckDto);
     }
@@ -68,7 +68,7 @@ public class DeckEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get a deck by id")
     public DeckDto findOne(@PathVariable final Long id) {
-        LOGGER.info("GET /api/v1/decks/{}", id);
+        LOGGER.debug("GET /api/v1/decks/{}", id);
         return deckMapper.deckToDeckDto(deckService.findOneOrThrow(id));
     }
 
@@ -77,7 +77,7 @@ public class DeckEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update deck", authorizations = @Authorization("user"))
     public DeckDto updateDeck(@PathVariable final Long id, @Valid @RequestBody final DeckUpdateDto deckUpdateDto) {
-        LOGGER.info("PATCH /api/v1/decks/{} body: {}", id, deckUpdateDto);
+        LOGGER.debug("PATCH /api/v1/decks/{} body: {}", id, deckUpdateDto);
         return deckMapper.deckToDeckDto(deckService.update(id, deckMapper.deckUpdateDtoToDeck(deckUpdateDto)));
     }
 
@@ -86,7 +86,7 @@ public class DeckEndpoint {
     @PostMapping(value = "/{id}/copy")
     @ApiOperation(value = "Copy a deck", authorizations = @Authorization("user"))
     public DeckDto copy(@PathVariable final Long id, @Valid @RequestBody final DeckInputDto deckInputDto) {
-        LOGGER.info("POST /api/v1/decks/{}/copy body={}", id, deckInputDto);
+        LOGGER.debug("POST /api/v1/decks/{}/copy body={}", id, deckInputDto);
         return deckMapper.deckToDeckDto(deckService.copy(id, deckMapper.deckInputDtoToDeck(deckInputDto)));
     }
 
@@ -95,14 +95,14 @@ public class DeckEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "delete deck", authorizations = @Authorization("admin"))
     public void deleteDeck(@PathVariable final Long id) {
-        LOGGER.info("DELETE /api/v1/decks/{}", id);
+        LOGGER.debug("DELETE /api/v1/decks/{}", id);
         deckService.delete(id);
 	}
 
     @GetMapping(value = "/{id}/revisions")
     @ApiOperation(value = "Get revisions of the deck")
     public Page<RevisionDtoWithContent> getRevisions(@PathVariable final Long id, @SortDefault(value = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
-        LOGGER.info("GET /api/v1/decks/{}/revisions {}", id, pageable);
+        LOGGER.debug("GET /api/v1/decks/{}/revisions {}", id, pageable);
         deckService.findOneOrThrow(id);
         return deckService.getRevisions(id, pageable).map(revisionMapper::revisionToRevisionDetailedDto);
     }
@@ -111,7 +111,7 @@ public class DeckEndpoint {
     @GetMapping("/progress")
     @ApiOperation(value = "Get all learned decks", authorizations = @Authorization("user"))
     public Page<DeckProgressDetailsDto> getLearnedDecks(@SortDefault(direction = Sort.Direction.ASC) final Pageable pageable) {
-        LOGGER.info("GET /api/v1/decks/progress {}", pageable);
+        LOGGER.debug("GET /api/v1/decks/progress {}", pageable);
         return deckService.getLearnedDecksWithStatus(pageable);
     }
 
@@ -120,14 +120,14 @@ public class DeckEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Remove user progress for card deck", authorizations = @Authorization("user"))
     public void deleteUserProgress(@PathVariable final Long id, @RequestParam(defaultValue = "false") final boolean reverse) {
-        LOGGER.info("DELETE /api/v1/decks/{}/progress", id, reverse);
+        LOGGER.debug("DELETE /api/v1/decks/{}/progress", id, reverse);
         deckService.deleteUserProgress(id, reverse);
     }
 
     @GetMapping(value = "/{id}", produces = "text/csv")
     @ApiOperation(value = "export deck", authorizations = @Authorization("apiKey"))
     public void export(@PathVariable final Long id, final HttpServletResponse response) {
-        LOGGER.info("GET /api/v1/decks/{} as .csv", id);
+        LOGGER.debug("GET /api/v1/decks/{} as .csv", id);
         deckService.findOneOrThrow(id);
         response.addHeader("Content-Disposition", "attachment");
         response.addHeader("Content-Type", "text/csv;charset=UTF-8");
@@ -144,7 +144,7 @@ public class DeckEndpoint {
     @PostMapping(value = "/{id}/cards", consumes = "multipart/form-data")
     @ApiOperation(value = "import cards to deck", authorizations = @Authorization("user"))
     public DeckDto importCards (@PathVariable final Long id, @RequestParam("file") final MultipartFile file) {
-        LOGGER.info("POST {} to /api/v1/decks/{}", file.getOriginalFilename(), id);
+        LOGGER.debug("POST {} to /api/v1/decks/{}", file.getOriginalFilename(), id);
         try {
             return deckMapper.deckToDeckDto(deckService.addCards(id, file));
         } catch (final IOException ex) {

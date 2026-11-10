@@ -39,7 +39,7 @@ public class LearnEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Submit an attempt at recalling a card", authorizations = {@Authorization("user")})
     public void attempt(@Valid @RequestBody final AttemptInputDto attempt){
-        LOGGER.info("POST /api/v1/learn body: {}", attempt);
+        LOGGER.debug("POST /api/v1/learn body: {}", attempt);
         learnService.saveAttempt(attempt);
     }
 
@@ -48,7 +48,7 @@ public class LearnEndpoint {
     @ApiOperation(value = "Get the next cards of a deck to learn", authorizations = {@Authorization("user")})
     public List<CardSimpleDto> getNextCards(@RequestParam final long deckId, @RequestParam(defaultValue = "false") final boolean reverse, final Pageable pageable){
         // TODO: Return page so the frontend knows how many more cards can be learned
-        LOGGER.info("GET /api/v1/learn/next?deckId={}&reverse={} {}", deckId, reverse, pageable);
+        LOGGER.debug("GET /api/v1/learn/next?deckId={}&reverse={} {}", deckId, reverse, pageable);
         return learnService.findNextCards(deckId, reverse, pageable).stream()
             .map((final Card card) -> revisionMapper.revisionEditToCardSimpleDto((RevisionEdit) card.getLatestRevision()))
             .collect(Collectors.toList());
