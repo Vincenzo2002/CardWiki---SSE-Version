@@ -1,0 +1,11 @@
+node_modules
+dist
+.angular
+.cache
+coverage
+cypress
+src/environments/config.prod.ts
+*.log
+.env
+.env.*
+.DS_Store
