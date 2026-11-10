@@ -1,0 +1,7 @@
+# The backend build needs only the parent POM and backend sources.
+**
+!pom.xml
+!backend/
+!backend/pom.xml
+!backend/src/
+!backend/src/**

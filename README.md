@@ -64,6 +64,43 @@ VS Code settings in `.vscode/` are local and ignored by Git. Each developer must
 select their own JDK 11 installation. See [VS Code troubleshooting](backend/README.md#vs-code-troubleshooting)
 for extension compatibility and generated-source diagnostics.
 
+### Run locally with Docker Compose
+
+Alternatively, install and start Docker with the Compose plugin (for example,
+Docker Desktop). You do not need Java, Maven, or Node installed on the host.
+From the repository root, run:
+
+```sh
+docker compose up --build -d
+docker compose ps
+```
+
+The first build downloads the images and application dependencies. Open
+**http://localhost:4200** once both services are healthy. The backend is available
+at **http://localhost:8080**; the frontend waits for its health check before
+starting. Stop any native development servers using these ports first.
+
+The backend uses the `dev` profile, with sample data and **Test User** / **Test
+Admin** login options. H2 runs inside the backend; it needs no separate database
+container. Named volumes preserve the Docker database and uploaded images across
+container rebuilds and shutdowns. These volumes are separate from the database
+and images used when running the backend directly on your machine.
+
+The frontend is compiled with the project's Node 14 toolchain and served by
+Nginx, including support for refreshing Angular routes. The setup is for local
+use at `localhost`, with ports bound to the local machine. Source changes require
+another `docker compose up --build -d`; there is no automatic reload.
+
+View logs and stop the application with:
+
+```sh
+docker compose logs -f
+docker compose down
+```
+
+To start again with an empty Docker database and no uploaded images, run
+`docker compose down --volumes`. This deletes the data in both Docker volumes.
+
 ## JMH benchmarks
 
 The root Maven project builds `backend` and the separate `benchmarks` module.
