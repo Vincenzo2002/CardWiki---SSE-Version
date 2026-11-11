@@ -101,19 +101,6 @@ docker compose down
 To start again with an empty Docker database and no uploaded images, run
 `docker compose down --volumes`. This deletes the data in both Docker volumes.
 
-## JMH benchmarks
-
-The root Maven project builds `backend` and the separate `benchmarks` module.
-With JDK 11 selected, run from the repository root:
-
-```sh
-mvn clean package
-java -jar benchmarks/target/benchmarks.jar
-```
-
-See the [benchmark guide](benchmarks/README.md) for a quick smoke run, benchmark
-selection, and JSON results.
-
 ## Sustainable Software Engineering (SSE)
 
 The frontend, backend, and measurement tools are maintained in one repository:
