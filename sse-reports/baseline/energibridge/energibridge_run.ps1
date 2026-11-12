@@ -2,7 +2,8 @@
 #   varied (default): CSV inputs from jmeter/data/varied.csv, load 200 users, stress 20 -> 2000 -> 20 users
 #   fixed (-Data ""): original scenario (search Haupt, deck 1), load 20 users, stress 5 -> 50 -> 5 users
 param(
-  [ValidateSet("baseline","improved")][string]$Label = "baseline",
+  # "baseline" -> sse-reports/baseline; any other label (e.g. "improved", "master", "debug-access-logs") -> sse-reports/sse-improvements
+  [ValidatePattern("^[a-z0-9][a-z0-9-]*$")][string]$Label = "baseline",
   [ValidateSet("load","stress")][string]$Plan = "load",
   [string]$Data = "jmeter/data/varied.csv",
   [int]$Users = 0,                 # 0 = default for the plan and data mode

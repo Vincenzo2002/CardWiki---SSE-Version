@@ -1,0 +1,12 @@
+idle_start: accepted on attempt 1; peak 30 s power 2.61 W
+run01: accepted on attempt 1; peak 30 s power 6.97 W
+run02: accepted on attempt 1; peak 30 s power 7.55 W
+run03: accepted on attempt 1; peak 30 s power 6.84 W
+run04: accepted on attempt 1; peak 30 s power 6.97 W
+run05: accepted on attempt 1; peak 30 s power 7.10 W
+run06: accepted on attempt 1; peak 30 s power 6.97 W
+run07: accepted on attempt 1; peak 30 s power 7.42 W
+run08: accepted on attempt 1; peak 30 s power 6.90 W
+run09: accepted on attempt 1; peak 30 s power 6.52 W
+run10: accepted on attempt 1; peak 30 s power 6.81 W
+idle_end: accepted on attempt 1; peak 30 s power 3.03 W

@@ -1,0 +1,14 @@
+
+Name            CPU_s
+----            -----
+java            303.3
+PSExpressCore     8.9
+System              8
+MsMpEng           4.3
+dwm               2.3
+WindowsTerminal   1.6
+AdobeCollabSync   1.3
+GlideXService     1.3
+
+
+

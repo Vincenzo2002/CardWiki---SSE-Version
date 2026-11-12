@@ -1,0 +1,14 @@
+
+Name             CPU_s
+----             -----
+java            1117.5
+svchost           21.4
+System            12.7
+PSExpressCore        9
+MsMpEng            5.4
+dwm                2.3
+WindowsTerminal    1.8
+GlideXService      1.4
+
+
+

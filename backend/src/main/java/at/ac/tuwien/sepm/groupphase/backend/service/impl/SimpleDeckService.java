@@ -17,6 +17,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -57,7 +58,7 @@ public class SimpleDeckService implements DeckService {
         this.progressRepository = progressRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Deck findOneOrThrow(final Long id) {
         LOGGER.debug("Find deck with id {}", id);
@@ -66,12 +67,15 @@ public class SimpleDeckService implements DeckService {
         return deck.orElseThrow(() -> new DeckNotFoundException(String.format("Could not find card deck with id %s", id)));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Page<Deck> searchByName(final String name, final Pageable pageable) {
         LOGGER.debug("Search card decks for name {} {}", name, pageable);
         Objects.requireNonNull(name, "name argument must not be null");
-        return deckRepository.findByNameContainingIgnoreCase(name, pageable);
+        final Page<Deck> decks = deckRepository.findByNameContainingIgnoreCase(name, pageable);
+        // The mapper reads the categories after the transaction; @BatchSize loads them for the whole page at once
+        decks.forEach(deck -> Hibernate.initialize(deck.getCategories()));
+        return decks;
     }
 
     @Transactional

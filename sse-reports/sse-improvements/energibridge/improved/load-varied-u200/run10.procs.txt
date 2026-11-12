@@ -1,0 +1,14 @@
+
+Name            CPU_s
+----            -----
+java              306
+svchost          21.9
+PSExpressCore     8.3
+System            7.2
+dwm               2.8
+MsMpEng           2.7
+GlideXService     1.6
+WindowsTerminal   1.6
+
+
+

@@ -19,12 +19,12 @@ import java.util.Set;
 public interface DeckRepository extends JpaRepository<Deck, Long> {
     /**
      * Find all decks containing {@code name} (case insensitive)
+     * No collection is fetch-joined, so paging is applied in SQL instead of in memory.
      *
      * @param name the search string
      * @param pageable the paging parameters
      * @return ordered list of all decks with names containing {@code name}
      */
-    @EntityGraph(attributePaths = {"createdBy", "categories"})
     Page<Deck> findByNameContainingIgnoreCase(final String name, final Pageable pageable);
 
     /**

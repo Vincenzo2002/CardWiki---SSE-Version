@@ -1,0 +1,14 @@
+
+Name          CPU_s
+----          -----
+java          312.2
+svchost        18.1
+PSExpressCore   8.1
+System          7.4
+dwm             2.4
+MsMpEng         2.3
+GlideXService   1.6
+mysqld          1.5
+
+
+

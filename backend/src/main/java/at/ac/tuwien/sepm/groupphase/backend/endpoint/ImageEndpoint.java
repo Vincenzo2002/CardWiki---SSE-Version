@@ -33,7 +33,7 @@ public class ImageEndpoint {
     @PostMapping
     @ApiOperation(value = "Save a new image", authorizations = {@Authorization("user")})
     public ImageDto upload(@RequestParam final MultipartFile file) {
-        LOGGER.info("POST api/v1/images filename: {}", file.getOriginalFilename());
+        LOGGER.debug("POST api/v1/images filename: {}", file.getOriginalFilename());
         return imageMapper.imageToImageDto(imageService.create(file));
     }
 }

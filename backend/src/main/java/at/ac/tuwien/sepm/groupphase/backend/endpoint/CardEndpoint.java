@@ -46,7 +46,7 @@ public class CardEndpoint {
     @PostMapping(value = "/decks/{deckId}/cards")
     @ApiOperation(value = "Create a new card", authorizations = {@Authorization("user")})
     public CardSimpleDto create(@Valid  @RequestBody final RevisionInputDto revisionInputDto, @PathVariable final Long deckId) {
-        LOGGER.info("POST /api/v1/decks/{}/cards body: {}", deckId, revisionInputDto);
+        LOGGER.debug("POST /api/v1/decks/{}/cards body: {}", deckId, revisionInputDto);
         final RevisionCreate revision = revisionMapper.revisionEditDtoToRevisionCreate(revisionInputDto);
         return revisionMapper.revisionEditToCardSimpleDto((RevisionEdit) cardService.addCardToDeck(deckId, revision).getLatestRevision());
     }
@@ -55,7 +55,7 @@ public class CardEndpoint {
     @GetMapping(value = "/decks/{deckId}/cards")
     @ApiOperation(value = "Get all cards for a specific deck")
     public Page<CardContentDto> getCardsByDeckId(@PathVariable final Long deckId, @SortDefault("createdAt") final Pageable pageable) {
-        LOGGER.info("GET /api/v1/decks/{}/cards {}", deckId, pageable);
+        LOGGER.debug("GET /api/v1/decks/{}/cards {}", deckId, pageable);
         return cardService.findLatestEditRevisionsByDeckId(deckId, pageable)
             .map(revisionMapper::revisionEditToCardContentDto);
     }
@@ -63,7 +63,7 @@ public class CardEndpoint {
     @GetMapping(value = "/cards/{cardId}")
     @ApiOperation(value = "Get information about a specific card in deck")
     public CardUpdateDto findOne(@PathVariable final Long cardId) {
-        LOGGER.info("GET /api/v1/cards/{}", cardId);
+        LOGGER.debug("GET /api/v1/cards/{}", cardId);
         return revisionMapper.revisionEditToCardUpdateDto((RevisionEdit) cardService.findOneOrThrow(cardId).getLatestRevision());
     }
 
@@ -72,7 +72,7 @@ public class CardEndpoint {
     @PatchMapping(value = "/cards/{cardId}")
     @ApiOperation(value = "Edit a specific card in a deck", authorizations = {@Authorization("user")})
     public CardSimpleDto edit(@Valid  @RequestBody final RevisionInputDto revisionInputDto, @PathVariable final Long cardId) {
-        LOGGER.info("PATCH /api/v1/cards/{} body: {}", cardId, revisionInputDto);
+        LOGGER.debug("PATCH /api/v1/cards/{} body: {}", cardId, revisionInputDto);
         final RevisionEdit revision = revisionMapper.revisionEditDtoToRevisionEdit(revisionInputDto);
         return revisionMapper.revisionEditToCardSimpleDto((RevisionEdit) cardService.editCardInDeck(cardId, revision).getLatestRevision());
     }
@@ -82,7 +82,7 @@ public class CardEndpoint {
     @PostMapping(value = "/cards/{cardId}")
     @ApiOperation(value = "Removes card from deck", authorizations = {@Authorization(value = "user")})
     public void addDeleteRevisionToCard(@Valid @RequestBody(required = false) final ReasonDto message, @PathVariable final Long cardId) {
-        LOGGER.info("POST /api/v1/cards/{} Body: {}", cardId, message);
+        LOGGER.debug("POST /api/v1/cards/{} Body: {}", cardId, message);
         cardService.addDeleteRevisionToCard(cardId, message == null ? null : message.getMessage());
     }
 
@@ -90,7 +90,7 @@ public class CardEndpoint {
     @DeleteMapping(value = "/cards/{cardId}")
     @ApiOperation(value = "Deletes a card", authorizations = {@Authorization("admin")})
     public void delete(@PathVariable final Long cardId) {
-        LOGGER.info("DELETE card {}", cardId);
+        LOGGER.debug("DELETE card {}", cardId);
         cardService.delete(cardId);
 	}
 

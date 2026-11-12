@@ -1,0 +1,14 @@
+
+Name            CPU_s
+----            -----
+svchost          16.2
+PSExpressCore     8.7
+System            7.8
+dwm               2.3
+java              1.6
+WindowsTerminal   1.5
+mysqld            1.4
+MsMpEng           1.4
+
+
+

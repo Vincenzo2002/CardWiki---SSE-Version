@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -39,6 +40,8 @@ public class Deck {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "deck")
     private Set<Comment> comments = new HashSet<>();
 
+    // Loads the categories of up to 100 decks (the maximum page size) in one query
+    @BatchSize(size = 100)
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "decks")
     private Set<Category> categories = new HashSet<>();
 

@@ -39,7 +39,7 @@ public class CategoryEndpoint {
     @GetMapping
     @ApiOperation(value = "Find categories by name")
     public Page<CategorySimpleDto> search(@RequestParam final String name, @SortDefault("name") final Pageable pageable) {
-        LOGGER.info("GET /api/v1/categories?name={} {}", name, pageable);
+        LOGGER.debug("GET /api/v1/categories?name={} {}", name, pageable);
         return categoryService.searchByName(name, pageable)
             .map(categoryMapper::categoryToCategorySimpleDto);
     }
@@ -49,7 +49,7 @@ public class CategoryEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create new Category", authorizations = {@Authorization("user")})
     public CategoryDetailedDto createCategory(@RequestBody @Valid final CategoryInputDto categoryInputDto) {
-        LOGGER.info("POST /api/v1/categories");
+        LOGGER.debug("POST /api/v1/categories");
         return categoryMapper.categoryToCategoryDetailedDto(
             categoryService.createCategory(
                 categoryMapper.categoryInputDtoToCategory(categoryInputDto)));
@@ -58,7 +58,7 @@ public class CategoryEndpoint {
     @GetMapping(value = "/{id}")
     @ApiOperation(value = "Get detailed information about a specific category")
     public CategoryDetailedDto getCategory(@PathVariable final Long id) {
-        LOGGER.info("GET /api/v1/categories/{}", id);
+        LOGGER.debug("GET /api/v1/categories/{}", id);
         return categoryMapper.categoryToCategoryDetailedDto(categoryService.findOneOrThrow(id));
     }
 
@@ -67,7 +67,7 @@ public class CategoryEndpoint {
     @ApiOperation(value = "Update category with specific id", authorizations = {@Authorization("user")})
     public CategoryDetailedDto updateCategory(@PathVariable final Long id,
                                               @RequestBody @Valid final CategoryInputDto categoryInputDto) {
-        LOGGER.info("PUT /api/v1/categories/{}", id);
+        LOGGER.debug("PUT /api/v1/categories/{}", id);
         return categoryMapper.categoryToCategoryDetailedDto(
             categoryService.updateCategory(
                 id, categoryMapper.categoryInputDtoToCategory(categoryInputDto)));
@@ -79,7 +79,7 @@ public class CategoryEndpoint {
     @DeleteMapping(value = "/{id}")
     @ApiOperation(value = "Permanently delete a category", authorizations = {@Authorization("admin")})
     public void deleteCategory(@PathVariable final Long id) {
-        LOGGER.info("DELETE /api/v1/categories/{}", id);
+        LOGGER.debug("DELETE /api/v1/categories/{}", id);
         categoryService.deleteCategory(id);
     }
 }
