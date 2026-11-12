@@ -1,0 +1,14 @@
+
+Name            CPU_s
+----            -----
+java              304
+svchost            23
+System            9.4
+PSExpressCore     8.8
+MsMpEng             3
+dwm               2.5
+MoUsoCoreWorker   1.9
+WindowsTerminal   1.7
+
+
+

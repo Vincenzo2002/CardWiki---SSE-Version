@@ -1,0 +1,14 @@
+
+Name            CPU_s
+----            -----
+svchost          22.8
+System            9.5
+PSExpressCore     8.8
+SystemSettings    5.6
+dwm               3.1
+MsMpEng             3
+MoUsoCoreWorker   1.8
+mysqld            1.6
+
+
+

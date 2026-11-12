@@ -1,0 +1,14 @@
+
+Name            CPU_s
+----            -----
+svchost          17.1
+PSExpressCore     8.5
+System            6.7
+dwm               2.3
+MsMpEng           1.9
+WindowsTerminal   1.8
+GlideXService     1.3
+java              1.1
+
+
+
